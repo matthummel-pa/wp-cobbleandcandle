@@ -59,7 +59,7 @@
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button {"className":"is-style-fill"} -->
-<div class="wp-block-button is-style-fill"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url(home_url('/reservations/')); ?>"><?php echo esc_html__('Reserve a table', 'cobbleandcandle'); ?></a></div>
+<div class="wp-block-button is-style-fill"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url(\App\page_link('/reservations/')); ?>"><?php echo esc_html__('Reserve a table', 'cobbleandcandle'); ?></a></div>
 <!-- /wp:button -->
 
 <!-- wp:button {"className":"is-style-outline"} -->

@@ -61,11 +61,24 @@ function crumbs(): array
 }
 
 /**
+ * Default page-hero eyebrow for the theme's own archives and single locations.
+ */
+function hero_eyebrow(): string
+{
+    return match (true) {
+        is_post_type_archive('cc_location') => __('Locations & contact', 'cobbleandcandle'),
+        is_post_type_archive('cc_event') => __('Events & specials', 'cobbleandcandle'),
+        is_singular('cc_location') => __('Our houses', 'cobbleandcandle'),
+        default => '',
+    };
+}
+
+/**
  * Page-hero text and image: block attributes win, then the post (title, excerpt, featured image),
  * then the archive (title, description).
  *
  * @param  array<string, mixed>  $attributes  Block attributes.
- * @return array{title: string, lede: string, image_id: int}
+ * @return array{title: string, lede: string, image_id: int, eyebrow: string}
  */
 function page_hero(array $attributes): array
 {
@@ -78,12 +91,18 @@ function page_hero(array $attributes): array
         $title = $title !== '' ? $title : plain_title($post);
         $lede = $lede !== '' ? $lede : (has_excerpt($post) ? get_the_excerpt($post) : '');
         $image = $image ?: (int) get_post_thumbnail_id($post);
+    } elseif (is_post_type_archive('cc_location')) {
+        $title = $title !== '' ? $title : __('Find us', 'cobbleandcandle');
+        $lede = $lede !== '' ? $lede : __('Each house has its own hours, menu and booking.', 'cobbleandcandle');
+    } elseif (is_post_type_archive('cc_event')) {
+        $title = $title !== '' ? $title : __('What’s on', 'cobbleandcandle');
+        $lede = $lede !== '' ? $lede : __('Seasonal suppers, live music and holiday nights across our houses.', 'cobbleandcandle');
     } elseif (is_archive()) {
         $title = $title !== '' ? $title : wp_strip_all_tags(is_post_type_archive() ? post_type_archive_title('', false) : get_the_archive_title());
         $lede = $lede !== '' ? $lede : wp_strip_all_tags(get_the_archive_description());
     }
 
-    return ['title' => $title !== '' ? $title : __('Page title', 'cobbleandcandle'), 'lede' => $lede, 'image_id' => $image];
+    return ['title' => $title !== '' ? $title : __('Page title', 'cobbleandcandle'), 'lede' => $lede, 'image_id' => $image, 'eyebrow' => (string) ($attributes['eyebrow'] ?? '') ?: hero_eyebrow()];
 }
 
 /**

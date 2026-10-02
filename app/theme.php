@@ -74,7 +74,22 @@ add_filter('language_attributes', function (string $output): string {
 });
 
 /**
- * Front-end assets. Block themes have no Blade layout, so print the Vite tags here.
+ * Front-end assets, enqueued so child themes and optimisation plugins can manage them.
+ *
+ * @link https://developer.wordpress.org/themes/core-concepts/including-assets/
+ */
+add_action('wp_enqueue_scripts', function () {
+    if (Vite::isRunningHot()) {
+        return; // The dev server's tags are printed in wp_head below.
+    }
+    // File names are content-hashed by Vite; the version is for tooling that expects one.
+    $version = wp_get_theme(get_template())->get('Version');
+    wp_enqueue_style('cobbleandcandle', Vite::asset('resources/css/app.css'), [], $version);
+    wp_enqueue_script('cobbleandcandle', Vite::asset('resources/js/app.js'), [], $version, ['strategy' => 'defer', 'in_footer' => false]);
+});
+
+/**
+ * Preload the active style's display font; print Vite dev-server tags while developing.
  */
 add_action('wp_head', function () {
     $font = directions()[direction()]['font'];
@@ -82,8 +97,9 @@ add_action('wp_head', function () {
         '<link rel="preload" href="%s" as="font" type="font/woff2" crossorigin>'."\n",
         esc_url(Vite::asset('resources/fonts/'.$font))
     );
-    // Vite builds these tags from its own manifest (asset URLs only).
-    echo Vite::withEntryPoints(['resources/css/app.css', 'resources/js/app.js'])->toHtml(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    if (Vite::isRunningHot()) {
+        echo Vite::withEntryPoints(['resources/css/app.css', 'resources/js/app.js'])->toHtml(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Vite dev-server tags (local only).
+    }
 }, 7);
 
 /**

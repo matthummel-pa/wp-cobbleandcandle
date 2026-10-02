@@ -24,27 +24,31 @@ add_filter('block_editor_settings_all', function ($settings) {
 });
 
 /**
- * Inject scripts into the block editor.
+ * Block editor script (block registration and settings), enqueued with its translations.
  *
- * @return void
+ * @link https://developer.wordpress.org/block-editor/how-to-guides/internationalization/
+ */
+add_action('enqueue_block_editor_assets', function () {
+    if (Vite::isRunningHot()) {
+        return; // Printed by the dev-server hook below.
+    }
+    wp_enqueue_script(
+        'cobbleandcandle-editor',
+        Vite::asset('resources/js/editor.js'),
+        ['wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-server-side-render', 'wp-i18n', 'wp-data'],
+        wp_get_theme(get_template())->get('Version'),
+        true
+    );
+    wp_set_script_translations('cobbleandcandle-editor', 'cobbleandcandle', get_theme_file_path('resources/lang'));
+});
+
+/**
+ * Vite dev server: print the editor entry while developing.
  */
 add_action('admin_head', function () {
-    if (! get_current_screen()?->is_block_editor()) {
-        return;
+    if (Vite::isRunningHot() && get_current_screen()?->is_block_editor()) {
+        echo Vite::withEntryPoints(['resources/js/editor.js'])->toHtml(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Vite dev-server tags (local only).
     }
-
-    if (! Vite::isRunningHot()) {
-        $dependencies = json_decode(Vite::content('editor.deps.json'));
-
-        foreach ($dependencies as $dependency) {
-            if (! wp_script_is($dependency)) {
-                wp_enqueue_script($dependency);
-            }
-        }
-    }
-    echo Vite::withEntryPoints([
-        'resources/js/editor.js',
-    ])->toHtml();
 });
 
 /**
@@ -71,6 +75,12 @@ add_filter('should_load_separate_core_block_assets', '__return_false');
  * @return void
  */
 add_action('after_setup_theme', function () {
+    /**
+     * Translations: resources/lang/cobbleandcandle-{locale}.mo (or wp-content/languages/themes/).
+     *
+     * @link https://developer.wordpress.org/reference/functions/load_theme_textdomain/
+     */
+    load_theme_textdomain('cobbleandcandle', get_theme_file_path('resources/lang'));
 
     /**
      * Register the navigation menus.
@@ -135,3 +145,15 @@ add_action('after_setup_theme', function () {
     ]);
 
 }, 20);
+
+/**
+ * Vite builds ES modules: load the theme's scripts as modules so their top-level variables stay
+ * private (as classic scripts they would overwrite globals such as underscore's `_`).
+ */
+add_filter('script_loader_tag', function (string $tag, string $handle): string {
+    if (! in_array($handle, ['cobbleandcandle', 'cobbleandcandle-editor'], true) || str_contains($tag, 'type="module"')) {
+        return $tag;
+    }
+
+    return (string) preg_replace('/<script(?![^>]*\btype=)/', '<script type="module"', $tag, 1);
+}, 10, 2);

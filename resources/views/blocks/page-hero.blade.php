@@ -20,8 +20,8 @@
           </ol>
         </nav>
       @endif
-      @if ($attributes['eyebrow'] !== '')
-        <p class="eyebrow eyebrow--hero">{{ $attributes['eyebrow'] }}</p>
+      @if ($hero['eyebrow'] !== '')
+        <p class="eyebrow eyebrow--hero">{{ $hero['eyebrow'] }}</p>
       @endif
       <h1 class="h1">{{ $hero['title'] }}</h1>
       @if ($hero['lede'] !== '')

@@ -9,7 +9,8 @@ if (! process.env.APP_URL) {
 }
 
 export default defineConfig({
-  base: '/wp-content/themes/cobbleandcandle/public/build/',
+  // Relative, so built CSS finds its fonts in subfolder installs and renamed theme folders.
+  base: './',
   plugins: [
     tailwindcss(),
     laravel({

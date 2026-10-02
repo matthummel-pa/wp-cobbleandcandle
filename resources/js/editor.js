@@ -76,34 +76,34 @@ const p = (className, content) => ['core/paragraph', { className, content }]
 const buttons = (items) => ['core/buttons', {}, items.map(([text, url, style]) => ['core/button', { text, url, className: style }])]
 const CONTENT = {
   'cobbleandcandle/hero': [
-    p('eyebrow eyebrow--hero', 'Supper by candlelight · Since 1888'),
-    ['core/heading', { level: 1, className: 'h1 hero-h', content: 'Supper by <em>candlelight</em> on the old cobbles.' }],
-    p('lede', 'A seasonal tasting menu served in three restored merchant houses, each lit as it was a century ago. Two seatings nightly.'),
-    buttons([['Reserve a table', '/reservations/', 'is-style-fill'], ['View the menu', '/menu/', 'is-style-outline']]),
+    p('eyebrow eyebrow--hero', __('Supper by candlelight · Since 1888', 'cobbleandcandle')),
+    ['core/heading', { level: 1, className: 'h1 hero-h', content: __('Supper by <em>candlelight</em> on the old cobbles.', 'cobbleandcandle') }],
+    p('lede', __('A seasonal tasting menu served in three restored merchant houses, each lit as it was a century ago. Two seatings nightly.', 'cobbleandcandle')),
+    buttons([[__('Reserve a table', 'cobbleandcandle'), '/reservations/', 'is-style-fill'], [__('View the menu', 'cobbleandcandle'), '/menu/', 'is-style-outline']]),
   ],
   'cobbleandcandle/story': [
-    p('eyebrow', 'Our story'),
-    ['core/heading', { level: 2, className: 'h2', content: 'A lamplighter’s house, still lit by hand' }],
-    ['core/paragraph', { content: 'In 1888 the Wharf’s lamplighter turned his front parlour into a supper room for sailors coming off the evening tide. The brass lamps he polished every dusk still hang above table four.' }],
-    ['core/paragraph', { content: 'Today Chef Margot Ellery cooks from the same coast and the same walled gardens, with a kitchen that runs on wood, patience and a very old copper stockpot.' }],
-    ['core/quote', { className: 'pull' }, [['core/paragraph', { content: 'We cook the way the house is lit: slowly, warmly, and with nothing to hide.' }]]],
-    buttons([['Read our story', '/story/', 'is-style-outline']]),
+    p('eyebrow', __('Our story', 'cobbleandcandle')),
+    ['core/heading', { level: 2, className: 'h2', content: __('A lamplighter’s house, still lit by hand', 'cobbleandcandle') }],
+    ['core/paragraph', { content: __('In 1888 the Wharf’s lamplighter turned his front parlour into a supper room for sailors coming off the evening tide. The brass lamps he polished every dusk still hang above table four.', 'cobbleandcandle') }],
+    ['core/paragraph', { content: __('Today Chef Margot Ellery cooks from the same coast and the same walled gardens, with a kitchen that runs on wood, patience and a very old copper stockpot.', 'cobbleandcandle') }],
+    ['core/quote', { className: 'pull' }, [['core/paragraph', { content: __('We cook the way the house is lit: slowly, warmly, and with nothing to hide.', 'cobbleandcandle') }]]],
+    buttons([[__('Read our story', 'cobbleandcandle'), '/story/', 'is-style-outline']]),
   ],
   'cobbleandcandle/reviews': [
-    ['core/quote', { citation: '<strong>The Old Town Courier</strong> ★★★★★ · Restaurant of the Year 2025' }, [['core/paragraph', { content: 'The kind of room that makes you lower your voice and order another bottle. Every plate glowed.' }]]],
-    ['core/quote', { citation: '<strong>Harbour &amp; Hearth Magazine</strong> Critic’s choice' }, [['core/paragraph', { content: 'Ellery’s duck is reason enough to cross the harbour. The candlelight is just the bonus.' }]]],
-    ['core/quote', { citation: '<strong>Eleanor W., guest</strong> ★★★★★ · Google review' }, [['core/paragraph', { content: 'We celebrated our 30th anniversary in the cellar. Faultless, unhurried, unforgettable.' }]]],
+    ['core/quote', { citation: __('<strong>The Old Town Courier</strong> ★★★★★ · Restaurant of the Year 2025', 'cobbleandcandle') }, [['core/paragraph', { content: __('The kind of room that makes you lower your voice and order another bottle. Every plate glowed.', 'cobbleandcandle') }]]],
+    ['core/quote', { citation: __('<strong>Harbour &amp; Hearth Magazine</strong> Critic’s choice', 'cobbleandcandle') }, [['core/paragraph', { content: __('Ellery’s duck is reason enough to cross the harbour. The candlelight is just the bonus.', 'cobbleandcandle') }]]],
+    ['core/quote', { citation: __('<strong>Eleanor W., guest</strong> ★★★★★ · Google review', 'cobbleandcandle') }, [['core/paragraph', { content: __('We celebrated our 30th anniversary in the cellar. Faultless, unhurried, unforgettable.', 'cobbleandcandle') }]]],
   ],
   'cobbleandcandle/private-dining': [
-    p('eyebrow', 'Private dining & events'),
-    ['core/heading', { level: 2, className: 'h2', content: 'Private dining in the Lamp Room' }],
-    ['core/paragraph', { content: 'Up to 28 guests by candlelight, with a dedicated sommelier and a menu written for the occasion.' }],
-    ['core/list', { className: 'rooms' }, [['core/list-item', { content: '<strong>The Lamp Room</strong> Seats 28' }], ['core/list-item', { content: '<strong>The Cellar Table</strong> Seats 22' }], ['core/list-item', { content: '<strong>The Snug</strong> Seats 10' }]]],
+    p('eyebrow', __('Private dining & events', 'cobbleandcandle')),
+    ['core/heading', { level: 2, className: 'h2', content: __('Private dining in the Lamp Room', 'cobbleandcandle') }],
+    ['core/paragraph', { content: __('Up to 28 guests by candlelight, with a dedicated sommelier and a menu written for the occasion.', 'cobbleandcandle') }],
+    ['core/list', { className: 'rooms' }, [['core/list-item', { content: __('<strong>The Lamp Room</strong> Seats 28', 'cobbleandcandle') }], ['core/list-item', { content: __('<strong>The Cellar Table</strong> Seats 22', 'cobbleandcandle') }], ['core/list-item', { content: __('<strong>The Snug</strong> Seats 10', 'cobbleandcandle') }]]],
   ],
 }
 CONTENT['cobbleandcandle/cta-band'] = [
-  ['core/heading', { level: 2, className: 'h2', content: 'Your table is waiting.' }],
-  buttons([['Reserve a table', '/reservations/', 'is-style-fill'], ['Private dining', '/#private-dining', 'is-style-outline']]),
+  ['core/heading', { level: 2, className: 'h2', content: __('Your table is waiting.', 'cobbleandcandle') }],
+  buttons([[__('Reserve a table', 'cobbleandcandle'), '/reservations/', 'is-style-fill'], [__('Private dining', 'cobbleandcandle'), '/#private-dining', 'is-style-outline']]),
 ]
 
 const ALLOWED = {
