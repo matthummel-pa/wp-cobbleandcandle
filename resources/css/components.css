@@ -574,7 +574,7 @@ input::placeholder,textarea::placeholder{color:var(--color-muted);opacity:1}
 .news{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;padding-bottom:48px;border-bottom:1px solid var(--color-line)}
 .news .orn{margin-bottom:16px}
 .news .h3{margin-bottom:8px}
-.news p{color:var(--color-muted);margin:0}
+.news p:not(.form-ok):not(.form-error){color:var(--color-muted);margin:0}
 .news-f label{display:block;font-weight:700;font-size:var(--text-sm);margin-bottom:8px}
 .news-row{display:flex;gap:10px}
 .news-row input{flex:1}

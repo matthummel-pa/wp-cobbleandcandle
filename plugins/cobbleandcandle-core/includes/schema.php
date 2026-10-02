@@ -176,8 +176,8 @@ function cc_site_schema() {
  * Print the site graph as JSON-LD.
  */
 function cc_print_site_schema() {
-	if ( defined( 'WPSEO_VERSION' ) ) {
-		return; // Yoast prints its own Organization graph; two would compete.
+	if ( defined( 'WPSEO_VERSION' ) || defined( 'RANK_MATH_VERSION' ) || defined( 'SEOPRESS_VERSION' ) ) {
+		return; // Yoast, Rank Math, and SEOPress print their own Organization graph.
 	}
 	// Single events are covered by cc_print_event_schema(), so they are not in this list.
 	if ( ! is_front_page() && ! is_post_type_archive( 'cc_location' ) && ! is_singular( 'cc_location' ) ) {

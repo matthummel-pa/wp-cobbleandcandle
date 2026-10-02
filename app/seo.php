@@ -55,6 +55,35 @@ function meta_description(): string
 }
 
 /**
+ * URL this view should be shared as. Archives keep their own address.
+ */
+function share_url(): string
+{
+    if (is_singular()) {
+        return (string) get_permalink();
+    }
+
+    global $wp;
+    $path = $wp instanceof \WP ? trim((string) $wp->request, '/') : '';
+    if ($path !== '') {
+        return home_url(user_trailingslashit($path));
+    }
+
+    // Plain permalinks leave the path empty; the archive link still has the right query.
+    if (is_post_type_archive()) {
+        $type = get_queried_object();
+        if ($type instanceof \WP_Post_Type) {
+            $archive = get_post_type_archive_link($type->name);
+            if (is_string($archive) && $archive !== '') {
+                return $archive;
+            }
+        }
+    }
+
+    return home_url('/');
+}
+
+/**
  * Print the share and search tags, ahead of everything else in <head>.
  */
 add_action('wp_head', function () {
@@ -85,7 +114,7 @@ add_action('wp_head', function () {
 
     printf(
         '<meta property="og:url" content="%s">'."\n",
-        esc_url(is_singular() ? (string) get_permalink() : home_url('/'))
+        esc_url(share_url())
     );
 
     if ($image !== '') {
