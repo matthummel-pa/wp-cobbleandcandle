@@ -46,3 +46,54 @@ function locations_json(): string
         'status' => $l['status'],
     ], locations()), JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
 }
+
+/**
+ * One row per weekday (Monday first) for the hours table: [day, hours text, is today].
+ *
+ * @return list<array{0: string, 1: string, 2: bool}>
+ */
+function week_rows(int $location_id): array
+{
+    if (! function_exists('cc_day_window')) {
+        return [];
+    }
+    $week = (array) get_post_meta($location_id, 'cc_hours', true);
+    $today = (int) wp_date('N') - 1;
+    $rows = [];
+    for ($i = 0; $i < 7; $i++) {
+        $window = cc_day_window($week[$i] ?? null);
+        $rows[] = [
+            wp_date('l', strtotime("monday this week +{$i} days")),
+            $window ? cc_time_label(cc_minutes_to_time($window[0])).' – '.cc_time_label(cc_minutes_to_time($window[1])) : __('Closed', 'cobbleandcandle'),
+            $i === $today,
+        ];
+    }
+
+    return $rows;
+}
+
+/**
+ * Upcoming holiday hours: [label, date text, hours text].
+ *
+ * @return list<array{0: string, 1: string, 2: string}>
+ */
+function holiday_rows(int $location_id): array
+{
+    if (! function_exists('cc_day_window')) {
+        return [];
+    }
+    $rows = [];
+    foreach ((array) get_post_meta($location_id, 'cc_holiday_hours', true) as $holiday) {
+        if (! is_array($holiday) || ($holiday['date'] ?? '') < wp_date('Y-m-d')) {
+            continue;
+        }
+        $window = cc_day_window($holiday);
+        $rows[] = [
+            (string) ($holiday['label'] ?? ''),
+            wp_date('D j M', (int) strtotime($holiday['date'])),
+            $window ? cc_time_label(cc_minutes_to_time($window[0])).' – '.cc_time_label(cc_minutes_to_time($window[1])) : __('Closed', 'cobbleandcandle'),
+        ];
+    }
+
+    return $rows;
+}

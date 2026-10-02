@@ -34,3 +34,7 @@
 
 /* Reservations sidebar: one set of cards per location, swapped with the chosen house. */
 .resv-side-in { display: flex; flex-direction: column; gap: 20px; }
+
+/* Placeholder map: the pin for the location on show. */
+.pin.is-current .pin-c { fill: var(--color-accent); }
+.pin.is-current .pin-n { fill: var(--color-accent-contrast); }

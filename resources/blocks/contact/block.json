@@ -1,0 +1,17 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/contact",
+  "title": "Contact Form",
+  "category": "cobbleandcandle",
+  "description": "A contact form that emails the chosen house, with a short intro and direct contacts.",
+  "keywords": ["contact", "form", "email", "message"],
+  "textdomain": "cobbleandcandle",
+  "attributes": {
+    "eyebrow": { "type": "string", "default": "Contact" },
+    "title": { "type": "string", "default": "Write to us" },
+    "intro": { "type": "string", "default": "For bookings within 48 hours please call the house directly. Everything else, drop us a line and we’ll reply within one working day." },
+    "contacts": { "type": "string", "default": "Press: press@example.com\nCareers: jobs@example.com\nGift cards & lost property: Ask any house, or use the form." }
+  },
+  "supports": { "html": false, "align": ["full"] }
+}
