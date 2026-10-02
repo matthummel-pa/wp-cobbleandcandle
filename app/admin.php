@@ -15,7 +15,7 @@ const CORE_PLUGIN = 'cobbleandcandle-core/cobbleandcandle-core.php';
  */
 function core_plugin_package(): string
 {
-    return get_theme_file_path('plugins/cobbleandcandle-core.zip');
+    return get_template_directory().'/plugins/cobbleandcandle-core.zip'; // Always the parent theme's bundled copy.
 }
 
 /**
