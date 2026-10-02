@@ -50,24 +50,7 @@
             @endif
           </div>
         </div>
-        @if ($board)
-          <aside class="board" aria-labelledby="{{ $hid }}-board">
-            <div class="board-in">
-              <x-ornament :width="110" />
-              <p class="eyebrow">{{ $attributes['boardEyebrow'] }}</p>
-              <h3 class="board-h" id="{{ $hid }}-board">{{ $attributes['boardTitle'] }}</h3>
-              <ul class="board-l">
-                @foreach ($board as $item)
-                  @php($price = $item['price'] !== '' ? $item['price'] : ($item['variants'][0]['price'] ?? ''))
-                  <li><span>{{ $item['name'] }}</span><span class="leader" aria-hidden="true"></span><span class="price">{{ $price }}</span></li>
-                @endforeach
-              </ul>
-              @if ($attributes['boardFoot'] !== '')
-                <p class="board-f">{{ $attributes['boardFoot'] }}</p>
-              @endif
-            </div>
-          </aside>
-        @endif
+        @includeWhen($board, 'partials.board', ['items' => $board, 'eyebrow' => $attributes['boardEyebrow'], 'title' => $attributes['boardTitle'], 'foot' => $attributes['boardFoot']])
       </div>
     </div>
   </section>

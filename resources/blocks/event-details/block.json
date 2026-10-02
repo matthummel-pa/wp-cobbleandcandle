@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/event-details",
+  "title": "Event Details",
+  "category": "cobbleandcandle",
+  "description": "A single event: heading, photo, description, courses, notes, a ticket card with booking and add-to-calendar, and more events.",
+  "keywords": ["event", "tickets", "single"],
+  "textdomain": "cobbleandcandle",
+  "attributes": {
+    "notes": { "type": "string", "default": "Dietary needs can be accommodated with 72 hours’ notice.\nTickets are refundable up to 7 days before.\nAges 18+." },
+    "related": { "type": "number", "default": 3 }
+  },
+  "supports": { "html": false, "align": ["full"] }
+}

@@ -1,0 +1,171 @@
+<?php
+/**
+ * Event extras: "Add to calendar" (.ics) downloads and Event structured data (HANDOFF §10).
+ *
+ * @package CobbleAndCandleCore
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Start and end of an event as site-timezone dates. Without an end, events last three hours.
+ *
+ * @param int $event_id Event post ID.
+ * @return array{0: \DateTimeImmutable, 1: \DateTimeImmutable}|null
+ */
+function cc_event_times( $event_id ) {
+	$start = date_create_immutable( (string) get_post_meta( $event_id, 'cc_start', true ), wp_timezone() );
+	if ( ! $start || '' === (string) get_post_meta( $event_id, 'cc_start', true ) ) {
+		return null;
+	}
+	$end_meta = (string) get_post_meta( $event_id, 'cc_end', true );
+	$end      = '' !== $end_meta ? date_create_immutable( $end_meta, wp_timezone() ) : false;
+	return array( $start, $end && $end > $start ? $end : $start->modify( '+3 hours' ) );
+}
+
+/**
+ * Link that downloads an event as an .ics file.
+ *
+ * @param int $event_id Event post ID.
+ * @return string
+ */
+function cc_event_ics_url( $event_id ) {
+	return add_query_arg( 'cc_ics', '1', get_permalink( $event_id ) );
+}
+
+/**
+ * Escape text for an iCalendar property value (RFC 5545 §3.3.11).
+ *
+ * @param string $text Text.
+ * @return string
+ */
+function cc_ics_text( $text ) {
+	return str_replace( array( '\\', ';', ',', "\r\n", "\n" ), array( '\\\\', '\;', '\,', '\n', '\n' ), wp_strip_all_tags( $text ) );
+}
+
+/**
+ * Serve ?cc_ics=1 on a single event as a calendar file.
+ */
+function cc_serve_event_ics() {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- public, read-only download.
+	if ( ! isset( $_GET['cc_ics'] ) || ! is_singular( 'cc_event' ) ) {
+		return;
+	}
+	$id    = get_queried_object_id();
+	$times = cc_event_times( $id );
+	if ( ! $times ) {
+		return;
+	}
+	$utc      = new \DateTimeZone( 'UTC' );
+	$location = (int) get_post_meta( $id, 'cc_location', true );
+	$place    = $location && function_exists( 'cc_location' ) ? cc_location( $location ) : array();
+	$where    = $place ? trim( $place['name'] . ', ' . $place['address'], ', ' ) : '';
+	$lines    = array(
+		'BEGIN:VCALENDAR',
+		'VERSION:2.0',
+		'PRODID:-//Cobble & Candle Core//EN',
+		'CALSCALE:GREGORIAN',
+		'BEGIN:VEVENT',
+		'UID:event-' . $id . '@' . wp_parse_url( home_url(), PHP_URL_HOST ),
+		'DTSTAMP:' . gmdate( 'Ymd\THis\Z' ),
+		'DTSTART:' . $times[0]->setTimezone( $utc )->format( 'Ymd\THis\Z' ),
+		'DTEND:' . $times[1]->setTimezone( $utc )->format( 'Ymd\THis\Z' ),
+		'SUMMARY:' . cc_ics_text( get_the_title( $id ) ),
+		'DESCRIPTION:' . cc_ics_text( get_the_excerpt( $id ) . "\n\n" . get_permalink( $id ) ),
+		'LOCATION:' . cc_ics_text( $where ),
+		'URL:' . get_permalink( $id ),
+		'END:VEVENT',
+		'END:VCALENDAR',
+	);
+
+	nocache_headers();
+	header( 'Content-Type: text/calendar; charset=utf-8' );
+	header( 'Content-Disposition: attachment; filename="' . sanitize_file_name( get_post_field( 'post_name', $id ) ) . '.ics"' );
+	echo implode( "\r\n", $lines ) . "\r\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- text/calendar body, values escaped by cc_ics_text().
+	exit;
+}
+add_action( 'template_redirect', 'cc_serve_event_ics' );
+
+/**
+ * Schema.org Event for a single event page.
+ *
+ * @param int $event_id Event post ID.
+ * @return array<string, mixed>
+ */
+function cc_event_schema( $event_id ) {
+	$times = cc_event_times( $event_id );
+	if ( ! $times ) {
+		return array();
+	}
+	$schema = array(
+		'@context'            => 'https://schema.org',
+		'@type'               => 'Event',
+		'name'                => get_the_title( $event_id ),
+		'description'         => wp_strip_all_tags( get_the_excerpt( $event_id ) ),
+		'url'                 => get_permalink( $event_id ),
+		'startDate'           => $times[0]->format( DATE_ATOM ),
+		'endDate'             => $times[1]->format( DATE_ATOM ),
+		'eventStatus'         => 'https://schema.org/EventScheduled',
+		'eventAttendanceMode' => 'https://schema.org/OfflineEventAttendanceMode',
+		'organizer'           => array(
+			'@type' => 'Organization',
+			'name'  => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
+			'url'   => home_url( '/' ),
+		),
+	);
+	$image = get_the_post_thumbnail_url( $event_id, 'full' );
+	if ( $image ) {
+		$schema['image'] = array( $image );
+	}
+	$location = (int) get_post_meta( $event_id, 'cc_location', true );
+	if ( $location ) {
+		$schema['location'] = array(
+			'@type'   => 'Place',
+			'name'    => get_the_title( $location ),
+			'address' => array_filter(
+				array(
+					'@type'           => 'PostalAddress',
+					'streetAddress'   => (string) get_post_meta( $location, 'cc_street', true ),
+					'addressLocality' => (string) get_post_meta( $location, 'cc_locality', true ),
+					'addressRegion'   => (string) get_post_meta( $location, 'cc_region', true ),
+					'postalCode'      => (string) get_post_meta( $location, 'cc_postcode', true ),
+					'addressCountry'  => (string) get_post_meta( $location, 'cc_country', true ),
+				)
+			),
+		);
+	}
+	// Prices are free text ("$145 pp"); structured data needs the number.
+	if ( preg_match( '/\d+(?:[.,]\d{1,2})?/', (string) get_post_meta( $event_id, 'cc_price', true ), $price ) ) {
+		$booking          = (string) get_post_meta( $event_id, 'cc_booking_url', true );
+		$schema['offers'] = array(
+			'@type'         => 'Offer',
+			'price'         => str_replace( ',', '.', $price[0] ),
+			/** ISO 4217 currency for event prices. */
+			'priceCurrency' => (string) apply_filters( 'cc_currency', 'USD' ),
+			'url'           => '' !== $booking ? $booking : get_permalink( $event_id ),
+			'availability'  => 'https://schema.org/InStock',
+			'validFrom'     => get_the_date( DATE_ATOM, $event_id ),
+		);
+	}
+	/**
+	 * Filter an event's structured data.
+	 *
+	 * @param array<string, mixed> $schema   Schema.org Event.
+	 * @param int                  $event_id Event post ID.
+	 */
+	return (array) apply_filters( 'cc_event_schema', $schema, $event_id );
+}
+
+/**
+ * Print Event JSON-LD on single events.
+ */
+function cc_print_event_schema() {
+	if ( ! is_singular( 'cc_event' ) ) {
+		return;
+	}
+	$schema = cc_event_schema( get_queried_object_id() );
+	if ( $schema ) {
+		wp_print_inline_script_tag( (string) wp_json_encode( $schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG ), array( 'type' => 'application/ld+json' ) );
+	}
+}
+add_action( 'wp_head', 'cc_print_event_schema' );

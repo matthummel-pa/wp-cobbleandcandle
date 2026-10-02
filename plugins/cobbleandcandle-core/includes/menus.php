@@ -188,6 +188,10 @@ function cc_event( $event ) {
 		'location'     => $location ? get_the_title( $location ) : '',
 		'price'        => (string) get_post_meta( $post->ID, 'cc_price', true ),
 		'availability' => (string) get_post_meta( $post->ID, 'cc_availability', true ),
+		'location_id'  => $location,
+		'end'          => (string) get_post_meta( $post->ID, 'cc_end', true ),
+		'booking_url'  => (string) get_post_meta( $post->ID, 'cc_booking_url', true ),
+		'courses'      => array_values( array_filter( (array) get_post_meta( $post->ID, 'cc_courses', true ), 'is_array' ) ),
 	);
 }
 

@@ -30,6 +30,7 @@ require_once CC_CORE_DIR . 'includes/menus.php';
 require_once CC_CORE_DIR . 'includes/inquiry.php';
 require_once CC_CORE_DIR . 'includes/reservations.php';
 require_once CC_CORE_DIR . 'includes/contact.php';
+require_once CC_CORE_DIR . 'includes/events.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	require_once CC_CORE_DIR . 'includes/seed.php';
