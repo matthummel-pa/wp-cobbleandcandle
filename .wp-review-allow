@@ -10,4 +10,4 @@
 ^\s*wp_get_attachment_image\s*\(
 ^\s*\$content\s*$
 ^\s*wp_nonce_field\s*\(
-get_the_password_form
+^\s*get_the_password_form\s*\(
