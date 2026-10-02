@@ -447,6 +447,9 @@ function cc_handle_room_booking() {
 	$phone     = isset( $_POST['cc_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_phone'] ) ) : '';
 	$message   = isset( $_POST['cc_message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['cc_message'] ) ) : '';
 	$dinner    = ! empty( $_POST['cc_dinner'] ) && isset( $_POST['cc_dinner_time'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_dinner_time'] ) ) : '';
+	if ( ! empty( $_POST['cc_dinner'] ) && '' === $dinner ) {
+		$done( 'dinner' ); // Ticked but no time: say so rather than silently booking the room without the table.
+	}
 
 	if ( ! $room || 'publish' !== get_post_status( $room['id'] ) || post_password_required( $room['id'] ) || '' === $name || ! is_email( $email ) || '' === $phone ) {
 		$done( 'invalid' );

@@ -13,6 +13,7 @@
   $messages = [
       'sent' => __('Request sent. We’ll confirm your stay by email shortly. Nothing is charged until we confirm.', 'cobbleandcandle'),
       'invalid' => __('Those dates or details don’t work for this room. Please check and try again.', 'cobbleandcandle'),
+      'dinner' => __('Please choose a table time for dinner, or untick dinner.', 'cobbleandcandle'),
       'unavailable' => __('Sorry, someone just booked one of those nights. Please choose other dates.', 'cobbleandcandle'),
       'expired' => __('This form had expired. Please send it again.', 'cobbleandcandle'),
       'busy' => __('Too many requests from this connection. Please wait a few minutes or call us.', 'cobbleandcandle'),
@@ -150,6 +151,7 @@
                     <p class="hint" x-show="checkIn && !dinnerSlots.length">{{ __('The kitchen is closed that night. Ask us about a late supper tray.', 'cobbleandcandle') }}</p>
                     <p class="hint" x-show="!checkIn">{{ __('Pick your dates first.', 'cobbleandcandle') }}</p>
                   </div>
+                  <noscript><div class="field"><label for="{{ $uid }}-dine-ns">{{ __('Table time (HH:MM)', 'cobbleandcandle') }}</label><input id="{{ $uid }}-dine-ns" name="cc_dinner_time" type="time" step="1800"></div></noscript>
                 </fieldset>
               @endif
               <div class="field"><label for="{{ $uid }}-msg">{{ __('Arrival time or requests', 'cobbleandcandle') }} <span class="opt">{{ __('(optional)', 'cobbleandcandle') }}</span></label><textarea id="{{ $uid }}-msg" name="cc_message" rows="3"></textarea></div>
