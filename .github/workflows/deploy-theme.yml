@@ -1,0 +1,62 @@
+# Build the Sage theme on every merge to main and publish it as the GitHub Release `theme-latest`.
+# Install on the site from that zip (a theme updater, `wp theme install <zip-url> --force`, or the host's file manager),
+# then purge the page cache. A merged PR is not live until the zip is installed.
+name: Deploy theme (theme-latest)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: theme-release
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+env:
+  THEME_SLUG: cobbleandcandle
+
+jobs:
+  build:
+    name: Build and publish theme zip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Composer (production)
+        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
+      - name: Build assets
+        run: |
+          npm ci
+          npm run build
+
+      - name: Pack theme zip
+        run: bash .github/scripts/pack-theme.sh "$THEME_SLUG" "$GITHUB_WORKSPACE/$THEME_SLUG.zip"
+
+      - name: Publish release theme-latest
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: theme-latest
+          name: Latest theme build
+          body: |
+            Built Sage theme (Composer vendor + Vite `public/build`).
+            Commit: ${{ github.sha }}
+            Unzip into `wp-content/themes/${{ env.THEME_SLUG }}/`, then purge the page cache.
+          files: ${{ env.THEME_SLUG }}.zip
+          fail_on_unmatched_files: true
+          make_latest: true
+          target_commitish: ${{ github.sha }}

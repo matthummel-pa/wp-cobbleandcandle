@@ -1,0 +1,12 @@
+/node_modules
+/vendor
+/public/*
+!/public/.gitkeep
+.env
+npm-debug.log
+
+# Claude Code personal settings
+.claude/settings.local.json
+
+# Local QA reports (Lighthouse)
+lighthouse-report*

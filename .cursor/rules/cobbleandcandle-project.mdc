@@ -1,0 +1,34 @@
+---
+description: Cobble & Candle project identity, the mockup handoff as the build spec, and hard constraints
+alwaysApply: true
+---
+
+# Cobble & Candle (project)
+
+Restaurant-group Sage 11 theme: candlelit old-town dining rooms with several locations, menus, reservations, events, gallery, and private dining. Theme folder and text domain: `cobbleandcandle`. Repo: `matthummel-pa/wp-cobbleandcandle`.
+
+## The spec
+
+`docs/mockups/HANDOFF.md` is the build spec. Read the matching section before building a component or template:
+- §1 tokens (`docs/mockups/app-theme.css` → `resources/css/app.css`), §2 style directions + Customizer, §3 component → Blade map, §4 templates + CPTs, §5 assets and image sizes, §6 booking states, §7 breakpoints, §8 interactions, §9 open-now status, §10 JSON-LD, §11 headings + a11y, §12 performance budget, §13 shortcuts not to port.
+- `docs/mockups/*.html` is the target markup. `docs/mockups/src/build.py` has one function per component; read it as the Blade output to match.
+- Open the mockups locally: `cd docs/mockups && python3 -m http.server 8765`.
+
+## Brand
+
+- Brand is **Cobble & Candle**. The mockups say "Lampwright"; that is placeholder copy. Brand name, locations, and copy are WordPress content (Customizer / options / CPTs), never hard-coded in Blade.
+- Default style direction is `lampwright` (Candlelit Old Town). `ember-arch` and `ashlar-iron` stay available through `data-theme` tokens (Customizer `rm_style`, visitor switcher off by default).
+
+## Data model
+
+CPTs `location`, `menu_item`, `event`; taxonomies `menu`, `menu_section`. Fields per HANDOFF §4. Register CPTs in a companion plugin or a clearly separated `app/` module so content survives a theme switch.
+
+## Hard constraints
+
+- No sliders or carousels, no autoplay, no hover-only information. All motion off under `prefers-reduced-motion`.
+- Open/closing-soon/closed status is computed in PHP from location hours and `wp_timezone()`; JS only refreshes it.
+- No map iframe or booking widget on page load. Load third-party scripts on interaction or consent.
+- One H1 per page (HANDOFF §11 heading map). Every interactive target ≥ 44×44px. Focus ring never removed.
+- Budget: home < 1 MB, CSS ≤ 25 KB gz, JS ≤ 30 KB gz, fonts ≤ 120 KB (active direction only). LCP < 2.5s, CLS < 0.05.
+- Fonts are self-hosted OFL woff2 in `resources/fonts/`. Illustrations in the mockups are placeholders for photography.
+- `.devnote` boxes, `content.js`, `RM_DEMO_NOW`, and the booking-states documentation section are mockup-only (HANDOFF §13).
