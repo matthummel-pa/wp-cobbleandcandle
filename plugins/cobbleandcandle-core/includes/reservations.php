@@ -104,6 +104,19 @@ function cc_is_bookable( $location_id, $date, $time ) {
 }
 
 /**
+ * A slot today must still be ahead of us. Slots before 6am are tonight's past-midnight seatings.
+ *
+ * @param string $date Y-m-d.
+ * @param string $time HH:MM.
+ * @return bool
+ */
+function cc_slot_is_future( $date, $time ) {
+	$now      = new \DateTimeImmutable( 'now', wp_timezone() );
+	$slot_min = (int) cc_minutes( $time );
+	return $date > $now->format( 'Y-m-d' ) || $slot_min < 360 || $slot_min > (int) $now->format( 'G' ) * 60 + (int) $now->format( 'i' );
+}
+
+/**
  * Handle a table request (logged in or not).
  */
 function cc_handle_reservation() {
@@ -138,12 +151,7 @@ function cc_handle_reservation() {
 	$requests = isset( $_POST['cc_requests'] ) ? sanitize_textarea_field( wp_unslash( $_POST['cc_requests'] ) ) : '';
 	$news     = ! empty( $_POST['cc_newsletter'] );
 
-	// A slot today must still be ahead of us. Slots before 6am are tonight's past-midnight seatings.
-	$now      = new \DateTimeImmutable( 'now', wp_timezone() );
-	$slot_min = (int) cc_minutes( $time );
-	$future   = $date > $now->format( 'Y-m-d' ) || $slot_min < 360 || $slot_min > (int) $now->format( 'G' ) * 60 + (int) $now->format( 'i' );
-
-	$valid = $future && cc_is_public_location( $location )
+	$valid = cc_slot_is_future( $date, $time ) && cc_is_public_location( $location )
 		&& cc_is_valid_date( $date ) && $date >= wp_date( 'Y-m-d' ) && $date <= wp_date( 'Y-m-d', strtotime( '+1 year' ) )
 		&& preg_match( '/^([01]\d|2[0-3]):[0-5]\d$/', $time )
 		&& cc_is_bookable( $location, $date, $time )

@@ -456,7 +456,8 @@ function cc_handle_room_booking() {
 		$done( $problem );
 	}
 	// Dinner on arrival: a real seating at the room's house on the check-in night.
-	if ( '' !== $dinner && ( ! $room['location_id'] || ! cc_is_bookable( $room['location_id'], $check_in, $dinner ) ) ) {
+	if ( '' !== $dinner && ( ! preg_match( '/^([01]\d|2[0-3]):[0-5]\d$/', $dinner ) || ! cc_slot_is_future( $check_in, $dinner )
+		|| ! $room['location_id'] || ! cc_is_bookable( $room['location_id'], $check_in, $dinner ) ) ) {
 		$done( 'invalid' );
 	}
 	if ( cc_open_requests_for( $email ) >= 2 ) {
@@ -571,7 +572,7 @@ function cc_booking_column( $column, $post_id ) {
 	$meta = static fn( $key ) => (string) get_post_meta( $post_id, $key, true );
 	if ( 'cc_dates' === $column ) {
 		echo esc_html( $meta( 'cc_check_in' ) . ' → ' . $meta( 'cc_check_out' ) );
-		if ( '' !== $meta( 'cc_dinner' ) ) {
+		if ( '' !== cc_time_label( $meta( 'cc_dinner' ) ) ) {
 			/* translators: %s: dinner time */
 			echo '<br><small>' . esc_html( sprintf( __( 'Dinner %s', 'cobbleandcandle-core' ), cc_time_label( $meta( 'cc_dinner' ) ) ) ) . '</small>';
 		}
@@ -1067,8 +1068,7 @@ function cc_dinner_line( $time, $guests, $location_id ) {
 	$house = $location_id ? cc_plain_title( $location_id ) : '';
 	return '' !== $house
 		/* translators: 1: time, 2: party size, 3: house name */
-		? sprintf( _n( 'Dinner on arrival: %1$s for %2$d at %3$s', 'Dinner on arrival: %1$s for %2$d at %3$s', $guests, 'cobbleandcandle-core' ), cc_time_label( $time ), $guests, $house )
+		? sprintf( _n( 'Dinner on arrival: %1$s for %2$d guest at %3$s', 'Dinner on arrival: %1$s for %2$d guests at %3$s', $guests, 'cobbleandcandle-core' ), cc_time_label( $time ), $guests, $house )
 		/* translators: 1: time, 2: party size */
-		: sprintf( _n( 'Dinner on arrival: %1$s for %2$d', 'Dinner on arrival: %1$s for %2$d', $guests, 'cobbleandcandle-core' ), cc_time_label( $time ), $guests );
+		: sprintf( _n( 'Dinner on arrival: %1$s for %2$d guest', 'Dinner on arrival: %1$s for %2$d guests', $guests, 'cobbleandcandle-core' ), cc_time_label( $time ), $guests );
 }
-
