@@ -16,7 +16,7 @@
   <nav {!! $wrapper !!} aria-label="{{ __('Quick actions', 'cobbleandcandle') }}">
     <div class="mbar">
       @foreach ($items as $i)
-        <a class="mbar-a{{ $i['primary'] ? ' mbar-a--primary' : '' }}" href="{{ $i['url'] }}" @isset($bind[$i['icon']]) :href="{{ $bind[$i['icon']] }}" @endisset><x-icon :name="$i['icon']" /><span>{{ $i['label'] }}</span></a>
+        <a class="mbar-a{{ $i['primary'] ? ' mbar-a--primary' : '' }}" href="{!! esc_url($i['url']) !!}" @isset($bind[$i['icon']]) :href="{!! esc_url($bind[$i['icon']]) !!}" @endisset><x-icon :name="$i['icon']" /><span>{{ $i['label'] }}</span></a>
       @endforeach
     </div>
   </nav>

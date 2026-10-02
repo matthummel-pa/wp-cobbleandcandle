@@ -12,7 +12,14 @@ namespace App;
  * @return string
  */
 add_filter('excerpt_more', function () {
-    return sprintf(' &hellip; <a href="%s">%s</a>', get_permalink(), __('Continued', 'cobbleandcandle'));
+    $post = get_post();
+
+    return sprintf(
+        ' &hellip; <a href="%s">%s<span class="sr"> %s</span></a>',
+        esc_url(get_permalink()),
+        esc_html__('Continued', 'cobbleandcandle'),
+        esc_html($post ? plain_title($post) : '')
+    );
 });
 
 /**

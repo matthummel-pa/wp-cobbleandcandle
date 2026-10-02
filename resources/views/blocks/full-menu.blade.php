@@ -115,7 +115,7 @@
           <div class="order-card card" id="order" @if ($attributes['orderUrl'] === '') x-show="$store.site.loc.order_url" @endif @if ($order === '') hidden @endif>
             <div><x-icon name="bag" class="i i--lg i--accent" /></div>
             <div><h2 class="h3">{{ $attributes['orderTitle'] }}</h2><p>{{ $attributes['orderText'] }}</p></div>
-            <a class="btn btn--primary" href="{{ $order }}" @if ($attributes['orderUrl'] === '') :href="$store.site.loc.order_url" @endif><span>{{ __('Start an order', 'cobbleandcandle') }}</span><x-icon name="arrow" /></a>
+            <a class="btn btn--primary" href="{!! esc_url($order) !!}" @if ($attributes['orderUrl'] === '') :href="$store.site.loc.order_url" @endif><span>{{ __('Start an order', 'cobbleandcandle') }}</span><x-icon name="arrow" /></a>
           </div>
         @endif
       </div>

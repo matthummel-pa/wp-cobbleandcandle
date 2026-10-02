@@ -18,7 +18,7 @@
           <ol>
             @foreach ($crumbs as [$label, $url])
               @if ($url !== '')
-                <li><a href="{{ $url }}">{{ $label }}</a></li>
+                <li><a href="{!! esc_url($url) !!}">{{ $label }}</a></li>
               @else
                 <li aria-current="page">{{ $label }}</li>
               @endif

@@ -58,7 +58,7 @@ function cc_location( $location ) {
 	return array(
 		'id'           => $id,
 		'slug'         => $post->post_name,
-		'name'         => get_the_title( $post ),
+		'name'         => cc_plain_title( $post ),
 		'url'          => get_permalink( $post ),
 		'street'       => (string) $meta( 'cc_street' ),
 		'locality'     => (string) $meta( 'cc_locality' ),

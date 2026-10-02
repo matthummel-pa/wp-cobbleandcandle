@@ -101,7 +101,7 @@ function cc_event_schema( $event_id ) {
 	$schema = array(
 		'@context'            => 'https://schema.org',
 		'@type'               => 'Event',
-		'name'                => html_entity_decode( get_the_title( $event_id ), ENT_QUOTES, 'UTF-8' ),
+		'name'                => cc_plain_title( $event_id ),
 		'description'         => wp_strip_all_tags( get_the_excerpt( $event_id ) ),
 		'url'                 => get_permalink( $event_id ),
 		'startDate'           => $times[0]->format( DATE_ATOM ),
@@ -122,7 +122,7 @@ function cc_event_schema( $event_id ) {
 	if ( $location ) {
 		$schema['location'] = array(
 			'@type'   => 'Place',
-			'name'    => html_entity_decode( get_the_title( $location ), ENT_QUOTES, 'UTF-8' ),
+			'name'    => cc_plain_title( $location ),
 			'address' => array_filter(
 				array(
 					'@type'           => 'PostalAddress',

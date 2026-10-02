@@ -93,7 +93,7 @@
                     <h3 class="h3">{{ __('Bookings by phone', 'cobbleandcandle') }}</h3>
                     <p>{{ sprintf(__('%s takes every booking by phone so we can seat you well.', 'cobbleandcandle'), $l['name']) }}</p>
                     @if ($l['phone'] !== '')
-                      <a class="callbook-n" href="{{ esc_url($l['tel']) }}">{{ $l['phone'] }}</a>
+                      <a class="callbook-n" href="{!! esc_url($l['tel']) !!}">{{ $l['phone'] }}</a>
                     @endif
                     @if ($attributes['callHours'] !== '')
                       <p class="muted">{{ $attributes['callHours'] }}</p>
@@ -114,7 +114,7 @@
                   <div class="embed" x-data="{ loaded: false }" :aria-busy="loaded.toString()">
                     <div class="embed-top"><span class="embed-logo">{{ $provider }}</span><span class="chip chip--quiet" x-show="!loaded">{{ __('Live availability', 'cobbleandcandle') }}</span></div>
                     <template x-if="loaded">
-                      <iframe class="embed-frame" src="{{ esc_url($l['booking_url']) }}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" title="{{ sprintf(__('%1$s booking for %2$s', 'cobbleandcandle'), $provider, $l['name']) }}" loading="lazy" style="width:100%;min-height:560px;border:0"></iframe>
+                      <iframe class="embed-frame" src="{!! esc_url($l['booking_url']) !!}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" title="{{ sprintf(__('%1$s booking for %2$s', 'cobbleandcandle'), $provider, $l['name']) }}" loading="lazy" style="width:100%;min-height:560px;border:0"></iframe>
                     </template>
                     <div x-show="!loaded">
                       <div class="sk sk--w60"></div><div class="sk-row"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
@@ -150,7 +150,7 @@
                   <p class="muted">{{ $parking }}</p>
                 @endif
                 @if ($l['map_url'] !== '')
-                  <a class="link-arrow" href="{{ esc_url($l['map_url']) }}">{{ __('Directions', 'cobbleandcandle') }}<x-icon name="arrow" /></a>
+                  <a class="link-arrow" href="{!! esc_url($l['map_url']) !!}">{{ __('Directions', 'cobbleandcandle') }}<x-icon name="arrow" /></a>
                 @endif
               </div>
             </div>

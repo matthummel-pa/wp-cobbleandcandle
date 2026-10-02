@@ -27,7 +27,7 @@
       @if ($event['availability'] !== '')
         <span class="chip chip--quiet">{{ $event['availability'] }}</span>
       @endif
-      <a class="link-arrow" href="{{ $event['url'] }}">{{ __('Details', 'cobbleandcandle') }}<x-icon name="arrow" /><span class="sr"> {{ sprintf(__('about %s', 'cobbleandcandle'), $event['title']) }}</span></a>
+      <a class="link-arrow" href="{!! esc_url($event['url']) !!}">{{ __('Details', 'cobbleandcandle') }}<x-icon name="arrow" /><span class="sr"> {{ sprintf(__('about %s', 'cobbleandcandle'), $event['title']) }}</span></a>
     </div>
   </div>
 </article>

@@ -87,7 +87,7 @@ function cc_handle_inquiry() {
 			__( 'Date', 'cobbleandcandle-core' ) . ': ' . $date,
 			__( 'Guests', 'cobbleandcandle-core' ) . ': ' . $guests,
 			__( 'Occasion', 'cobbleandcandle-core' ) . ': ' . $occasion,
-			__( 'Location', 'cobbleandcandle-core' ) . ': ' . ( $location ? get_the_title( $location ) : '—' ),
+			__( 'Location', 'cobbleandcandle-core' ) . ': ' . ( $location ? cc_plain_title( $location ) : '—' ),
 			'',
 			$message,
 		)

@@ -59,11 +59,13 @@ function week_rows(int $location_id): array
     }
     $week = (array) get_post_meta($location_id, 'cc_hours', true);
     $today = (int) wp_date('N') - 1;
+    // Build dates in the site timezone: strtotime() is UTC, so wp_date() would shift US sites a day back.
+    $monday = new \DateTimeImmutable('monday this week', wp_timezone());
     $rows = [];
     for ($i = 0; $i < 7; $i++) {
         $window = cc_day_window($week[$i] ?? null);
         $rows[] = [
-            wp_date('l', strtotime("monday this week +{$i} days")),
+            wp_date('l', $monday->modify("+{$i} days")->getTimestamp()),
             $window ? cc_time_label(cc_minutes_to_time($window[0])).' – '.cc_time_label(cc_minutes_to_time($window[1])) : __('Closed', 'cobbleandcandle'),
             $i === $today,
         ];
@@ -90,7 +92,7 @@ function holiday_rows(int $location_id): array
         $window = cc_day_window($holiday);
         $rows[] = [
             (string) ($holiday['label'] ?? ''),
-            wp_date('D j M', (int) strtotime($holiday['date'])),
+            wp_date('D j M', (date_create_immutable($holiday['date'], wp_timezone()) ?: new \DateTimeImmutable('now', wp_timezone()))->getTimestamp()),
             $window ? cc_time_label(cc_minutes_to_time($window[0])).' – '.cc_time_label(cc_minutes_to_time($window[1])) : __('Closed', 'cobbleandcandle'),
         ];
     }

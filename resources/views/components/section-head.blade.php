@@ -14,6 +14,6 @@
     @endif
   </div>
   @if ($link && $linkLabel !== '')
-    <div class="sh-link"><a class="link-arrow" href="{{ $link }}">{{ $linkLabel }}<x-icon name="arrow" /></a></div>
+    <div class="sh-link"><a class="link-arrow" href="{!! esc_url($link) !!}">{{ $linkLabel }}<x-icon name="arrow" /></a></div>
   @endif
 </header>
