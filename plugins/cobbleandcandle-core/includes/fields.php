@@ -269,6 +269,75 @@ function cc_field_schema() {
 				),
 			),
 		),
+		'cc_room'      => array(
+			array(
+				'title'  => __( 'Rates & capacity', 'cobbleandcandle-core' ),
+				'fields' => array(
+					'cc_price_night'   => array(
+						'type'  => 'number',
+						'label' => __( 'Price per night', 'cobbleandcandle-core' ),
+					),
+					'cc_price_weekend' => array(
+						'type'  => 'number',
+						'label' => __( 'Friday & Saturday night price (optional)', 'cobbleandcandle-core' ),
+					),
+					'cc_min_nights'    => array(
+						'type'  => 'number',
+						'label' => __( 'Minimum nights', 'cobbleandcandle-core' ),
+					),
+					'cc_max_guests'    => array(
+						'type'  => 'number',
+						'label' => __( 'Maximum guests', 'cobbleandcandle-core' ),
+					),
+					'cc_units'         => array(
+						'type'  => 'number',
+						'label' => __( 'How many rooms of this kind', 'cobbleandcandle-core' ),
+					),
+					'cc_beds'          => array(
+						'type'  => 'text',
+						'label' => __( 'Beds (e.g. 1 king)', 'cobbleandcandle-core' ),
+					),
+					'cc_size'          => array(
+						'type'  => 'text',
+						'label' => __( 'Size (e.g. 28 m²)', 'cobbleandcandle-core' ),
+					),
+					'cc_location'      => array(
+						'type'  => 'location',
+						'label' => __( 'House', 'cobbleandcandle-core' ),
+					),
+				),
+			),
+			array(
+				'title'  => __( 'Amenities', 'cobbleandcandle-core' ),
+				'fields' => array(
+					'cc_amenities' => array(
+						'type'    => 'checkboxes',
+						'label'   => __( 'In the room', 'cobbleandcandle-core' ),
+						'options' => cc_room_amenities(),
+					),
+				),
+			),
+			array(
+				'title'  => __( 'Calendar sync (Airbnb, Booking.com, Vrbo)', 'cobbleandcandle-core' ),
+				'fields' => array(
+					'cc_ical_import' => array(
+						'type'   => 'list',
+						'label'  => __( 'Import calendars (iCal links)', 'cobbleandcandle-core' ),
+						'add'    => __( 'Add calendar', 'cobbleandcandle-core' ),
+						'fields' => array(
+							'label' => array(
+								'type'  => 'text',
+								'label' => __( 'Name (e.g. Airbnb)', 'cobbleandcandle-core' ),
+							),
+							'url'   => array(
+								'type'  => 'url',
+								'label' => __( 'iCal link', 'cobbleandcandle-core' ),
+							),
+						),
+					),
+				),
+			),
+		),
 	);
 }
 

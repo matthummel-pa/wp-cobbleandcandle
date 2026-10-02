@@ -42,6 +42,8 @@ require_once CC_CORE_DIR . 'includes/inquiry.php';
 require_once CC_CORE_DIR . 'includes/reservations.php';
 require_once CC_CORE_DIR . 'includes/contact.php';
 require_once CC_CORE_DIR . 'includes/events.php';
+require_once CC_CORE_DIR . 'includes/rooms.php';
+require_once CC_CORE_DIR . 'includes/ical.php';
 require_once CC_CORE_DIR . 'includes/seo.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
@@ -52,6 +54,7 @@ register_activation_hook(
 	__FILE__,
 	static function () {
 		cc_register_content_types();
+		cc_register_room_types();
 		flush_rewrite_rules();
 	}
 );
@@ -59,9 +62,10 @@ register_deactivation_hook(
 	__FILE__,
 	static function () {
 		// Unregister first so the flush drops this plugin's rewrite rules.
-		foreach ( array( 'cc_location', 'cc_menu_item', 'cc_event' ) as $post_type ) {
+		foreach ( array( 'cc_location', 'cc_menu_item', 'cc_event', 'cc_room', 'cc_booking' ) as $post_type ) {
 			unregister_post_type( $post_type );
 		}
+		wp_clear_scheduled_hook( 'cc_ical_sync' );
 		flush_rewrite_rules();
 	}
 );
