@@ -25,6 +25,7 @@
       'minNights' => $room['min_nights'],
       'priceNight' => $room['price_night'],
       'priceWeekend' => $room['price_weekend'],
+      'windows' => $place && function_exists('cc_booking_windows') ? cc_booking_windows($place['id']) : null,
   ] : [];
 @endphp
 @if ($room)
@@ -136,6 +137,21 @@
               <div class="field"><label for="{{ $uid }}-name">{{ __('Full name', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $uid }}-name" name="cc_name" type="text" autocomplete="name" required></div>
               <div class="field"><label for="{{ $uid }}-email">{{ __('Email', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $uid }}-email" name="cc_email" type="email" autocomplete="email" required></div>
               <div class="field"><label for="{{ $uid }}-tel">{{ __('Phone', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $uid }}-tel" name="cc_phone" type="tel" autocomplete="tel" required></div>
+              @if ($place && function_exists('cc_booking_windows'))
+                <fieldset class="dine">
+                  <legend class="sr">{{ __('Dinner on arrival', 'cobbleandcandle') }}</legend>
+                  <label class="check"><input type="checkbox" name="cc_dinner" value="1" x-model="dinner"><span>{{ sprintf(__('Add dinner at %s on your first night', 'cobbleandcandle'), $place['name']) }}</span></label>
+                  <div class="field" x-show="dinner" x-cloak>
+                    <label for="{{ $uid }}-dine">{{ __('Table time', 'cobbleandcandle') }}</label>
+                    <div class="select"><select id="{{ $uid }}-dine" name="cc_dinner_time" x-model="dinnerTime" :disabled="!dinner" :required="dinner">
+                      <option value="">{{ __('Choose a time', 'cobbleandcandle') }}</option>
+                      <template x-for="slot in dinnerSlots" :key="slot.value"><option :value="slot.value" x-text="slot.label"></option></template>
+                    </select><x-icon name="chev-down" /></div>
+                    <p class="hint" x-show="checkIn && !dinnerSlots.length">{{ __('The kitchen is closed that night. Ask us about a late supper tray.', 'cobbleandcandle') }}</p>
+                    <p class="hint" x-show="!checkIn">{{ __('Pick your dates first.', 'cobbleandcandle') }}</p>
+                  </div>
+                </fieldset>
+              @endif
               <div class="field"><label for="{{ $uid }}-msg">{{ __('Arrival time or requests', 'cobbleandcandle') }} <span class="opt">{{ __('(optional)', 'cobbleandcandle') }}</span></label><textarea id="{{ $uid }}-msg" name="cc_message" rows="3"></textarea></div>
               <button class="btn btn--primary btn--block" type="submit" :disabled="!valid"><x-icon name="calendar" /><span>{{ __('Request this stay', 'cobbleandcandle') }}</span></button>
               <p class="hint">{{ __('This is a request: we confirm every stay personally. No card needed.', 'cobbleandcandle') }}</p>

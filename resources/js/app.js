@@ -226,6 +226,22 @@ const isoDate = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getD
 const timeFormat = new Intl.DateTimeFormat(root.lang || undefined, { hour: 'numeric', minute: '2-digit' })
 const dayFormat = new Intl.DateTimeFormat(root.lang || undefined, { weekday: 'short', day: 'numeric', month: 'short' })
 
+/* Table slots for a day from a house's booking windows (skips the next 30 minutes today). */
+const seatingSlots = (windows, iso) => {
+  if (!iso || !windows) return []
+  const window = iso in windows.holidays ? windows.holidays[iso] : windows.week[(new Date(`${iso}T12:00`).getDay() + 6) % 7]
+  if (!window) return []
+  const now = new Date()
+  const soonest = iso === isoDate(now) ? now.getHours() * 60 + now.getMinutes() + 30 : -1
+  const slots = []
+  for (let m = window[0]; m <= window[1]; m += windows.step) {
+    if (m < soonest) continue
+    const at = new Date(2000, 0, 1, Math.floor(m / 60) % 24, m % 60)
+    slots.push({ value: `${pad(Math.floor(m / 60) % 24)}:${pad(m % 60)}`, label: timeFormat.format(at) })
+  }
+  return slots
+}
+
 Alpine.data('bookingForm', (windows) => ({
   date: '',
   party: '2',
@@ -239,18 +255,7 @@ Alpine.data('bookingForm', (windows) => ({
     this.$watch('date', () => { if (!this.slots.some((s) => s.value === this.time)) this.time = '' })
   },
   slotsFor(iso) {
-    if (!iso) return []
-    const window = iso in windows.holidays ? windows.holidays[iso] : windows.week[(new Date(`${iso}T12:00`).getDay() + 6) % 7]
-    if (!window) return []
-    const now = new Date()
-    const soonest = iso === isoDate(now) ? now.getHours() * 60 + now.getMinutes() + 30 : -1
-    const slots = []
-    for (let m = window[0]; m <= window[1]; m += windows.step) {
-      if (m < soonest) continue
-      const at = new Date(2000, 0, 1, Math.floor(m / 60) % 24, m % 60)
-      slots.push({ value: `${pad(Math.floor(m / 60) % 24)}:${pad(m % 60)}`, label: timeFormat.format(at) })
-    }
-    return slots
+    return seatingSlots(windows, iso)
   },
   get slots() {
     return this.slotsFor(this.date)
@@ -274,6 +279,8 @@ Alpine.data('stayPicker', (cfg) => ({
   offset: 0,
   checkIn: '',
   checkOut: '',
+  dinner: false,
+  dinnerTime: '',
   weekdays: [...Array(7)].map((_, i) => new Intl.DateTimeFormat(root.lang || undefined, { weekday: 'narrow' }).format(new Date(2024, 0, 1 + i))),
   async init() {
     const to = new Date()
@@ -345,6 +352,12 @@ Alpine.data('stayPicker', (cfg) => ({
       return { key: `${first.getFullYear()}-${first.getMonth()}`, label: fmt.format(first), blank: (first.getDay() + 6) % 7, days }
     })
   },
+  get dinnerSlots() {
+    return seatingSlots(cfg.windows, this.checkIn)
+  },
+  get dinnerOk() {
+    return !this.dinner || this.dinnerSlots.some((s) => s.value === this.dinnerTime)
+  },
   clearOut() {
     if (this.checkOut <= this.checkIn) this.checkOut = ''
   },
@@ -364,7 +377,7 @@ Alpine.data('stayPicker', (cfg) => ({
     return ''
   },
   get valid() {
-    return this.stay.length > 0 && this.problem === ''
+    return this.stay.length > 0 && this.problem === '' && this.dinnerOk
   },
   get nightsLabel() {
     const n = this.stay.length

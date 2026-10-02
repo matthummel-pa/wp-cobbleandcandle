@@ -446,6 +446,7 @@ function cc_handle_room_booking() {
 	$email     = isset( $_POST['cc_email'] ) ? sanitize_email( wp_unslash( $_POST['cc_email'] ) ) : '';
 	$phone     = isset( $_POST['cc_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_phone'] ) ) : '';
 	$message   = isset( $_POST['cc_message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['cc_message'] ) ) : '';
+	$dinner    = ! empty( $_POST['cc_dinner'] ) && isset( $_POST['cc_dinner_time'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_dinner_time'] ) ) : '';
 
 	if ( ! $room || 'publish' !== get_post_status( $room['id'] ) || post_password_required( $room['id'] ) || '' === $name || ! is_email( $email ) || '' === $phone ) {
 		$done( 'invalid' );
@@ -453,6 +454,10 @@ function cc_handle_room_booking() {
 	$problem = cc_stay_problem( $room, $check_in, $check_out, $guests );
 	if ( '' !== $problem ) {
 		$done( $problem );
+	}
+	// Dinner on arrival: a real seating at the room's house on the check-in night.
+	if ( '' !== $dinner && ( ! $room['location_id'] || ! cc_is_bookable( $room['location_id'], $check_in, $dinner ) ) ) {
+		$done( 'invalid' );
 	}
 	if ( cc_open_requests_for( $email ) >= 2 ) {
 		$done( 'busy' ); // Stops one address holding many rooms with requests it never means to keep.
@@ -475,6 +480,7 @@ function cc_handle_room_booking() {
 				'cc_email'     => $email,
 				'cc_phone'     => $phone,
 				'cc_message'   => $message,
+				'cc_dinner'    => $dinner,
 				'cc_total'     => $total,
 				'cc_status'    => 'pending',
 				'cc_source'    => 'site',
@@ -497,6 +503,9 @@ function cc_handle_room_booking() {
 		__( 'Guests', 'cobbleandcandle-core' ) . ': ' . $guests,
 		__( 'Total', 'cobbleandcandle-core' ) . ': ' . cc_money( $total ),
 	);
+	if ( '' !== $dinner ) {
+		$lines[] = cc_dinner_line( $dinner, $guests, $room['location_id'] );
+	}
 	wp_mail(
 		$owner,
 		/* translators: 1: guest name, 2: room */
@@ -562,6 +571,10 @@ function cc_booking_column( $column, $post_id ) {
 	$meta = static fn( $key ) => (string) get_post_meta( $post_id, $key, true );
 	if ( 'cc_dates' === $column ) {
 		echo esc_html( $meta( 'cc_check_in' ) . ' → ' . $meta( 'cc_check_out' ) );
+		if ( '' !== $meta( 'cc_dinner' ) ) {
+			/* translators: %s: dinner time */
+			echo '<br><small>' . esc_html( sprintf( __( 'Dinner %s', 'cobbleandcandle-core' ), cc_time_label( $meta( 'cc_dinner' ) ) ) ) . '</small>';
+		}
 	} elseif ( 'cc_guests' === $column ) {
 		echo esc_html( $meta( 'cc_guests' ) );
 	} elseif ( 'cc_total' === $column ) {
@@ -621,6 +634,9 @@ function cc_handle_booking_status() {
 	$room_name = cc_plain_title( (int) $meta( 'cc_room' ) );
 	$site      = wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
 	$dates     = $meta( 'cc_check_in' ) . ' → ' . $meta( 'cc_check_out' );
+	if ( 'confirmed' === $to && '' !== $meta( 'cc_dinner' ) ) {
+		$dates .= '. ' . cc_dinner_line( $meta( 'cc_dinner' ), (int) $meta( 'cc_guests' ), (int) get_post_meta( (int) $meta( 'cc_room' ), 'cc_location', true ) );
+	}
 	if ( is_email( $meta( 'cc_email' ) ) ) {
 		wp_mail(
 			$meta( 'cc_email' ),
@@ -664,6 +680,7 @@ function cc_booking_fields() {
 		'cc_email'     => array( __( 'Email', 'cobbleandcandle-core' ), 'email' ),
 		'cc_phone'     => array( __( 'Phone', 'cobbleandcandle-core' ), 'tel' ),
 		'cc_message'   => array( __( 'Notes', 'cobbleandcandle-core' ), 'textarea' ),
+		'cc_dinner'    => array( __( 'Dinner on arrival (time)', 'cobbleandcandle-core' ), 'time' ),
 		'cc_status'    => array( __( 'Status', 'cobbleandcandle-core' ), 'status' ),
 	);
 }
@@ -731,6 +748,8 @@ function cc_save_booking_meta_box( $post_id ) {
 			$clean[ $key ] = sanitize_email( (string) $raw );
 		} elseif ( 'textarea' === $type ) {
 			$clean[ $key ] = sanitize_textarea_field( (string) $raw );
+		} elseif ( 'time' === $type ) {
+			$clean[ $key ] = preg_match( '/^([01]\d|2[0-3]):[0-5]\d$/', (string) $raw ) ? (string) $raw : '';
 		} elseif ( 'status' === $type ) {
 			$clean[ $key ] = array_key_exists( (string) $raw, cc_booking_status_labels() ) ? (string) $raw : 'confirmed';
 		} else {
@@ -1034,5 +1053,22 @@ function cc_schema_room( $room_id ) {
 		);
 	}
 	return array_filter( $node, static fn( $value ) => null !== $value && '' !== $value && array() !== $value );
+}
+
+/**
+ * "Dinner on arrival: 7:30pm for 2 at Chandler's Wharf".
+ *
+ * @param string $time        HH:MM.
+ * @param int    $guests      Party size.
+ * @param int    $location_id House.
+ * @return string
+ */
+function cc_dinner_line( $time, $guests, $location_id ) {
+	$house = $location_id ? cc_plain_title( $location_id ) : '';
+	return '' !== $house
+		/* translators: 1: time, 2: party size, 3: house name */
+		? sprintf( _n( 'Dinner on arrival: %1$s for %2$d at %3$s', 'Dinner on arrival: %1$s for %2$d at %3$s', $guests, 'cobbleandcandle-core' ), cc_time_label( $time ), $guests, $house )
+		/* translators: 1: time, 2: party size */
+		: sprintf( _n( 'Dinner on arrival: %1$s for %2$d', 'Dinner on arrival: %1$s for %2$d', $guests, 'cobbleandcandle-core' ), cc_time_label( $time ), $guests );
 }
 
