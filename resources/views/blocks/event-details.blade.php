@@ -95,3 +95,6 @@
     @endif
   </div>
 @endif
+@if (! $event && \App\is_editor_preview())
+  <div {!! $wrapper !!}><p class="empty"><x-icon name="calendar" /> {{ __('Event Details shows the event being viewed: its photo, story, courses and ticket card.', 'cobbleandcandle') }}</p></div>
+@endif
