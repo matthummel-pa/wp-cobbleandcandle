@@ -186,6 +186,45 @@ Alpine.data('bookingForm', (windows) => ({
   },
 }))
 
+/* Gallery: category filter and a <dialog> lightbox over the visible tiles (arrows, Esc, focus return). */
+Alpine.data('gallery', () => ({
+  filter: 'all',
+  index: 0,
+  caption: '',
+  count: '',
+  from: null,
+  items() {
+    return [...this.$root.querySelectorAll('.gitem:not([hidden]) .gbtn')]
+  },
+  open(button) {
+    this.from = button
+    this.show(this.items().indexOf(button))
+    this.$refs.dialog.showModal()
+  },
+  show(i) {
+    const items = this.items()
+    if (!items.length) return
+    this.index = (i + items.length) % items.length
+    const button = items[this.index]
+    const media = button.querySelector('.media').cloneNode(true)
+    const img = media.querySelector('img')
+    if (img && button.dataset.full) {
+      img.removeAttribute('srcset')
+      img.removeAttribute('sizes')
+      img.loading = 'eager'
+      img.src = button.dataset.full
+    }
+    this.$refs.media.replaceChildren(media)
+    this.caption = button.querySelector('.gcap')?.textContent || ''
+    this.count = `${this.index + 1} / ${items.length}`
+  },
+  closed() {
+    this.$refs.media.replaceChildren()
+    // After the dialog's own focus restore, so the tile that opened it always gets focus back.
+    requestAnimationFrame(() => this.from?.focus())
+  },
+}))
+
 /* Site Header drawer: focus trap, inert page, scroll lock, Esc, focus return (HANDOFF §8). */
 Alpine.data('siteHeader', () => ({
   open: false,

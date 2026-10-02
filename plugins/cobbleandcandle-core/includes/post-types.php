@@ -112,6 +112,25 @@ function cc_register_content_types() {
 		)
 	);
 
+	// Gallery filter chips (Rooms, Plates, …) come from this taxonomy on media items.
+	register_taxonomy(
+		'cc_gallery',
+		'attachment',
+		array(
+			'labels'                => array(
+				'name'          => __( 'Gallery categories', 'cobbleandcandle-core' ),
+				'singular_name' => __( 'Gallery category', 'cobbleandcandle-core' ),
+				'add_new_item'  => __( 'Add gallery category (e.g. Rooms, Plates)', 'cobbleandcandle-core' ),
+			),
+			'hierarchical'          => true,
+			'public'                => false,
+			'show_ui'               => true,
+			'show_admin_column'     => true,
+			'show_in_rest'          => true,
+			'update_count_callback' => '_update_generic_term_count',
+		)
+	);
+
 	// Sections and menus are ordered by an integer term meta.
 	foreach ( array( 'cc_menu', 'cc_menu_section' ) as $taxonomy ) {
 		register_term_meta(

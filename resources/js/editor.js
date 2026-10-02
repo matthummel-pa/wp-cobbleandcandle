@@ -43,7 +43,7 @@ const LABELS = {
   press: __('Press names (comma separated)', 'cobbleandcandle'),
   seatings: __('Seatings nightly', 'cobbleandcandle'),
   imageId: __('Photo', 'cobbleandcandle'),
-  imageIds: __('Photos (5)', 'cobbleandcandle'),
+  imageIds: __('Photos', 'cobbleandcandle'),
   lede: __('Intro (empty = the page excerpt)', 'cobbleandcandle'),
   art: __('Placeholder art when there is no photo', 'cobbleandcandle'),
   showCrumbs: __('Show breadcrumbs', 'cobbleandcandle'),

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/gallery-grid",
+  "title": "Gallery Grid",
+  "category": "cobbleandcandle",
+  "description": "A filterable photo grid with a full-screen viewer. Filters come from each photo's Gallery category (Media → Gallery categories); captions from the photo caption.",
+  "keywords": ["gallery", "photos", "lightbox", "images"],
+  "textdomain": "cobbleandcandle",
+  "attributes": {
+    "imageIds": { "type": "array", "default": [], "items": { "type": "number" } }
+  },
+  "supports": { "html": false, "align": ["full"] }
+}
