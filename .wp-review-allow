@@ -2,3 +2,7 @@
 # Add theme helpers that already return escaped or kses-filtered markup.
 # Example:
 # ^\s*\\?App\\mh_svg_icon\s*\(
+^\s*\$wrapper\s*$
+^\s*\\?App\\menu\s*\(
+^\s*wp_get_inline_script_tag\s*\(
+^\s*\\?App\\icon_symbols\s*\(

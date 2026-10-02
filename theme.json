@@ -4,7 +4,8 @@
   "version": 3,
   "settings": {
     "layout": {
-      "contentSize": "48rem"
+      "contentSize": "48rem",
+      "wideSize": "1240px"
     },
     "background": {
       "backgroundImage": true
@@ -23,15 +24,37 @@
       "typography": {
         "font-size": {},
         "line-height": {}
-      }
+      },
+      "direction": "lampwright"
     },
     "spacing": {
       "padding": true,
-      "units": ["px", "%", "em", "rem", "vw", "vh"]
+      "units": [
+        "px",
+        "%",
+        "em",
+        "rem",
+        "vw",
+        "vh"
+      ]
     },
     "typography": {
       "defaultFontSizes": false,
       "customFontSize": false
+    },
+    "appearanceTools": true
+  },
+  "templateParts": [
+    {
+      "name": "header",
+      "title": "Header",
+      "area": "header"
+    },
+    {
+      "name": "footer",
+      "title": "Footer",
+      "area": "footer"
     }
-  }
+  ],
+  "customTemplates": []
 }

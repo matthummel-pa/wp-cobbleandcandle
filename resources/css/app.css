@@ -1,4 +1,14 @@
 @import "tailwindcss" theme(static);
+
+/* Design system ported from docs/mockups (HANDOFF §1). */
+@import "./fonts.css";
+@import "./tokens.css";
+@import "./components.css" layer(components);
+@import "./wp.css" layer(components);
+
 @source "../../app/**/*.php";
 @source "../**/*.blade.php";
 @source "../**/*.js";
+@source "../../templates/**/*.html";
+@source "../../parts/**/*.html";
+@source "../../patterns/**/*.php";
