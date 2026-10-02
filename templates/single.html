@@ -1,15 +1,57 @@
 <!-- wp:template-part {"slug":"header","tagName":"div","area":"header"} /-->
 
-<!-- wp:group {"tagName":"main","layout":{"type":"constrained"}} -->
+<!-- wp:group {"tagName":"main","layout":{"type":"default"}} -->
 <main class="wp-block-group">
-<!-- wp:group {"className":"section section--first","layout":{"type":"constrained"}} -->
-<div class="wp-block-group section section--first"><!-- wp:post-date {"className":"eyebrow"} /-->
+<!-- wp:cobbleandcandle/page-hero {"align":"full"} /-->
 
-<!-- wp:post-title {"level":1,"className":"h1 h1--page"} /-->
+<!-- wp:group {"className":"section post-single","layout":{"type":"constrained"}} -->
+<div class="wp-block-group section post-single"><!-- wp:group {"className":"post-meta","layout":{"type":"flex","flexWrap":"wrap"}} -->
+<div class="wp-block-group post-meta"><!-- wp:post-date /-->
 
-<!-- wp:post-featured-image {"aspectRatio":"3/2","className":"r-3x2"} /-->
+<!-- wp:post-author-name {"isLink":true} /-->
 
-<!-- wp:post-content {"layout":{"type":"constrained"}} /--></div>
+<!-- wp:post-terms {"term":"category"} /--></div>
+<!-- /wp:group -->
+
+<!-- wp:post-content {"layout":{"type":"constrained"}} /-->
+
+<!-- wp:post-terms {"term":"post_tag","className":"post-tags"} /-->
+
+<!-- wp:group {"className":"post-nav","layout":{"type":"flex","justifyContent":"space-between","flexWrap":"wrap"}} -->
+<div class="wp-block-group post-nav"><!-- wp:post-navigation-link {"type":"previous","showTitle":true} /-->
+
+<!-- wp:post-navigation-link {"showTitle":true} /--></div>
+<!-- /wp:group -->
+
+<!-- wp:comments {"className":"post-comments"} -->
+<div class="wp-block-comments post-comments"><!-- wp:comments-title /-->
+
+<!-- wp:comment-template -->
+<!-- wp:group {"className":"comment","layout":{"type":"default"}} -->
+<div class="wp-block-group comment"><!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap"}} -->
+<div class="wp-block-group"><!-- wp:avatar {"size":40} /-->
+
+<!-- wp:comment-author-name /-->
+
+<!-- wp:comment-date /--></div>
+<!-- /wp:group -->
+
+<!-- wp:comment-content /-->
+
+<!-- wp:comment-reply-link /--></div>
+<!-- /wp:group -->
+<!-- /wp:comment-template -->
+
+<!-- wp:comments-pagination -->
+<!-- wp:comments-pagination-previous /-->
+
+<!-- wp:comments-pagination-numbers /-->
+
+<!-- wp:comments-pagination-next /-->
+<!-- /wp:comments-pagination -->
+
+<!-- wp:post-comments-form /--></div>
+<!-- /wp:comments --></div>
 <!-- /wp:group -->
 </main>
 <!-- /wp:group -->

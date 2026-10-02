@@ -57,7 +57,8 @@ add_action('admin_head', function () {
  * @return string
  */
 add_filter('theme_file_path', function ($path, $file) {
-    return $file === 'theme.json'
+    // Only the parent's theme.json: a child theme's own theme.json must still load on top of it.
+    return $file === 'theme.json' && str_starts_with(wp_normalize_path($path), trailingslashit(wp_normalize_path(get_template_directory())))
         ? public_path('build/assets/theme.json')
         : $path;
 }, 10, 2);

@@ -49,8 +49,7 @@ jobs:
 
       - name: Pack companion plugin zip
         run: |
-          cd plugins
-          zip -rq "$GITHUB_WORKSPACE/cobbleandcandle-core.zip" cobbleandcandle-core -x '*.DS_Store'
+          (cd plugins && zip -rq "$GITHUB_WORKSPACE/cobbleandcandle-core.zip" cobbleandcandle-core -x '*.DS_Store')
 
       - name: Publish release theme-latest
         uses: softprops/action-gh-release@v2
@@ -60,7 +59,8 @@ jobs:
           body: |
             Built Sage theme (Composer vendor + Vite `public/build`) and the Cobble & Candle Core plugin.
             Commit: ${{ github.sha }}
-            Install both: the theme zip in Appearance → Themes, the plugin zip in Plugins → Add New → Upload. Then purge the page cache.
+            Install the theme zip in Appearance → Themes; its admin notice installs the bundled Core plugin (also attached here).
+            Then purge the page cache.
           files: |
             ${{ env.THEME_SLUG }}.zip
             cobbleandcandle-core.zip
