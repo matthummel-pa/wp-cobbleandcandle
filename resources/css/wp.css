@@ -28,3 +28,6 @@
 
 /* Real photos fill the same media slots as the placeholder illustrations. */
 .media > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+/* Breadcrumbs: the padded links (tap targets) and the plain current item share a centre line. */
+.crumbs ol { align-items: center; }

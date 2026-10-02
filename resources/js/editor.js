@@ -3,6 +3,7 @@ import { createElement as el, Fragment } from '@wordpress/element'
 import { InspectorControls, InnerBlocks, MediaUpload, MediaUploadCheck, useBlockProps } from '@wordpress/block-editor'
 import { Button, PanelBody, TextControl, ToggleControl } from '@wordpress/components'
 import ServerSideRender from '@wordpress/server-side-render'
+import { useSelect } from '@wordpress/data'
 import { __ } from '@wordpress/i18n'
 
 /* Every resources/blocks/<name>/block.json is registered here and rendered by Blade (app/blocks.php).
@@ -43,6 +44,13 @@ const LABELS = {
   seatings: __('Seatings nightly', 'cobbleandcandle'),
   imageId: __('Photo', 'cobbleandcandle'),
   imageIds: __('Photos (5)', 'cobbleandcandle'),
+  lede: __('Intro (empty = the page excerpt)', 'cobbleandcandle'),
+  art: __('Placeholder art when there is no photo', 'cobbleandcandle'),
+  showCrumbs: __('Show breadcrumbs', 'cobbleandcandle'),
+  picks: __('Chef’s picks to show (0 = none)', 'cobbleandcandle'),
+  allergenNote: __('Allergen note', 'cobbleandcandle'),
+  orderTitle: __('Order card title (empty = hide)', 'cobbleandcandle'),
+  orderText: __('Order card text', 'cobbleandcandle'),
 }
 
 /* Starting copy for content blocks: real core blocks, styled with the mockup classes. */
@@ -132,9 +140,11 @@ Object.values(manifests).forEach((metadata) => {
     : {
         edit({ attributes, setAttributes }) {
           const blockProps = useBlockProps()
+          // Pass the post being edited so blocks like Page Hero can preview its title and image.
+          const postId = useSelect((select) => select('core/editor')?.getCurrentPostId?.(), [])
           return el(Fragment, null,
             el(Settings, { metadata, attributes, setAttributes }),
-            el('div', blockProps, el(ServerSideRender, { block: metadata.name, attributes })))
+            el('div', blockProps, el(ServerSideRender, { block: metadata.name, attributes, urlQueryArgs: postId ? { post_id: postId } : {} })))
         },
         save: () => null,
       })

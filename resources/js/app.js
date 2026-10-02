@@ -51,6 +51,12 @@ Alpine.data('locationSwitcher', () => ({
   toggle() {
     this.open ? this.close() : this.show()
   },
+  /* "Change location" buttons elsewhere dispatch cc-open-locations; only a visible switcher answers. */
+  openFromPage() {
+    if (!this.$el.offsetParent) return
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    this.show()
+  },
   choose(index) {
     Alpine.store('site').setLocation(index)
     this.close(true)
@@ -85,6 +91,52 @@ Alpine.data('tabs', () => ({
     else if (event.key === 'ArrowLeft') go(this.active - 1)
     else if (event.key === 'Home') go(0)
     else if (event.key === 'End') go(count - 1)
+  },
+}))
+
+/* Full menu: dietary filters (AND logic) and per-location availability, with a live count (HANDOFF §3, §8). */
+Alpine.data('menuFilter', () => ({
+  diets: [],
+  summary: '',
+  init() {
+    Alpine.effect(() => this.apply())
+  },
+  clear() {
+    this.diets = []
+  },
+  apply() {
+    const slug = Alpine.store('site').loc.slug || ''
+    const diets = [...this.diets]
+    let hidden = 0
+    this.$root.querySelectorAll('.mrow, .dish').forEach((el) => {
+      const diet = (el.dataset.diet || '').split(' ')
+      const locs = (el.dataset.locs || '').split(' ').filter(Boolean)
+      const here = !slug || !locs.length || locs.includes(slug)
+      const match = diets.every((d) => diet.includes(d))
+      el.hidden = !(here && match)
+      if (here && !match) hidden++
+    })
+    // A section emptied by filters says so; one with nothing served at this location disappears.
+    this.$root.querySelectorAll('.mcat').forEach((section) => {
+      const empty = !section.querySelector('.mrow:not([hidden]), .dish:not([hidden])')
+      const note = section.querySelector('.mcat-empty')
+      section.hidden = empty && (!diets.length || !note)
+      if (note) note.hidden = !empty
+    })
+    const { hiddenOne, hiddenMany } = this.$root.dataset
+    this.summary = !diets.length ? '' : hidden === 1 ? hiddenOne : hiddenMany.replace('%d', hidden)
+  },
+}))
+
+/* Menu section links: aria-current follows the section in view (IntersectionObserver scrollspy). */
+Alpine.data('catbar', () => ({
+  current: '',
+  init() {
+    const links = [...this.$el.querySelectorAll('a[href^="#"]')]
+    this.current = links[0]?.hash.slice(1) || ''
+    if (!('IntersectionObserver' in window)) return
+    const spy = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) this.current = e.target.id }), { rootMargin: '-30% 0px -60% 0px' })
+    links.forEach((a) => { const section = document.getElementById(a.hash.slice(1)); if (section) spy.observe(section) })
   },
 }))
 
