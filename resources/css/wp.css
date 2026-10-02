@@ -31,3 +31,6 @@
 
 /* Breadcrumbs: the padded links (tap targets) and the plain current item share a centre line. */
 .crumbs ol { align-items: center; }
+
+/* Reservations sidebar: one set of cards per location, swapped with the chosen house. */
+.resv-side-in { display: flex; flex-direction: column; gap: 20px; }

@@ -140,6 +140,52 @@ Alpine.data('catbar', () => ({
   },
 }))
 
+/* Native table request: time slots for the chosen date from the location's hours (Core plugin's
+   cc_booking_windows: Monday-first [first, last seating] minutes plus holiday overrides). */
+const pad = (n) => String(n).padStart(2, '0')
+const isoDate = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+const timeFormat = new Intl.DateTimeFormat(root.lang || undefined, { hour: 'numeric', minute: '2-digit' })
+const dayFormat = new Intl.DateTimeFormat(root.lang || undefined, { weekday: 'short', day: 'numeric', month: 'short' })
+
+Alpine.data('bookingForm', (windows) => ({
+  date: '',
+  party: '2',
+  time: '',
+  init() {
+    const today = new Date()
+    for (let k = 0; k < 14 && !this.date; k++) {
+      const day = new Date(today.getFullYear(), today.getMonth(), today.getDate() + k)
+      if (this.slotsFor(isoDate(day)).length) this.date = isoDate(day)
+    }
+    this.$watch('date', () => { if (!this.slots.some((s) => s.value === this.time)) this.time = '' })
+  },
+  slotsFor(iso) {
+    if (!iso) return []
+    const window = iso in windows.holidays ? windows.holidays[iso] : windows.week[(new Date(`${iso}T12:00`).getDay() + 6) % 7]
+    if (!window) return []
+    const now = new Date()
+    const soonest = iso === isoDate(now) ? now.getHours() * 60 + now.getMinutes() + 30 : -1
+    const slots = []
+    for (let m = window[0]; m <= window[1]; m += windows.step) {
+      if (m < soonest) continue
+      const at = new Date(2000, 0, 1, Math.floor(m / 60) % 24, m % 60)
+      slots.push({ value: `${pad(Math.floor(m / 60) % 24)}:${pad(m % 60)}`, label: timeFormat.format(at) })
+    }
+    return slots
+  },
+  get slots() {
+    return this.slotsFor(this.date)
+  },
+  get dayLabel() {
+    return this.date ? `· ${dayFormat.format(new Date(`${this.date}T12:00`))}` : ''
+  },
+  get submitLabel() {
+    const slot = this.slots.find((s) => s.value === this.time)
+    const { submit, submitEmpty } = this.$root.dataset
+    return slot ? submit.replace('%1$s', this.party).replace('%2$s', slot.label) : submitEmpty
+  },
+}))
+
 /* Site Header drawer: focus trap, inert page, scroll lock, Esc, focus return (HANDOFF §8). */
 Alpine.data('siteHeader', () => ({
   open: false,
