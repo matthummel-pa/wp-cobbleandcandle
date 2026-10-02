@@ -1,0 +1,17 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/mobile-bar",
+  "title": "Mobile Action Bar",
+  "category": "cobbleandcandle",
+  "description": "Fixed bottom bar on phones: Reserve, Order, Call, Directions. Hidden from 768px up.",
+  "keywords": ["mobile", "call", "reserve"],
+  "textdomain": "cobbleandcandle",
+  "attributes": {
+    "reserveUrl": { "type": "string", "default": "/reservations/" },
+    "orderUrl": { "type": "string", "default": "" },
+    "phone": { "type": "string", "default": "" },
+    "directionsUrl": { "type": "string", "default": "" }
+  },
+  "supports": { "html": false, "multiple": false, "reusable": false }
+}

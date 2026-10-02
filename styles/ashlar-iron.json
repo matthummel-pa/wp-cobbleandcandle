@@ -1,0 +1,148 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "title": "Ashlar & Iron",
+  "settings": {
+    "custom": {
+      "direction": "ashlar-iron"
+    },
+    "color": {
+      "palette": [
+        {
+          "slug": "bg",
+          "name": "Bg",
+          "color": "#EFE6D6"
+        },
+        {
+          "slug": "surface",
+          "name": "Surface",
+          "color": "#F8F1E4"
+        },
+        {
+          "slug": "surface-2",
+          "name": "Surface (2)",
+          "color": "#E6D9C2"
+        },
+        {
+          "slug": "text",
+          "name": "Text",
+          "color": "#231C17"
+        },
+        {
+          "slug": "muted",
+          "name": "Muted",
+          "color": "#62574B"
+        },
+        {
+          "slug": "accent",
+          "name": "Accent",
+          "color": "#7A2A2E"
+        },
+        {
+          "slug": "accent-contrast",
+          "name": "Accent (Contrast)",
+          "color": "#FFFFFF"
+        },
+        {
+          "slug": "brand-alt",
+          "name": "Brand (Alt)",
+          "color": "#9A4A2E"
+        },
+        {
+          "slug": "hero",
+          "name": "Hero",
+          "color": "#231C17"
+        },
+        {
+          "slug": "hero-text",
+          "name": "Hero (Text)",
+          "color": "#F8F1E4"
+        },
+        {
+          "slug": "hero-accent",
+          "name": "Hero (Accent)",
+          "color": "#E0AE82"
+        },
+        {
+          "slug": "focus",
+          "name": "Focus",
+          "color": "#7A2A2E"
+        },
+        {
+          "slug": "success",
+          "name": "Success",
+          "color": "#3D7A47"
+        },
+        {
+          "slug": "warn",
+          "name": "Warn",
+          "color": "#B9781A"
+        },
+        {
+          "slug": "line",
+          "name": "Line",
+          "color": "color-mix(in srgb, var(--color-text) 16%, transparent)"
+        },
+        {
+          "slug": "board",
+          "name": "Board",
+          "color": "#E6D9C2"
+        },
+        {
+          "slug": "board-ink",
+          "name": "Board (Ink)",
+          "color": "#231C17"
+        },
+        {
+          "slug": "board-frame",
+          "name": "Board (Frame)",
+          "color": "#9A4A2E"
+        },
+        {
+          "slug": "glow",
+          "name": "Glow",
+          "color": "#FFC77A"
+        },
+        {
+          "slug": "eyebrow",
+          "name": "Eyebrow",
+          "color": "#9A4A2E"
+        },
+        {
+          "slug": "status-open",
+          "name": "Status (Open)",
+          "color": "#3D7A47"
+        },
+        {
+          "slug": "status-warn",
+          "name": "Status (Warn)",
+          "color": "#B9781A"
+        },
+        {
+          "slug": "status-off",
+          "name": "Status (Off)",
+          "color": "#8C7F70"
+        },
+        {
+          "slug": "board-title",
+          "name": "Board (Title)",
+          "color": "#7A2A2E"
+        }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Display",
+          "fontFamily": "\"Marcellus\", \"Trajan Pro\", Georgia, serif"
+        },
+        {
+          "slug": "sans",
+          "name": "Sans",
+          "fontFamily": "\"Alegreya Sans\", system-ui, sans-serif"
+        }
+      ]
+    }
+  }
+}

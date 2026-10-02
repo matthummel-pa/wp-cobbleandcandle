@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/site-header",
+  "title": "Site Header",
+  "category": "cobbleandcandle",
+  "description": "Utility bar, split navigation with the crest in the centre, Order and Reserve buttons, and the mobile drawer.",
+  "keywords": ["header", "navigation", "menu"],
+  "textdomain": "cobbleandcandle",
+  "attributes": {
+    "reserveLabel": { "type": "string", "default": "Reserve a table" },
+    "reserveUrl": { "type": "string", "default": "/reservations/" },
+    "orderLabel": { "type": "string", "default": "Order online" },
+    "orderUrl": { "type": "string", "default": "" },
+    "showUtilityBar": { "type": "boolean", "default": true },
+    "showStyleSwitcher": { "type": "boolean", "default": false }
+  },
+  "supports": { "html": false, "multiple": false, "reusable": false, "inserter": true }
+}

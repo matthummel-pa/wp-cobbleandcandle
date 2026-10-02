@@ -1,1 +1,9 @@
-@import "tailwindcss";
+@import "tailwindcss" theme(static);
+
+/* Same design system inside the block editor iframe, so blocks preview like the front end. */
+@import "./fonts.css";
+@import "./tokens.css";
+@import "./components.css" layer(components);
+@import "./wp.css" layer(components);
+
+@source "../**/*.blade.php";
