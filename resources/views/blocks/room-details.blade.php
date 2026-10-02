@@ -43,9 +43,10 @@
           </ol>
         </nav>
         <header class="ev-head">
+          {{-- translators: %s: house (location) name --}}
           <p class="eyebrow">{{ $place ? sprintf(__('Rooms at %s', 'cobbleandcandle'), $place['name']) : __('Rooms & stays', 'cobbleandcandle') }}</p>
           <h1 class="h1 h1--page">{{ $room['name'] }}</h1>
-          @if ($room['excerpt'] !== '')
+          @if ($room['excerpt'] !== '' && ! $locked)
             <p class="lede">{{ $room['excerpt'] }}</p>
           @endif
           <ul class="room-facts room-facts--lg">
@@ -78,6 +79,7 @@
             @endif
           </div>
 
+          @unless ($locked)
           <aside class="card ticket stay" id="book" aria-labelledby="{{ $uid }}-h">
             <h2 class="h4" id="{{ $uid }}-h">{{ __('Check dates & book', 'cobbleandcandle') }}</h2>
             @if ($room['price_night'] > 0)
@@ -91,7 +93,7 @@
               <p class="{{ $status === 'sent' ? 'form-ok' : 'form-error' }}" role="status"><x-icon :name="$status === 'sent' ? 'check' : 'info'" /> {{ $messages[$status] }}</p>
             @endif
 
-            <form class="stay-form" method="post" action="{{ admin_url('admin-post.php') }}" x-data="stayPicker({{ wp_json_encode($picker) }})"
+            <form class="stay-form" method="post" action="{!! esc_url(admin_url('admin-post.php')) !!}" x-data="stayPicker({{ wp_json_encode($picker) }})"
                   {{-- translators: %d: minimum number of nights --}}
                   data-min="{{ sprintf(_n('Minimum stay %d night.', 'Minimum stay %d nights.', $room['min_nights'], 'cobbleandcandle'), $room['min_nights']) }}"
                   data-taken="{{ __('Some of those nights are taken. Please choose other dates.', 'cobbleandcandle') }}"
@@ -139,6 +141,7 @@
               <p class="hint">{{ __('This is a request: we confirm every stay personally. No card needed.', 'cobbleandcandle') }}</p>
             </form>
           </aside>
+          @endunless
         </div>
       </div>
     </section>

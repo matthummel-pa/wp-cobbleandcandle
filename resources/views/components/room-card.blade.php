@@ -1,5 +1,6 @@
 {{-- Room card (.room): photo, name, beds · guests · size, price from, amenities, link. --}}
 @props(['room' => [], 'heading' => 'h3'])
+@php($heading = in_array($heading, ['h2', 'h3', 'h4'], true) ? $heading : 'h3')
 <article class="room card">
   <x-media :image-id="$room['image_id']" kind="room" ratio="r-4x3" class="room-m" size="large" />
   <div class="room-b">

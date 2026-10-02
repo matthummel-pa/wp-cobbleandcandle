@@ -162,6 +162,7 @@ function cc_get_rooms() {
 		array(
 			'post_type'      => 'cc_room',
 			'post_status'    => 'publish',
+			'has_password'   => false, // Password-protected rooms are for invited guests: never listed.
 			'posts_per_page' => 50,
 			'orderby'        => array(
 				'menu_order' => 'ASC',
@@ -396,7 +397,7 @@ add_action( 'rest_api_init', 'cc_register_room_routes' );
  */
 function cc_rest_room_availability( WP_REST_Request $request ) {
 	$room = cc_room( (int) $request['id'] );
-	if ( ! $room || 'publish' !== get_post_status( $room['id'] ) ) {
+	if ( ! $room || 'publish' !== get_post_status( $room['id'] ) || post_password_required( $room['id'] ) ) {
 		return new WP_Error( 'cc_no_room', __( 'Room not found.', 'cobbleandcandle-core' ), array( 'status' => 404 ) );
 	}
 	$from = max( (string) $request['from'], wp_date( 'Y-m-d' ) ); // Never reveal past occupancy.
@@ -446,7 +447,7 @@ function cc_handle_room_booking() {
 	$phone     = isset( $_POST['cc_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_phone'] ) ) : '';
 	$message   = isset( $_POST['cc_message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['cc_message'] ) ) : '';
 
-	if ( ! $room || 'publish' !== get_post_status( $room['id'] ) || '' === $name || ! is_email( $email ) || '' === $phone ) {
+	if ( ! $room || 'publish' !== get_post_status( $room['id'] ) || post_password_required( $room['id'] ) || '' === $name || ! is_email( $email ) || '' === $phone ) {
 		$done( 'invalid' );
 	}
 	$problem = cc_stay_problem( $room, $check_in, $check_out, $guests );
@@ -1004,7 +1005,7 @@ function cc_schema_room( $room_id ) {
 		'@id'         => $room['url'] . '#room',
 		'name'        => $room['name'],
 		'url'         => $room['url'],
-		'description' => $room['excerpt'],
+		'description' => post_password_required( $room['id'] ) ? null : wp_strip_all_tags( get_the_excerpt( $room['id'] ) ),
 		'image'       => $room['image_id'] ? wp_get_attachment_image_url( $room['image_id'], 'full' ) : null,
 		'occupancy'   => array(
 			'@type'    => 'QuantitativeValue',
