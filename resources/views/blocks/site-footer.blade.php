@@ -1,4 +1,4 @@
-{{-- Site Footer block: brand, about line, social links, footer + legal menus (location columns arrive with the Locations CPT). --}}
+{{-- Site Footer block: newsletter band, brand, about line, social links, footer + legal menus. --}}
 @php
   $about = $attributes['about'] ?: get_bloginfo('description');
   $social = array_filter([
@@ -6,10 +6,47 @@
     'fb' => ['url' => $attributes['facebook'], 'label' => __('Facebook', 'cobbleandcandle')],
     'mail' => ['url' => $attributes['email'] ? 'mailto:'.antispambot(sanitize_email($attributes['email'])) : '', 'label' => __('Email', 'cobbleandcandle')],
   ], fn ($s) => $s['url'] !== '');
+  // The band is only useful with the Core plugin: without it nothing would receive the signup.
+  $newsletter = function_exists('cc_newsletter_form_url') && $attributes['newsTitle'] !== '';
+  $nid = wp_unique_id('news-');
+  // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only status flag after redirect.
+  $status = isset($_GET['newsletter']) ? sanitize_key(wp_unslash($_GET['newsletter'])) : '';
+  $messages = [
+      'sent' => __('Thank you, you’re on the list.', 'cobbleandcandle'),
+      'invalid' => __('Please check that email address and try again.', 'cobbleandcandle'),
+      'expired' => __('This form had expired. Please send it again.', 'cobbleandcandle'),
+      'busy' => __('Too many signups from this connection. Please wait a few minutes.', 'cobbleandcandle'),
+      'error' => __('We couldn’t add you just now. Please try again later.', 'cobbleandcandle'),
+  ];
 @endphp
 <footer {!! $wrapper !!}>
   <div class="ftr">
     <div class="container">
+      @if ($newsletter)
+        <section class="news" id="newsletter" aria-labelledby="{{ $nid }}-h">
+          <div>
+            <x-ornament :width="120" />
+            <h2 class="h3" id="{{ $nid }}-h">{{ $attributes['newsTitle'] }}</h2>
+            @if ($attributes['newsText'] !== '')
+              <p>{{ $attributes['newsText'] }}</p>
+            @endif
+          </div>
+          <form class="news-f" method="post" action="{{ cc_newsletter_form_url() }}">
+            @if (isset($messages[$status]))
+              <p class="{{ $status === 'sent' ? 'form-ok' : 'form-error' }}" role="status"><x-icon :name="$status === 'sent' ? 'check' : 'info'" /> {{ $messages[$status] }}</p>
+            @endif
+            <input type="hidden" name="action" value="cc_newsletter">
+            {!! wp_nonce_field('cc_newsletter', 'cc_newsletter_nonce', true, false) !!}
+            <div class="sr" aria-hidden="true"><label for="{{ $nid }}-web">{{ __('Leave this empty', 'cobbleandcandle') }}</label><input id="{{ $nid }}-web" type="text" name="cc_website" tabindex="-1" autocomplete="off"></div>
+            <label for="{{ $nid }}-email">{{ __('Email address', 'cobbleandcandle') }}</label>
+            <div class="news-row">
+              <input id="{{ $nid }}-email" name="cc_email" type="email" autocomplete="email" placeholder="{{ __('you@example.com', 'cobbleandcandle') }}" required>
+              <button class="btn btn--primary" type="submit">{{ $attributes['newsButton'] !== '' ? $attributes['newsButton'] : __('Subscribe', 'cobbleandcandle') }}</button>
+            </div>
+            <p class="hint">{{ __('Monthly. No spam. Unsubscribe any time.', 'cobbleandcandle') }}</p>
+          </form>
+        </section>
+      @endif
       <div class="f-grid">
         <div class="f-brand">
           @include('partials.brand')

@@ -4,14 +4,17 @@
   "name": "cobbleandcandle/site-footer",
   "title": "Site Footer",
   "category": "cobbleandcandle",
-  "description": "Brand, about line, social links, footer and legal menus.",
-  "keywords": ["footer"],
+  "description": "Newsletter band, brand, about line, social links, footer and legal menus.",
+  "keywords": ["footer", "newsletter"],
   "textdomain": "cobbleandcandle",
   "attributes": {
     "about": { "type": "string", "default": "" },
     "instagram": { "type": "string", "default": "" },
     "facebook": { "type": "string", "default": "" },
-    "email": { "type": "string", "default": "" }
+    "email": { "type": "string", "default": "" },
+    "newsTitle": { "type": "string", "default": "Letters from the house" },
+    "newsText": { "type": "string", "default": "A short, monthly note on new menus, cellar finds and seasonal suppers." },
+    "newsButton": { "type": "string", "default": "Subscribe" }
   },
   "supports": { "html": false, "multiple": false, "reusable": false }
 }
