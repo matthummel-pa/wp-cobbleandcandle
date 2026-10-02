@@ -79,7 +79,7 @@
               <x-button :href="$reserve" icon="calendar" size="block">{{ __('Reserve a table', 'cobbleandcandle') }}</x-button>
             @endif
             @if (function_exists('cc_event_ics_url') && $event['iso'] !== '')
-              <x-button :href="cc_event_ics_url($event['id'])" variant="text" icon="calendar" download>{{ __('Add to calendar (.ics)', 'cobbleandcandle') }}</x-button>
+              <x-button :href="cc_event_ics_url($event['id'])" variant="text" icon="calendar" rel="nofollow" download>{{ __('Add to calendar (.ics)', 'cobbleandcandle') }}</x-button>
             @endif
           </aside>
         </div>

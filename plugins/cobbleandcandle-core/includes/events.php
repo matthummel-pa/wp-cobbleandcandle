@@ -80,6 +80,7 @@ function cc_serve_event_ics() {
 	);
 
 	nocache_headers();
+	header( 'X-Robots-Tag: noindex' );
 	header( 'Content-Type: text/calendar; charset=utf-8' );
 	header( 'Content-Disposition: attachment; filename="' . sanitize_file_name( get_post_field( 'post_name', $id ) ) . '.ics"' );
 	echo implode( "\r\n", $lines ) . "\r\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- text/calendar body, values escaped by cc_ics_text().
@@ -108,11 +109,7 @@ function cc_event_schema( $event_id ) {
 		'endDate'             => $times[1]->format( DATE_ATOM ),
 		'eventStatus'         => 'https://schema.org/EventScheduled',
 		'eventAttendanceMode' => 'https://schema.org/OfflineEventAttendanceMode',
-		'organizer'           => array(
-			'@type' => 'Organization',
-			'name'  => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
-			'url'   => home_url( '/' ),
-		),
+		'organizer'           => array( '@id' => home_url( '/#organization' ) ),
 	);
 	$image  = get_the_post_thumbnail_url( $event_id, 'full' );
 	if ( $image ) {
@@ -121,7 +118,8 @@ function cc_event_schema( $event_id ) {
 	$location = (int) get_post_meta( $event_id, 'cc_location', true );
 	if ( $location ) {
 		$schema['location'] = array(
-			'@type'   => 'Place',
+			'@type'   => 'Restaurant',
+			'@id'     => get_permalink( $location ) . '#restaurant',
 			'name'    => cc_plain_title( $location ),
 			'address' => array_filter(
 				array(
@@ -136,15 +134,17 @@ function cc_event_schema( $event_id ) {
 		);
 	}
 	// Prices are free text ("$145 pp"); structured data needs the number.
-	if ( preg_match( '/\d+(?:[.,]\d{1,2})?/', (string) get_post_meta( $event_id, 'cc_price', true ), $price ) ) {
+	$price_text = (string) get_post_meta( $event_id, 'cc_price', true );
+	$free       = (bool) preg_match( '/\b(free|no cover)\b/i', $price_text );
+	if ( $free || preg_match( '/\d+(?:[.,]\d{1,2})?/', $price_text, $price ) ) {
 		$booking          = (string) get_post_meta( $event_id, 'cc_booking_url', true );
 		$schema['offers'] = array(
 			'@type'         => 'Offer',
-			'price'         => str_replace( ',', '.', $price[0] ),
+			'price'         => $free ? '0' : str_replace( ',', '.', $price[0] ),
 			/** ISO 4217 currency for event prices. */
 			'priceCurrency' => (string) apply_filters( 'cc_currency', 'USD' ),
 			'url'           => '' !== $booking ? $booking : get_permalink( $event_id ),
-			'availability'  => 'https://schema.org/InStock',
+			'availability'  => cc_event_availability( (string) get_post_meta( $event_id, 'cc_availability', true ) ),
 			'validFrom'     => get_the_date( DATE_ATOM, $event_id ),
 		);
 	}
@@ -158,15 +158,17 @@ function cc_event_schema( $event_id ) {
 }
 
 /**
- * Print Event JSON-LD on single events.
+ * Map the free-text availability ("Sold out", "Waitlist", "12 seats left") to schema.org.
+ *
+ * @param string $text Availability text.
+ * @return string
  */
-function cc_print_event_schema() {
-	if ( ! is_singular( 'cc_event' ) ) {
-		return;
+function cc_event_availability( $text ) {
+	if ( preg_match( '/sold\s*out|full/i', $text ) ) {
+		return 'https://schema.org/SoldOut';
 	}
-	$schema = cc_event_schema( get_queried_object_id() );
-	if ( $schema ) {
-		wp_print_inline_script_tag( (string) wp_json_encode( $schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG ), array( 'type' => 'application/ld+json' ) );
+	if ( preg_match( '/wait\s*list|few|left|last/i', $text ) ) {
+		return 'https://schema.org/LimitedAvailability';
 	}
+	return 'https://schema.org/InStock';
 }
-add_action( 'wp_head', 'cc_print_event_schema' );

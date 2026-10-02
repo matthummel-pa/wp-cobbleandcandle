@@ -85,3 +85,8 @@ function page_hero(array $attributes): array
 
     return ['title' => $title !== '' ? $title : __('Page title', 'cobbleandcandle'), 'lede' => $lede, 'image_id' => $image];
 }
+
+/**
+ * Share the visible breadcrumb trail with the Core plugin's BreadcrumbList structured data.
+ */
+add_filter('cc_breadcrumb_trail', fn (): array => crumbs());
