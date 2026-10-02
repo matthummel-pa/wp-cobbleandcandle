@@ -40,3 +40,10 @@ Merging to `main` runs `.github/workflows/deploy-theme.yml`: Composer (no dev) +
   Locally a valid submission shows "error" unless a mail catcher is set up.
 - OpenTable / Resy booking modes load the location's "Provider booking page" URL in an iframe only after
   the guest clicks; with no URL the panel falls back to call-to-book.
+- Translations: `WP="studio wp --path ~/Studio/cobbleandcandle" npm run translate:pot` builds
+  `resources/lang/cobbleandcandle.pot` (PHP, patterns, Blade via compiled views, and block.json
+  defaults via the generated `resources/lang/block-strings.php`) and the plugin's `.pot`.
+  Block settings left at their default render translated; `/reservations/`-style defaults resolve
+  to the real page (`App\page_link`). Patterns use `esc_html__()` and `\App\page_link()`.
+- Theme JS/CSS are enqueued (handles `cobbleandcandle`, `cobbleandcandle-editor`) and loaded as ES
+  modules (`script_loader_tag`); Vite `base` is `./` so fonts resolve in any install path.

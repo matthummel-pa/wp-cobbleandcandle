@@ -10,3 +10,4 @@ npm-debug.log
 
 # Local QA reports (Lighthouse)
 lighthouse-report*
+resources/lang/.views/

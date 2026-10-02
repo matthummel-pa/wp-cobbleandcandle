@@ -11,6 +11,7 @@
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       cobbleandcandle-core
+ * Domain Path:       /languages
  *
  * @package CobbleAndCandleCore
  */
@@ -21,6 +22,14 @@ define( 'CC_CORE_VERSION', '0.1.0' );
 define( 'CC_CORE_FILE', __FILE__ );
 define( 'CC_CORE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CC_CORE_URL', plugin_dir_url( __FILE__ ) );
+
+/**
+ * Translations bundled in languages/ (wp-content/languages/plugins/ wins when present).
+ */
+function cc_load_textdomain() {
+	load_plugin_textdomain( 'cobbleandcandle-core', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+}
+add_action( 'init', 'cc_load_textdomain', 0 );
 
 require_once CC_CORE_DIR . 'includes/post-types.php';
 require_once CC_CORE_DIR . 'includes/fields.php';

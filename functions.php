@@ -15,7 +15,7 @@ use Roots\Acorn\Application;
 */
 
 if (! file_exists($composer = __DIR__.'/vendor/autoload.php')) {
-    wp_die(__('Error locating autoloader. Please run <code>composer install</code>.', 'sage'));
+    wp_die(wp_kses(__('Error locating autoloader. Please run <code>composer install</code>.', 'cobbleandcandle'), ['code' => []]));
 }
 
 require $composer;
@@ -53,9 +53,10 @@ Application::configure()
 collect(['setup', 'filters', 'theme', 'locations', 'content', 'pages', 'blocks'])
     ->each(function ($file) {
         if (! locate_template($file = "app/{$file}.php", true, true)) {
-            wp_die(
+            wp_die(wp_kses(
                 /* translators: %s is replaced with the relative file path */
-                sprintf(__('Error locating <code>%s</code> for inclusion.', 'sage'), $file)
-            );
+                sprintf(__('Error locating <code>%s</code> for inclusion.', 'cobbleandcandle'), esc_html($file)),
+                ['code' => []]
+            ));
         }
     });

@@ -1,0 +1,737 @@
+# Copyright (C) 2026 Matt Hummel
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Cobble & Candle Core 0.1.0\n"
+"Report-Msgid-Bugs-To: https://matthummel.com/\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-02T22:06:04+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: cobbleandcandle-core\n"
+
+#. Plugin Name of the plugin
+#: cobbleandcandle-core.php
+msgid "Cobble & Candle Core"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: cobbleandcandle-core.php
+msgid "https://github.com/matthummel-pa/wp-cobbleandcandle"
+msgstr ""
+
+#. Description of the plugin
+#: cobbleandcandle-core.php
+msgid "Locations, menus and events for the Cobble & Candle restaurant theme. Your content stays when you switch themes."
+msgstr ""
+
+#. Author of the plugin
+#: cobbleandcandle-core.php
+msgid "Matt Hummel"
+msgstr ""
+
+#. Author URI of the plugin
+#: cobbleandcandle-core.php
+msgid "https://matthummel.com/"
+msgstr ""
+
+#: includes/contact.php:25
+msgid "General"
+msgstr ""
+
+#: includes/contact.php:26
+msgid "Reservation"
+msgstr ""
+
+#: includes/contact.php:27
+msgid "Private dining"
+msgstr ""
+
+#: includes/contact.php:28
+msgid "Press"
+msgstr ""
+
+#: includes/contact.php:29
+msgid "Lost property"
+msgstr ""
+
+#. translators: 1: topic, 2: sender name
+#: includes/contact.php:74
+#, php-format
+msgid "Website message (%1$s) from %2$s"
+msgstr ""
+
+#: includes/contact.php:78
+msgid "Topic"
+msgstr ""
+
+#: includes/contact.php:79
+#: includes/fields.php:93
+#: includes/inquiry.php:85
+#: includes/reservations.php:171
+msgid "Name"
+msgstr ""
+
+#: includes/contact.php:80
+#: includes/fields.php:67
+#: includes/inquiry.php:86
+#: includes/reservations.php:173
+msgid "Email"
+msgstr ""
+
+#: includes/contact.php:81
+#: includes/fields.php:63
+#: includes/reservations.php:172
+msgid "Phone"
+msgstr ""
+
+#: includes/contact.php:82
+#: includes/fields.php:222
+#: includes/inquiry.php:90
+#: includes/post-types.php:30
+#: includes/reservations.php:165
+msgid "Location"
+msgstr ""
+
+#: includes/fields.php:21
+msgid "Booking form on this site"
+msgstr ""
+
+#: includes/fields.php:22
+msgid "OpenTable widget"
+msgstr ""
+
+#: includes/fields.php:23
+msgid "Resy widget"
+msgstr ""
+
+#: includes/fields.php:24
+msgid "Bookings by phone"
+msgstr ""
+
+#: includes/fields.php:30
+msgid "Address & contact"
+msgstr ""
+
+#: includes/fields.php:34
+msgid "Street address"
+msgstr ""
+
+#: includes/fields.php:38
+msgid "Neighbourhood or town"
+msgstr ""
+
+#: includes/fields.php:42
+msgid "State / region"
+msgstr ""
+
+#: includes/fields.php:46
+msgid "Postcode"
+msgstr ""
+
+#: includes/fields.php:50
+msgid "Country code"
+msgstr ""
+
+#: includes/fields.php:55
+msgid "Latitude"
+msgstr ""
+
+#: includes/fields.php:59
+msgid "Longitude"
+msgstr ""
+
+#: includes/fields.php:71
+msgid "Directions link (Google/Apple Maps)"
+msgstr ""
+
+#: includes/fields.php:76
+msgid "Opening hours"
+msgstr ""
+
+#: includes/fields.php:80
+msgid "Weekly hours"
+msgstr ""
+
+#: includes/fields.php:84
+msgid "Holiday hours"
+msgstr ""
+
+#: includes/fields.php:85
+msgid "Add holiday"
+msgstr ""
+
+#: includes/fields.php:89
+#: includes/inquiry.php:87
+#: includes/reservations.php:166
+msgid "Date"
+msgstr ""
+
+#: includes/fields.php:97
+#: assets/editor-fields.js:66
+msgid "Opens"
+msgstr ""
+
+#: includes/fields.php:101
+#: assets/editor-fields.js:67
+msgid "Closes"
+msgstr ""
+
+#: includes/fields.php:105
+msgid "Closed all day"
+msgstr ""
+
+#: includes/fields.php:112
+msgid "Reservations & ordering"
+msgstr ""
+
+#: includes/fields.php:116
+msgid "How guests book"
+msgstr ""
+
+#: includes/fields.php:122
+msgid "OpenTable rid / Resy venue ID"
+msgstr ""
+
+#: includes/fields.php:126
+msgid "Provider booking page (fallback link)"
+msgstr ""
+
+#: includes/fields.php:130
+msgid "Order online link"
+msgstr ""
+
+#: includes/fields.php:134
+msgid "Menu PDF link"
+msgstr ""
+
+#: includes/fields.php:138
+msgid "Price range (e.g. $$$)"
+msgstr ""
+
+#: includes/fields.php:143
+msgid "Getting there"
+msgstr ""
+
+#: includes/fields.php:147
+msgid "Parking"
+msgstr ""
+
+#: includes/fields.php:151
+msgid "Public transport"
+msgstr ""
+
+#: includes/fields.php:155
+msgid "Accessibility"
+msgstr ""
+
+#: includes/fields.php:162
+msgid "Price & details"
+msgstr ""
+
+#: includes/fields.php:166
+msgid "Price (leave empty when using sizes)"
+msgstr ""
+
+#: includes/fields.php:170
+msgid "Sizes (e.g. Glass / Bottle, Starter / Main)"
+msgstr ""
+
+#: includes/fields.php:171
+msgid "Add size"
+msgstr ""
+
+#: includes/fields.php:175
+msgid "Size"
+msgstr ""
+
+#: includes/fields.php:179
+msgid "Price"
+msgstr ""
+
+#: includes/fields.php:185
+msgid "Dietary"
+msgstr ""
+
+#: includes/fields.php:187
+msgid "Vegetarian"
+msgstr ""
+
+#: includes/fields.php:188
+msgid "Vegan"
+msgstr ""
+
+#: includes/fields.php:189
+msgid "Gluten-free"
+msgstr ""
+
+#: includes/fields.php:190
+msgid "Spicy"
+msgstr ""
+
+#: includes/fields.php:195
+msgid "Flag (e.g. Chef’s pick, Popular)"
+msgstr ""
+
+#: includes/fields.php:199
+msgid "Show in Chef’s picks"
+msgstr ""
+
+#: includes/fields.php:203
+msgid "Served at (none = every location)"
+msgstr ""
+
+#: includes/fields.php:210
+msgid "When & where"
+msgstr ""
+
+#: includes/fields.php:214
+msgid "Starts"
+msgstr ""
+
+#: includes/fields.php:218
+msgid "Ends"
+msgstr ""
+
+#: includes/fields.php:226
+msgid "Type (e.g. Tasting, Live music)"
+msgstr ""
+
+#: includes/fields.php:231
+msgid "Tickets"
+msgstr ""
+
+#: includes/fields.php:235
+msgid "Price (e.g. $145 pp, No cover)"
+msgstr ""
+
+#: includes/fields.php:239
+msgid "Seats"
+msgstr ""
+
+#: includes/fields.php:243
+msgid "Availability note (e.g. 12 seats left)"
+msgstr ""
+
+#: includes/fields.php:247
+msgid "Booking link"
+msgstr ""
+
+#: includes/fields.php:252
+msgid "Menu for the evening"
+msgstr ""
+
+#: includes/fields.php:256
+msgid "Courses"
+msgstr ""
+
+#: includes/fields.php:257
+msgid "Add course"
+msgstr ""
+
+#: includes/fields.php:261
+msgid "Course"
+msgstr ""
+
+#: includes/fields.php:265
+msgid "Note"
+msgstr ""
+
+#: includes/fields.php:465
+msgid "Monday"
+msgstr ""
+
+#: includes/fields.php:466
+msgid "Tuesday"
+msgstr ""
+
+#: includes/fields.php:467
+msgid "Wednesday"
+msgstr ""
+
+#: includes/fields.php:468
+msgid "Thursday"
+msgstr ""
+
+#: includes/fields.php:469
+msgid "Friday"
+msgstr ""
+
+#: includes/fields.php:470
+msgid "Saturday"
+msgstr ""
+
+#: includes/fields.php:471
+msgid "Sunday"
+msgstr ""
+
+#: includes/hours.php:53
+#: includes/hours.php:266
+msgid "midnight"
+msgstr ""
+
+#: includes/hours.php:56
+#: includes/hours.php:267
+msgid "noon"
+msgstr ""
+
+#. translators: %s: opening time, e.g. 5:30pm
+#: includes/hours.php:126
+#: includes/hours.php:261
+#, php-format
+msgid "Closed · opens %s"
+msgstr ""
+
+#: includes/hours.php:134
+#: includes/hours.php:265
+msgid "tomorrow"
+msgstr ""
+
+#. translators: 1: "tomorrow" or a weekday, 2: opening time
+#: includes/hours.php:138
+#: includes/hours.php:263
+#, php-format
+msgid "Closed · opens %1$s %2$s"
+msgstr ""
+
+#: includes/hours.php:145
+#: includes/hours.php:196
+#: includes/hours.php:221
+#: includes/hours.php:264
+#: assets/editor-fields.js:58
+msgid "Closed"
+msgstr ""
+
+#. translators: %s: closing time
+#: includes/hours.php:162
+#: includes/hours.php:259
+#, php-format
+msgid "Closing soon · closes %s"
+msgstr ""
+
+#. translators: %s: closing time
+#: includes/hours.php:168
+#: includes/hours.php:257
+#, php-format
+msgid "Open now · closes %s"
+msgstr ""
+
+#: includes/hours.php:191
+msgid "Mon"
+msgstr ""
+
+#: includes/hours.php:191
+msgid "Tue"
+msgstr ""
+
+#: includes/hours.php:191
+msgid "Wed"
+msgstr ""
+
+#: includes/hours.php:191
+msgid "Thu"
+msgstr ""
+
+#: includes/hours.php:191
+msgid "Fri"
+msgstr ""
+
+#: includes/hours.php:191
+msgid "Sat"
+msgstr ""
+
+#: includes/hours.php:191
+msgid "Sun"
+msgstr ""
+
+#: includes/inquiry.php:29
+msgid "Celebration"
+msgstr ""
+
+#: includes/inquiry.php:30
+msgid "Business dinner"
+msgstr ""
+
+#: includes/inquiry.php:31
+msgid "Wedding / rehearsal"
+msgstr ""
+
+#: includes/inquiry.php:32
+msgid "Wake or memorial"
+msgstr ""
+
+#: includes/inquiry.php:33
+#: includes/reservations.php:31
+msgid "Other"
+msgstr ""
+
+#. translators: 1: guest name, 2: date
+#: includes/inquiry.php:81
+#, php-format
+msgid "Private dining inquiry: %1$s, %2$s"
+msgstr ""
+
+#: includes/inquiry.php:88
+msgid "Guests"
+msgstr ""
+
+#: includes/inquiry.php:89
+#: includes/reservations.php:170
+msgid "Occasion"
+msgstr ""
+
+#: includes/post-types.php:29
+msgid "Locations"
+msgstr ""
+
+#: includes/post-types.php:31
+msgid "Add location"
+msgstr ""
+
+#: includes/post-types.php:32
+msgid "Edit location"
+msgstr ""
+
+#: includes/post-types.php:33
+msgid "All locations"
+msgstr ""
+
+#: includes/post-types.php:52
+msgid "Menu items"
+msgstr ""
+
+#: includes/post-types.php:53
+msgid "Menu item"
+msgstr ""
+
+#: includes/post-types.php:54
+msgid "Add menu item"
+msgstr ""
+
+#: includes/post-types.php:55
+msgid "Edit menu item"
+msgstr ""
+
+#: includes/post-types.php:56
+msgid "All menu items"
+msgstr ""
+
+#: includes/post-types.php:57
+msgid "Food & drink"
+msgstr ""
+
+#: includes/post-types.php:73
+msgid "Events"
+msgstr ""
+
+#: includes/post-types.php:74
+msgid "Event"
+msgstr ""
+
+#: includes/post-types.php:75
+msgid "Add event"
+msgstr ""
+
+#: includes/post-types.php:76
+msgid "Edit event"
+msgstr ""
+
+#: includes/post-types.php:77
+msgid "All events"
+msgstr ""
+
+#: includes/post-types.php:97
+msgid "Menus"
+msgstr ""
+
+#: includes/post-types.php:98
+msgid "Menu"
+msgstr ""
+
+#: includes/post-types.php:99
+msgid "Add menu (e.g. Dinner, Bar, Wine)"
+msgstr ""
+
+#: includes/post-types.php:114
+msgid "Menu sections"
+msgstr ""
+
+#: includes/post-types.php:115
+msgid "Menu section"
+msgstr ""
+
+#: includes/post-types.php:116
+msgid "Add section (e.g. To begin, Mains)"
+msgstr ""
+
+#: includes/post-types.php:132
+msgid "Gallery categories"
+msgstr ""
+
+#: includes/post-types.php:133
+msgid "Gallery category"
+msgstr ""
+
+#: includes/post-types.php:134
+msgid "Add gallery category (e.g. Rooms, Plates)"
+msgstr ""
+
+#: includes/reservations.php:21
+msgid "No preference"
+msgstr ""
+
+#: includes/reservations.php:22
+msgid "Dining room"
+msgstr ""
+
+#: includes/reservations.php:23
+msgid "Bar / counter"
+msgstr ""
+
+#: includes/reservations.php:24
+msgid "Outdoors"
+msgstr ""
+
+#: includes/reservations.php:27
+msgid "None"
+msgstr ""
+
+#: includes/reservations.php:28
+msgid "Birthday"
+msgstr ""
+
+#: includes/reservations.php:29
+msgid "Anniversary"
+msgstr ""
+
+#: includes/reservations.php:30
+msgid "Business"
+msgstr ""
+
+#. translators: 1: guest name, 2: party size, 3: date, 4: time
+#: includes/reservations.php:161
+#, php-format
+msgid "Table request: %1$s, %2$s guests, %3$s %4$s"
+msgstr ""
+
+#: includes/reservations.php:167
+msgid "Time"
+msgstr ""
+
+#: includes/reservations.php:168
+msgid "Party size"
+msgstr ""
+
+#: includes/reservations.php:169
+msgid "Seating"
+msgstr ""
+
+#: includes/reservations.php:174
+msgid "Newsletter"
+msgstr ""
+
+#: includes/reservations.php:174
+msgid "Yes"
+msgstr ""
+
+#: includes/reservations.php:174
+msgid "No"
+msgstr ""
+
+#. translators: %s: site name
+#: includes/seo.php:441
+#, php-format
+msgid "Find %s: addresses, opening hours, holiday hours and directions for every location."
+msgstr ""
+
+#. translators: %s: site name
+#: includes/seo.php:444
+#, php-format
+msgid "What’s on at %s: upcoming suppers, tastings, live music and holiday nights."
+msgstr ""
+
+#: includes/settings.php:18
+msgid "Logo"
+msgstr ""
+
+#: includes/settings.php:18
+msgid "Shown in the header and footer instead of the monogram crest. SVG or PNG, about 120 px tall."
+msgstr ""
+
+#: includes/settings.php:19
+msgid "Brand line"
+msgstr ""
+
+#: includes/settings.php:19
+msgid "Short line under the name, e.g. “Dining rooms” or “Tavern & kitchen”."
+msgstr ""
+
+#: includes/settings.php:20
+msgid "Established (year)"
+msgstr ""
+
+#: includes/settings.php:20
+msgid "Shown as “Est. 1888” and around the crest. Leave empty to hide."
+msgstr ""
+
+#: includes/settings.php:21
+msgid "Cuisine"
+msgstr ""
+
+#: includes/settings.php:21
+msgid "For search engines, e.g. “Modern British, Seafood”."
+msgstr ""
+
+#: includes/settings.php:22
+msgid "Price range"
+msgstr ""
+
+#: includes/settings.php:22
+msgid "For search engines, e.g. “$$$”."
+msgstr ""
+
+#: includes/settings.php:23
+msgid "Currency (ISO code)"
+msgstr ""
+
+#: includes/settings.php:23
+msgid "Used for menu and ticket prices in search results, e.g. USD, GBP, EUR."
+msgstr ""
+
+#: includes/settings.php:31
+msgid "Google Business Profile"
+msgstr ""
+
+#: includes/settings.php:112
+#: includes/settings.php:134
+msgid "Restaurant settings"
+msgstr ""
+
+#: includes/settings.php:112
+msgid "Restaurant"
+msgstr ""
+
+#: includes/settings.php:135
+msgid "Your brand details and profiles. Locations, hours and menus are edited under their own menus."
+msgstr ""
+
+#: includes/settings.php:152
+msgid "Choose logo"
+msgstr ""
+
+#: includes/settings.php:153
+#: assets/editor-fields.js:89
+msgid "Remove"
+msgstr ""
+
+#: assets/editor-fields.js:92
+msgid "Add"
+msgstr ""
+
+#: assets/editor-fields.js:103
+msgid "— Choose —"
+msgstr ""

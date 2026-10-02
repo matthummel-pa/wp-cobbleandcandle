@@ -26,8 +26,8 @@ tar -C "$root" \
 [[ -f "$stage/$slug/style.css" ]] || { echo "style.css missing from pack" >&2; exit 1; }
 [[ -f "$stage/$slug/public/build/manifest.json" ]] || { echo "Vite manifest missing: run npm run build first" >&2; exit 1; }
 [[ -f "$stage/$slug/vendor/autoload.php" ]] || { echo "Composer vendor missing: run composer install --no-dev first" >&2; exit 1; }
-grep -q "/wp-content/themes/$slug/public/build/" "$root/vite.config.js" \
-  || { echo "vite.config.js base does not point at /wp-content/themes/$slug/public/build/" >&2; exit 1; }
+grep -q "base: './'" "$root/vite.config.js" \
+  || { echo "vite.config.js base must be './' so built CSS finds its fonts in any install path" >&2; exit 1; }
 
 rm -f "$stage/$slug/public/hot"
 (cd "$stage" && zip -rq "$out" "$slug")

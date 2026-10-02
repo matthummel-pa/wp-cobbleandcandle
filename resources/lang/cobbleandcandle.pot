@@ -1,0 +1,1682 @@
+# Copyright (C) 2026 Matt Hummel
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Cobble & Candle 0.1.0\n"
+"Report-Msgid-Bugs-To: https://matthummel.com/\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-02T22:06:02+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: cobbleandcandle\n"
+
+#. Theme Name of the theme
+#: style.css
+#: app/blocks.php:114
+#: app/blocks.php:125
+msgid "Cobble & Candle"
+msgstr ""
+
+#. Theme URI of the theme
+#: style.css
+msgid "https://github.com/matthummel-pa/wp-cobbleandcandle"
+msgstr ""
+
+#. Description of the theme
+#: style.css
+msgid "Restaurant group theme: candlelit old-town dining rooms, menus, reservations, events, and locations. Built on Sage 11."
+msgstr ""
+
+#. Author of the theme
+#: style.css
+msgid "Matt Hummel"
+msgstr ""
+
+#. Author URI of the theme
+#: style.css
+msgid "https://matthummel.com/"
+msgstr ""
+
+#: app/filters.php:20
+msgid "Continued"
+msgstr ""
+
+#: app/locations.php:82
+#: app/locations.php:109
+msgid "Closed"
+msgstr ""
+
+#: app/pages.php:38
+msgid "Home"
+msgstr ""
+
+#: app/pages.php:53
+#: patterns/no-results.php:13
+msgid "Search"
+msgstr ""
+
+#: app/pages.php:55
+msgid "Page not found"
+msgstr ""
+
+#: app/pages.php:69
+msgid "Locations & contact"
+msgstr ""
+
+#. translators: Default for the Upcoming Events block setting "eyebrow".
+#: app/pages.php:70
+#: resources/lang/block-strings.php:52
+msgid "Events & specials"
+msgstr ""
+
+#. translators: Default for the Houses block setting "eyebrow".
+#: app/pages.php:71
+#: resources/lang/block-strings.php:76
+msgid "Our houses"
+msgstr ""
+
+#: app/pages.php:95
+#: resources/views/blocks/hours-strip.blade.php
+msgid "Find us"
+msgstr ""
+
+#: app/pages.php:96
+msgid "Each house has its own hours, menu and booking."
+msgstr ""
+
+#. translators: Default for the Upcoming Events block setting "title".
+#: app/pages.php:98
+#: resources/lang/block-strings.php:54
+msgid "What’s on"
+msgstr ""
+
+#: app/pages.php:99
+msgid "Seasonal suppers, live music and holiday nights across our houses."
+msgstr ""
+
+#: app/pages.php:105
+msgid "Page title"
+msgstr ""
+
+#: app/setup.php:91
+msgid "Primary Navigation"
+msgstr ""
+
+#: app/setup.php:92
+msgid "Header Right Links"
+msgstr ""
+
+#: app/setup.php:93
+msgid "Footer Navigation"
+msgstr ""
+
+#: app/setup.php:94
+msgid "Legal Links"
+msgstr ""
+
+#: app/theme.php:23
+msgid "Candlelit Old Town"
+msgstr ""
+
+#: app/theme.php:24
+msgid "Brick & Ember"
+msgstr ""
+
+#: app/theme.php:25
+msgid "Limestone & Iron"
+msgstr ""
+
+#: functions.php:18
+msgid "Error locating autoloader. Please run <code>composer install</code>."
+msgstr ""
+
+#. translators: %s is replaced with the relative file path
+#: functions.php:58
+#, php-format
+msgid "Error locating <code>%s</code> for inclusion."
+msgstr ""
+
+#: patterns/home.php
+msgctxt "Pattern title"
+msgid "Home"
+msgstr ""
+
+#: patterns/home.php
+msgctxt "Pattern description"
+msgid "The full home page: hero, hours, signature dishes, menu teaser, story, events, reviews, gallery and private dining."
+msgstr ""
+
+#: patterns/home.php:14
+msgid "Supper by candlelight · Since 1888"
+msgstr ""
+
+#: patterns/home.php:18
+msgid "Supper by <em>candlelight</em> on the old cobbles."
+msgstr ""
+
+#: patterns/home.php:22
+msgid "A seasonal tasting menu served in three restored merchant houses, each lit as it was a century ago. Two seatings nightly."
+msgstr ""
+
+#. translators: Default for the Location Details block setting "reserveLabel".
+#. translators: Default for the Locations Explorer block setting "reserveLabel".
+#. translators: Default for the Site Header block setting "reserveLabel".
+#: patterns/home.php:27
+#: patterns/page-about.php:62
+#: resources/views/partials/location-panel.blade.php
+#: resources/views/blocks/not-found.blade.php
+#: resources/views/blocks/event-details.blade.php
+#: resources/lang/block-strings.php:80
+#: resources/lang/block-strings.php:82
+#: resources/lang/block-strings.php:116
+msgid "Reserve a table"
+msgstr ""
+
+#: patterns/home.php:31
+msgid "View the menu"
+msgstr ""
+
+#: patterns/home.php:44
+msgid "Our story"
+msgstr ""
+
+#: patterns/home.php:48
+msgid "A lamplighter’s house, still lit by hand"
+msgstr ""
+
+#: patterns/home.php:52
+#: patterns/page-about.php:13
+msgid "In 1888 the Wharf’s lamplighter turned his front parlour into a supper room for sailors coming off the evening tide. The brass lamps he polished every dusk still hang above table four."
+msgstr ""
+
+#: patterns/home.php:56
+#: patterns/page-about.php:17
+msgid "Today Chef Margot Ellery cooks from the same coast and the same walled gardens, with a kitchen that runs on wood, patience and a very old copper stockpot."
+msgstr ""
+
+#: patterns/home.php:61
+#: patterns/page-about.php:38
+msgid "We cook the way the house is lit: slowly, warmly, and with nothing to hide."
+msgstr ""
+
+#: patterns/home.php:62
+#: patterns/page-about.php:47
+msgid "Margot Ellery"
+msgstr ""
+
+#: patterns/home.php:67
+msgid "Read our story"
+msgstr ""
+
+#: patterns/home.php:77
+msgid "The kind of room that makes you lower your voice and order another bottle. Every plate glowed."
+msgstr ""
+
+#: patterns/home.php:78
+msgid "<strong>The Old Town Courier</strong> ★★★★★ · Restaurant of the Year 2025"
+msgstr ""
+
+#: patterns/home.php:83
+msgid "Ellery’s duck is reason enough to cross the harbour. The candlelight is just the bonus."
+msgstr ""
+
+#: patterns/home.php:84
+msgid "<strong>Harbour &amp; Hearth Magazine</strong> Critic’s choice"
+msgstr ""
+
+#: patterns/home.php:89
+msgid "We celebrated our 30th anniversary in the cellar. Faultless, unhurried, unforgettable."
+msgstr ""
+
+#: patterns/home.php:90
+msgid "<strong>Eleanor W., guest</strong> ★★★★★ · Google review"
+msgstr ""
+
+#: patterns/home.php:98
+msgid "Private dining &amp; events"
+msgstr ""
+
+#: patterns/home.php:102
+msgid "Private dining in the Lamp Room"
+msgstr ""
+
+#: patterns/home.php:106
+msgid "Up to 28 guests by candlelight, with a dedicated sommelier and a menu written for the occasion."
+msgstr ""
+
+#: patterns/home.php:111
+msgid "<strong>The Lamp Room</strong> Seats 28"
+msgstr ""
+
+#: patterns/home.php:115
+msgid "<strong>The Cellar Table</strong> Seats 22"
+msgstr ""
+
+#: patterns/home.php:119
+msgid "<strong>The Snug</strong> Seats 10"
+msgstr ""
+
+#: patterns/no-results.php
+msgctxt "Pattern title"
+msgid "No results"
+msgstr ""
+
+#: patterns/no-results.php
+msgctxt "Pattern description"
+msgid "Shown when a list or search has nothing to show."
+msgstr ""
+
+#: patterns/no-results.php:10
+msgid "Nothing here yet. Try a search, or head back to the dining rooms."
+msgstr ""
+
+#: patterns/page-about.php
+msgctxt "Pattern title"
+msgid "About page"
+msgstr ""
+
+#: patterns/page-about.php
+msgctxt "Pattern description"
+msgid "Your story, a short history, the chef, what you believe, every house, and a call to book."
+msgstr ""
+
+#: patterns/page-about.php:21
+msgid "We still keep the original ledgers, the brass and the stubborn habit of doing things slowly. What has changed is the cooking: lighter, seasonal and rooted in growers we know by name."
+msgstr ""
+
+#: patterns/page-about.php:29
+msgid "The kitchen"
+msgstr ""
+
+#: patterns/page-about.php:33
+msgid "Meet Margot Ellery"
+msgstr ""
+
+#: patterns/page-about.php:43
+msgid "Trained in old harbour kitchens and two seasons abroad, our chef writes the menu each morning with the growers on the phone. The brigade is small, the stockpot is older than any of us, and staff meal is taken seriously."
+msgstr ""
+
+#: patterns/page-about.php:57
+msgid "Your table is waiting."
+msgstr ""
+
+#: patterns/page-about.php:66
+msgid "Private dining"
+msgstr ""
+
+#: patterns/page-gallery.php
+msgctxt "Pattern title"
+msgid "Gallery page"
+msgstr ""
+
+#: patterns/page-gallery.php
+msgctxt "Pattern description"
+msgid "A filterable photo grid with a full-screen viewer."
+msgstr ""
+
+#: patterns/page-menu.php
+msgctxt "Pattern title"
+msgid "Menu page"
+msgstr ""
+
+#: patterns/page-menu.php
+msgctxt "Pattern description"
+msgid "Every menu with filters, section links, the allergen key and an order card."
+msgstr ""
+
+#: patterns/page-reservations.php
+msgctxt "Pattern title"
+msgid "Reservations page"
+msgstr ""
+
+#: patterns/page-reservations.php
+msgctxt "Pattern description"
+msgid "Choose a house, then book online, through OpenTable or Resy, or by phone."
+msgstr ""
+
+#: resources/views/blocks/mobile-bar.blade.php
+msgid "Reserve"
+msgstr ""
+
+#: resources/views/blocks/mobile-bar.blade.php
+msgid "Order"
+msgstr ""
+
+#: resources/views/blocks/mobile-bar.blade.php
+#: resources/views/partials/location-panel.blade.php
+msgid "Call"
+msgstr ""
+
+#: resources/views/blocks/mobile-bar.blade.php
+#: resources/views/blocks/hours-strip.blade.php
+#: resources/views/blocks/reservations.blade.php
+msgid "Directions"
+msgstr ""
+
+#: resources/views/blocks/mobile-bar.blade.php
+msgid "Quick actions"
+msgstr ""
+
+#: resources/views/blocks/reviews.blade.php
+msgid "As featured in"
+msgstr ""
+
+#: resources/views/blocks/full-menu.blade.php
+#: resources/views/components/diet-badges.blade.php
+msgid "Vegetarian"
+msgstr ""
+
+#: resources/views/blocks/full-menu.blade.php
+#: resources/views/components/diet-badges.blade.php
+msgid "Vegan"
+msgstr ""
+
+#: resources/views/blocks/full-menu.blade.php
+#: resources/views/components/diet-badges.blade.php
+msgid "Gluten-free"
+msgstr ""
+
+#: resources/views/blocks/full-menu.blade.php
+#: resources/views/components/diet-badges.blade.php
+msgid "Spicy"
+msgstr ""
+
+#: resources/views/blocks/full-menu.blade.php
+#: resources/views/blocks/full-menu.blade.php
+#: resources/views/blocks/menu-teaser.blade.php
+msgid "Menus"
+msgstr ""
+
+#: resources/views/blocks/full-menu.blade.php
+msgid "1 dish hidden across the menus"
+msgstr ""
+
+#: resources/views/blocks/full-menu.blade.php
+#, php-format
+msgid "%d dishes hidden across the menus"
+msgstr ""
+
+#: resources/views/blocks/full-menu.blade.php
+msgid "Showing the menu at"
+msgstr ""
+
+#: resources/views/blocks/full-menu.blade.php
+msgid "Change location"
+msgstr ""
+
+#: resources/views/blocks/full-menu.blade.php
+msgid "Dietary filter"
+msgstr ""
+
+#: resources/views/blocks/full-menu.blade.php
+#: resources/views/blocks/menu-teaser.blade.php
+msgid "Printable PDF"
+msgstr ""
+
+#: resources/views/blocks/full-menu.blade.php
+#, php-format
+msgid "Sections in %s"
+msgstr ""
+
+#: resources/views/blocks/full-menu.blade.php
+msgid "Chef’s picks"
+msgstr ""
+
+#: resources/views/blocks/full-menu.blade.php
+msgid "No dishes in this section match your filters."
+msgstr ""
+
+#: resources/views/blocks/full-menu.blade.php
+msgid "Clear filters"
+msgstr ""
+
+#: resources/views/blocks/full-menu.blade.php
+msgid "Key"
+msgstr ""
+
+#: resources/views/blocks/full-menu.blade.php
+msgid "Start an order"
+msgstr ""
+
+#: resources/views/blocks/hours-strip.blade.php
+msgid "Hours and location"
+msgstr ""
+
+#: resources/views/blocks/hours-strip.blade.php
+msgid "Tonight"
+msgstr ""
+
+#: resources/views/blocks/hours-strip.blade.php
+msgid "Call to book"
+msgstr ""
+
+#: resources/views/blocks/hours-strip.blade.php
+#, php-format
+msgid "Today %s"
+msgstr ""
+
+#: resources/views/blocks/hours-strip.blade.php
+#, php-format
+msgid "%s house"
+msgid_plural "%s houses"
+msgstr[0] ""
+msgstr[1] ""
+
+#: resources/views/blocks/hours-strip.blade.php
+msgid "All locations"
+msgstr ""
+
+#: resources/views/blocks/events-archive.blade.php
+#, php-format
+msgid "Next up · %s"
+msgstr ""
+
+#: resources/views/blocks/events-archive.blade.php
+msgid "Next up"
+msgstr ""
+
+#: resources/views/blocks/events-archive.blade.php
+#, php-format
+msgid "Book tickets · %s"
+msgstr ""
+
+#: resources/views/blocks/events-archive.blade.php
+#: resources/views/blocks/event-details.blade.php
+msgid "Book tickets"
+msgstr ""
+
+#: resources/views/blocks/events-archive.blade.php
+#: resources/views/blocks/events-archive.blade.php
+#: resources/views/components/event-card.blade.php
+msgid "Details"
+msgstr ""
+
+#: resources/views/blocks/events-archive.blade.php
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "All"
+msgstr ""
+
+#: resources/views/blocks/events-archive.blade.php
+#: resources/views/components/event-card.blade.php
+#, php-format
+msgid "about %s"
+msgstr ""
+
+#: resources/views/partials/brand.blade.php
+#, php-format
+msgid "Est. %s"
+msgstr ""
+
+#: resources/views/blocks/page-hero.blade.php
+#: resources/views/blocks/event-details.blade.php
+msgid "Breadcrumb"
+msgstr ""
+
+#: resources/views/blocks/locations-explorer.blade.php
+#: resources/views/partials/location-switcher.blade.php
+msgid "Choose a location"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "Rooms"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "Plates"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "Cellar & bar"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "Outside"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "The front room at dusk"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "Signature plate"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "The vaulted cellar"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "Pudding course"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "Our front door"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "The back bar"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "From the oven"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "The hearth, lit nightly"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "Long table for a private supper"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "Cheese from the cave"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "The pass"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "Dry-aged duck"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "Filter gallery"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+#, php-format
+msgid "Open image: %s"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "Open image"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "Image viewer"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "Close"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "Previous image"
+msgstr ""
+
+#: resources/views/blocks/gallery-grid.blade.php
+msgid "Next image"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Request sent. The house will confirm your table by email or phone."
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "That time isn’t available or a detail is missing. Please check and try again."
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+#: resources/views/partials/inquiry-form.blade.php
+#: resources/views/blocks/contact.blade.php
+msgid "This form had expired. Please send it again."
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+#: resources/views/partials/inquiry-form.blade.php
+#: resources/views/blocks/contact.blade.php
+msgid "Too many messages from this connection. Please wait a few minutes or call us."
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "We couldn’t send your request. Please call the house instead."
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "1 · Choose a house"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Book online"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Book via OpenTable"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Book via Resy"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Book by phone"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "2 · Find a table"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+#, php-format
+msgid "Book at %s"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "No tables left online for this day. Try another date or call us."
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+#, php-format
+msgid "Request a table for %1$s · %2$s"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Choose a time"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+#: resources/views/partials/inquiry-form.blade.php
+#: resources/views/blocks/contact.blade.php
+msgid "Leave this empty"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Date"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Party size"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+#, php-format
+msgid "%s guest"
+msgid_plural "%s guests"
+msgstr[0] ""
+msgstr[1] ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Seating"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+#: resources/views/blocks/reservations.blade.php
+#: resources/views/blocks/reservations.blade.php
+#: resources/views/partials/inquiry-form.blade.php
+#: resources/views/blocks/contact.blade.php
+msgid "(optional)"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Times"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Time (HH:MM)"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+#: resources/views/partials/inquiry-form.blade.php
+#: resources/views/blocks/contact.blade.php
+msgid "Full name"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+#: resources/views/blocks/contact.blade.php
+msgid "Phone"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Only used if we need to reach you about this booking."
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+#: resources/views/partials/inquiry-form.blade.php
+#: resources/views/blocks/contact.blade.php
+msgid "Email"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+#: resources/views/partials/inquiry-form.blade.php
+msgid "Occasion"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Requests or allergies"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Send me the monthly newsletter"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Request a table"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "This is a request: the house confirms every table personally."
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Bookings by phone"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+#, php-format
+msgid "%s takes every booking by phone so we can seat you well."
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Call now"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Email us"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Live availability"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+#, php-format
+msgid "%1$s booking for %2$s"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Check availability"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+#, php-format
+msgid "Booking loads from %1$s. Trouble? <a href=\"%2$s\">Book on %1$s</a> or call %3$s."
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+#, php-format
+msgid "Hours at %s"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+#: resources/views/blocks/event-details.blade.php
+msgid "Good to know"
+msgstr ""
+
+#: resources/views/blocks/reservations.blade.php
+msgid "Getting there"
+msgstr ""
+
+#: resources/views/blocks/menu-teaser.blade.php
+msgid "See the full menu"
+msgstr ""
+
+#: resources/views/blocks/hero.blade.php
+#, php-format
+msgid "Pictured: %s"
+msgstr ""
+
+#: resources/views/blocks/site-header.blade.php
+msgid "Contact and style"
+msgstr ""
+
+#: resources/views/blocks/site-header.blade.php
+msgid "Primary"
+msgstr ""
+
+#: resources/views/blocks/site-header.blade.php
+msgid "Secondary"
+msgstr ""
+
+#: resources/views/blocks/site-header.blade.php
+msgid "Open menu"
+msgstr ""
+
+#: resources/views/blocks/site-header.blade.php
+msgid "Site menu"
+msgstr ""
+
+#: resources/views/blocks/site-header.blade.php
+msgid "Close menu"
+msgstr ""
+
+#: resources/views/blocks/site-header.blade.php
+msgid "Mobile"
+msgstr ""
+
+#: resources/views/blocks/site-header.blade.php
+msgid "Demo style"
+msgstr ""
+
+#: resources/views/art/map.blade.php
+msgid "Illustrated map of the old town"
+msgstr ""
+
+#: resources/views/art/map.blade.php
+msgid "STATIC MAP · LINKS TO DIRECTIONS"
+msgstr ""
+
+#: resources/views/partials/location-switcher.blade.php
+#: resources/views/blocks/contact.blade.php
+msgid "Location"
+msgstr ""
+
+#: resources/views/blocks/gallery-mosaic.blade.php
+msgid "Open the gallery"
+msgstr ""
+
+#: resources/views/partials/theme-switcher.blade.php
+msgid "Demo style direction"
+msgstr ""
+
+#: resources/views/partials/theme-switcher.blade.php
+msgid "Style"
+msgstr ""
+
+#: resources/views/components/crest.blade.php
+#: resources/views/art/street.blade.php
+#, php-format
+msgid "EST · %s"
+msgstr ""
+
+#: resources/views/partials/location-panel.blade.php
+msgid "Parking"
+msgstr ""
+
+#: resources/views/partials/location-panel.blade.php
+msgid "Transit"
+msgstr ""
+
+#: resources/views/partials/location-panel.blade.php
+msgid "Access"
+msgstr ""
+
+#: resources/views/partials/location-panel.blade.php
+msgid "Get directions"
+msgstr ""
+
+#: resources/views/partials/location-panel.blade.php
+msgid "Opening hours"
+msgstr ""
+
+#: resources/views/partials/location-panel.blade.php
+#, php-format
+msgid "Weekly hours at %s"
+msgstr ""
+
+#: resources/views/partials/location-panel.blade.php
+msgid "Today"
+msgstr ""
+
+#: resources/views/partials/location-panel.blade.php
+msgid "Holiday hours"
+msgstr ""
+
+#: resources/views/partials/location-panel.blade.php
+msgid "About this house"
+msgstr ""
+
+#: resources/views/partials/inquiry-form.blade.php
+msgid "Thank you. We’ll be in touch within one working day."
+msgstr ""
+
+#: resources/views/partials/inquiry-form.blade.php
+msgid "Please check the highlighted details and try again."
+msgstr ""
+
+#: resources/views/partials/inquiry-form.blade.php
+msgid "We couldn’t send your inquiry. Please call us instead."
+msgstr ""
+
+#: resources/views/partials/inquiry-form.blade.php
+msgid "Send an inquiry"
+msgstr ""
+
+#: resources/views/partials/inquiry-form.blade.php
+msgid "Preferred date"
+msgstr ""
+
+#: resources/views/partials/inquiry-form.blade.php
+msgid "Guests"
+msgstr ""
+
+#: resources/views/partials/inquiry-form.blade.php
+#: resources/views/blocks/story.blade.php
+msgid "House"
+msgid_plural "Houses"
+msgstr[0] ""
+msgstr[1] ""
+
+#: resources/views/partials/inquiry-form.blade.php
+msgid "Tell us about your event"
+msgstr ""
+
+#: resources/views/partials/inquiry-form.blade.php
+msgid "Send inquiry"
+msgstr ""
+
+#: resources/views/partials/inquiry-form.blade.php
+msgid "Our events team replies within one working day."
+msgstr ""
+
+#: resources/views/blocks/contact.blade.php
+msgid "Thanks, your message is on its way."
+msgstr ""
+
+#: resources/views/blocks/contact.blade.php
+msgid "Please fill in the required fields and try again."
+msgstr ""
+
+#: resources/views/blocks/contact.blade.php
+msgid "We couldn’t send your message. Please call us instead."
+msgstr ""
+
+#: resources/views/blocks/contact.blade.php
+msgid "Send a message"
+msgstr ""
+
+#: resources/views/blocks/contact.blade.php
+msgid "Topic"
+msgstr ""
+
+#: resources/views/blocks/contact.blade.php
+msgid "Message"
+msgstr ""
+
+#: resources/views/blocks/contact.blade.php
+#, php-format
+msgid "I agree to the <a href=\"%s\">privacy policy</a>."
+msgstr ""
+
+#: resources/views/blocks/contact.blade.php
+msgid "I agree to my details being used to reply to this message."
+msgstr ""
+
+#: resources/views/blocks/contact.blade.php
+msgid "Send message"
+msgstr ""
+
+#: resources/views/blocks/not-found.blade.php
+msgid "Back to home"
+msgstr ""
+
+#: resources/views/blocks/not-found.blade.php
+msgid "See the menu"
+msgstr ""
+
+#: resources/views/blocks/not-found.blade.php
+msgid "Search the site"
+msgstr ""
+
+#: resources/views/blocks/not-found.blade.php
+msgid "Or visit one of our houses"
+msgstr ""
+
+#: resources/views/blocks/site-footer.blade.php
+msgid "Our locations"
+msgstr ""
+
+#: resources/views/blocks/site-footer.blade.php
+msgid "Footer"
+msgstr ""
+
+#: resources/views/blocks/site-footer.blade.php
+msgid "Legal"
+msgstr ""
+
+#: resources/views/blocks/event-details.blade.php
+msgid "About the evening"
+msgstr ""
+
+#. translators: Default for the Menu Teaser block setting "eyebrow".
+#: resources/views/blocks/event-details.blade.php
+#: resources/lang/block-strings.php:84
+msgid "The menu"
+msgstr ""
+
+#: resources/views/blocks/event-details.blade.php
+msgid "Book this event"
+msgstr ""
+
+#: resources/views/blocks/event-details.blade.php
+#, php-format
+msgid "Call %s to book"
+msgstr ""
+
+#: resources/views/blocks/event-details.blade.php
+msgid "Add to calendar (.ics)"
+msgstr ""
+
+#: resources/views/blocks/event-details.blade.php
+#: resources/views/blocks/event-details.blade.php
+msgid "More events"
+msgstr ""
+
+#: resources/views/blocks/event-details.blade.php
+#: resources/views/blocks/event-details.blade.php
+msgid "You might also like"
+msgstr ""
+
+#. translators: Default for the Upcoming Events block setting "linkLabel".
+#: resources/views/blocks/event-details.blade.php
+#: resources/views/blocks/event-details.blade.php
+#: resources/lang/block-strings.php:58
+msgid "All events"
+msgstr ""
+
+#: resources/views/blocks/event-details.blade.php
+msgid "Event Details shows the event being viewed: its photo, story, courses and ticket card."
+msgstr ""
+
+#: resources/views/blocks/story.blade.php
+msgid "Established"
+msgstr ""
+
+#: resources/views/blocks/story.blade.php
+msgid "Seatings nightly"
+msgstr ""
+
+#: resources/views/blocks/houses.blade.php
+msgid "Visit"
+msgstr ""
+
+#. translators: Default for the Signature Dishes block setting "eyebrow".
+#: resources/lang/block-strings.php:12
+msgid "Signature dishes"
+msgstr ""
+
+#. translators: Default for the Signature Dishes block setting "title".
+#: resources/lang/block-strings.php:14
+msgid "Signatures of the house"
+msgstr ""
+
+#. translators: Default for the Signature Dishes block setting "intro".
+#: resources/lang/block-strings.php:16
+msgid "Three plates that have stayed on the menu through every season, because guests would riot otherwise."
+msgstr ""
+
+#. translators: Default for the Contact Form block setting "eyebrow".
+#: resources/lang/block-strings.php:18
+msgid "Contact"
+msgstr ""
+
+#. translators: Default for the Contact Form block setting "title".
+#: resources/lang/block-strings.php:20
+msgid "Write to us"
+msgstr ""
+
+#. translators: Default for the Contact Form block setting "intro".
+#: resources/lang/block-strings.php:22
+msgid "For bookings within 48 hours please call the house directly. Everything else, drop us a line and we’ll reply within one working day."
+msgstr ""
+
+#. translators: Default for the Contact Form block setting "contacts".
+#: resources/lang/block-strings.php:24
+msgid ""
+"Press: press@example.com\n"
+"Careers: jobs@example.com\n"
+"Gift cards & lost property: Ask any house, or use the form."
+msgstr ""
+
+#. translators: Default for the Event Details block setting "notes".
+#: resources/lang/block-strings.php:28
+msgid ""
+"Dietary needs can be accommodated with 72 hours’ notice.\n"
+"Tickets are refundable up to 7 days before.\n"
+"Ages 18+."
+msgstr ""
+
+#. translators: Default for the Events Archive block setting "listTitle".
+#: resources/lang/block-strings.php:32
+msgid "All upcoming"
+msgstr ""
+
+#. translators: Default for the Events Archive block setting "emptyText".
+#: resources/lang/block-strings.php:34
+msgid "Nothing on the calendar just now. Check back soon."
+msgstr ""
+
+#. translators: Default for the Events Archive block setting "regularsEyebrow".
+#: resources/lang/block-strings.php:36
+msgid "Every week"
+msgstr ""
+
+#. translators: Default for the Events Archive block setting "regularsTitle".
+#: resources/lang/block-strings.php:38
+msgid "Regulars & specials"
+msgstr ""
+
+#. translators: Default for the Events Archive block setting "regularsIntro".
+#: resources/lang/block-strings.php:40
+msgid "Chalked up fresh each day at every house."
+msgstr ""
+
+#. translators: Default for the Events Archive block setting "regulars".
+#: resources/lang/block-strings.php:42
+msgid ""
+"Two-course weekday lunch from $34\n"
+"Half-price bottles on Sunday evenings\n"
+"Seasonal set menu, Tuesday to Thursday"
+msgstr ""
+
+#. translators: Default for the Events Archive block setting "boardEyebrow".
+#. translators: Default for the Menu Teaser block setting "boardEyebrow".
+#: resources/lang/block-strings.php:46
+#: resources/lang/block-strings.php:90
+msgid "By the glass"
+msgstr ""
+
+#. translators: Default for the Events Archive block setting "boardTitle".
+#. translators: Default for the Menu Teaser block setting "boardTitle".
+#: resources/lang/block-strings.php:48
+#: resources/lang/block-strings.php:92
+msgid "Tonight’s Cellar"
+msgstr ""
+
+#. translators: Default for the Events Archive block setting "boardFoot".
+#. translators: Default for the Menu Teaser block setting "boardFoot".
+#: resources/lang/block-strings.php:50
+#: resources/lang/block-strings.php:94
+msgid "Ask your sommelier"
+msgstr ""
+
+#. translators: Default for the Upcoming Events block setting "intro".
+#: resources/lang/block-strings.php:56
+msgid "Suppers, music and seasonal nights across all three houses."
+msgstr ""
+
+#. translators: Default for the Full Menu block setting "allergenNote".
+#: resources/lang/block-strings.php:60
+msgid "Please tell your server about any allergies before ordering. Our kitchens handle nuts, gluten and shellfish; we cannot guarantee any dish is allergen-free."
+msgstr ""
+
+#. translators: Default for the Full Menu block setting "orderTitle".
+#. translators: Default for the Site Header block setting "orderLabel".
+#: resources/lang/block-strings.php:62
+#: resources/lang/block-strings.php:118
+msgid "Order online"
+msgstr ""
+
+#. translators: Default for the Full Menu block setting "orderText".
+#: resources/lang/block-strings.php:64
+msgid "Collect from any of our houses from 5pm."
+msgstr ""
+
+#. translators: Default for the Gallery Mosaic block setting "eyebrow".
+#: resources/lang/block-strings.php:66
+msgid "Gallery"
+msgstr ""
+
+#. translators: Default for the Gallery Mosaic block setting "title".
+#: resources/lang/block-strings.php:68
+msgid "Inside the houses"
+msgstr ""
+
+#. translators: Default for the Gallery Mosaic block setting "linkLabel".
+#: resources/lang/block-strings.php:70
+msgid "View the gallery"
+msgstr ""
+
+#. translators: Default for the Hero block setting "caption".
+#: resources/lang/block-strings.php:72
+msgid "Chandler’s Wharf at dusk"
+msgstr ""
+
+#. translators: Default for the Hours Strip block setting "tonightNote".
+#: resources/lang/block-strings.php:74
+msgid "Tonight’s seatings · 6:00 & 8:30"
+msgstr ""
+
+#. translators: Default for the Houses block setting "title".
+#: resources/lang/block-strings.php:78
+msgid "Find your table"
+msgstr ""
+
+#. translators: Default for the Menu Teaser block setting "title".
+#: resources/lang/block-strings.php:86
+msgid "From the bill of fare"
+msgstr ""
+
+#. translators: Default for the Menu Teaser block setting "intro".
+#: resources/lang/block-strings.php:88
+msgid "Our menus are written each morning and printed on the press in the cellar."
+msgstr ""
+
+#. translators: Default for the Page Not Found block setting "eyebrow".
+#: resources/lang/block-strings.php:96
+msgid "Error 404 · Page not found"
+msgstr ""
+
+#. translators: Default for the Page Not Found block setting "title".
+#: resources/lang/block-strings.php:98
+msgid "This lane is unlit."
+msgstr ""
+
+#. translators: Default for the Page Not Found block setting "text".
+#: resources/lang/block-strings.php:100
+msgid "The page you were after has slipped down a side street. Let us light the way back."
+msgstr ""
+
+#. translators: Default for the Reservations block setting "notes".
+#: resources/lang/block-strings.php:102
+msgid ""
+"Tables are held for 15 minutes.\n"
+"Cancel free up to 24 hours before.\n"
+"Parties of 9 or more: ask about private dining.\n"
+"Tell us about allergies when booking.\n"
+"Smart-casual; no dress code."
+msgstr ""
+
+#. translators: Default for the Reservations block setting "callHours".
+#: resources/lang/block-strings.php:108
+msgid "Phones answered daily 11am – 6pm. Walk-ins always welcome at the bar."
+msgstr ""
+
+#. translators: Default for the Reviews & Press block setting "eyebrow".
+#: resources/lang/block-strings.php:110
+msgid "Reviews & press"
+msgstr ""
+
+#. translators: Default for the Reviews & Press block setting "title".
+#: resources/lang/block-strings.php:112
+msgid "Kind words"
+msgstr ""
+
+#. translators: Default for the Reviews & Press block setting "press".
+#: resources/lang/block-strings.php:114
+msgid "The Old Town Courier, Harbour & Hearth, Coastal Table, The Night Ledger"
+msgstr ""
+
+#. translators: Default for the Story block setting "caption".
+#: resources/lang/block-strings.php:120
+msgid "Margot Ellery · Chef-patron since 2014"
+msgstr ""
+
+#. translators: Default for the Timeline block setting "eyebrow".
+#: resources/lang/block-strings.php:122
+msgid "Since 1888"
+msgstr ""
+
+#. translators: Default for the Timeline block setting "title".
+#: resources/lang/block-strings.php:124
+msgid "A short history"
+msgstr ""
+
+#. translators: Default for the Timeline block setting "items".
+#: resources/lang/block-strings.php:126
+msgid ""
+"1888 | The first supper | Lamplighter Josiah Wren opens his parlour to the evening tide.\n"
+"1931 | The cellar opens | The old coal store becomes a wine cellar of 400 bins.\n"
+"1998 | Cathedral Close | A second house opens in a former vestry beside the cathedral.\n"
+"2014 | Chef Margot | Margot Ellery takes the pass and rewrites the bill of fare."
+msgstr ""
+
+#. translators: Default for the Values block setting "eyebrow".
+#: resources/lang/block-strings.php:131
+msgid "What we believe"
+msgstr ""
+
+#. translators: Default for the Values block setting "title".
+#: resources/lang/block-strings.php:133
+msgid "House rules"
+msgstr ""
+
+#. translators: Values block lines: "icon | Title | Text"; keep the icon names (flame, leaf, clock) in English.
+#: resources/lang/block-strings.php:135
+msgid ""
+"flame | Lit by hand | Every candle and lamp is lit at dusk by the front-of-house team.\n"
+"leaf | Coast & garden | Fish from boats we know by name; vegetables from two walled gardens.\n"
+"clock | Nothing rushed | Two seatings a night, so your table is yours for the evening."
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Bg"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Surface"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Surface (2)"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Text"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Muted"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Accent"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Accent (Contrast)"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Brand (Alt)"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Hero"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Hero (Text)"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Hero (Accent)"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Focus"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Success"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Warn"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Line"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Board"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Board (Ink)"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Board (Frame)"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Glow"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Eyebrow"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Status (Open)"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Status (Warn)"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Status (Off)"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Color name"
+msgid "Board (Title)"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Font family name"
+msgid "sans"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Font family name"
+msgid "serif"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Font family name"
+msgid "mono"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Font family name"
+msgid "display"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Font size name"
+msgid "xs"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Font size name"
+msgid "sm"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Font size name"
+msgid "base"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Font size name"
+msgid "lg"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Font size name"
+msgid "xl"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Font size name"
+msgid "2xl"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Font size name"
+msgid "3xl"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Font size name"
+msgid "4xl"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Font size name"
+msgid "5xl"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Font size name"
+msgid "6xl"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Font size name"
+msgid "7xl"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Font size name"
+msgid "8xl"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Font size name"
+msgid "9xl"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Border radius size name"
+msgid "xs"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Border radius size name"
+msgid "btn"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Border radius size name"
+msgid "input"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Border radius size name"
+msgid "card"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Border radius size name"
+msgid "sm"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Border radius size name"
+msgid "md"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Border radius size name"
+msgid "lg"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Border radius size name"
+msgid "xl"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Border radius size name"
+msgid "2xl"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Border radius size name"
+msgid "3xl"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Border radius size name"
+msgid "4xl"
+msgstr ""
+
+#: public/build/assets/theme.json
+msgctxt "Border radius size name"
+msgid "chip"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: theme.json
+msgctxt "Template part name"
+msgid "Header"
+msgstr ""
+
+#: public/build/assets/theme.json
+#: theme.json
+msgctxt "Template part name"
+msgid "Footer"
+msgstr ""
+
+#: styles/ashlar-iron.json
+msgctxt "Style variation name"
+msgid "Ashlar & Iron"
+msgstr ""
+
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Font family name"
+msgid "Display"
+msgstr ""
+
+#: styles/ashlar-iron.json
+#: styles/ember-arch.json
+msgctxt "Font family name"
+msgid "Sans"
+msgstr ""
+
+#: styles/ember-arch.json
+msgctxt "Style variation name"
+msgid "Ember & Arch"
+msgstr ""
