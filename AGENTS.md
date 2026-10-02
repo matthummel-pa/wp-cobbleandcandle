@@ -21,3 +21,12 @@ The build spec is `docs/mockups/HANDOFF.md` (static mockups in `docs/mockups/`).
 ## Deploy
 
 Merging to `main` runs `.github/workflows/deploy-theme.yml`: Composer (no dev) + `npm run build`, then the GitHub Release `theme-latest` gets `cobbleandcandle.zip`. Install that zip on the site and purge the cache. `docs/`, `.claude/`, and other dev files are left out of the zip.
+
+## Gotchas
+
+- WordPress caches the theme's `patterns/` file list. After adding or renaming a pattern file locally:
+  `studio wp eval 'wp_get_theme()->delete_pattern_cache();' --path ~/Studio/cobbleandcandle`
+  (or set `define('WP_DEVELOPMENT_MODE', 'theme');` in the local `wp-config.php`).
+- Core-block styling that must beat WordPress global styles lives in `resources/css/core-blocks.css`,
+  which is imported **without** a CSS layer. Layered rules always lose to WordPress's unlayered CSS.
+- Demo content: `studio wp cobbleandcandle seed --path ~/Studio/cobbleandcandle` (Core plugin active).

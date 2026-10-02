@@ -195,3 +195,16 @@ function cc_hours_grouped( $location_id ) {
 	}
 	return $out;
 }
+
+/**
+ * Today's hours as text ("5:30pm – 11pm" or "Closed"), holiday overrides included.
+ *
+ * @param int $location_id Location post ID.
+ * @return string
+ */
+function cc_today_hours( $location_id ) {
+	$window = cc_day_window( cc_hours_row_for_date( $location_id, new \DateTimeImmutable( 'now', wp_timezone() ) ) );
+	return $window
+		? cc_time_label( cc_minutes_to_time( $window[0] ) ) . ' – ' . cc_time_label( cc_minutes_to_time( $window[1] ) )
+		: __( 'Closed', 'cobbleandcandle-core' );
+}

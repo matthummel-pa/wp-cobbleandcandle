@@ -25,3 +25,6 @@
 
 /* Mobile bar: spread however many actions are set (1–4) across the full width. */
 .mbar { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); }
+
+/* Real photos fill the same media slots as the placeholder illustrations. */
+.media > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }

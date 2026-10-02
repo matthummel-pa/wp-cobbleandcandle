@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/menu-teaser",
+  "title": "Menu Teaser",
+  "category": "cobbleandcandle",
+  "description": "Tabs with the first few dishes of each menu, plus a specials board from one menu.",
+  "keywords": ["menu", "tabs", "specials", "board"],
+  "textdomain": "cobbleandcandle",
+  "attributes": {
+    "eyebrow": { "type": "string", "default": "The menu" },
+    "title": { "type": "string", "default": "From the bill of fare" },
+    "intro": { "type": "string", "default": "Our menus are written each morning and printed on the press in the cellar." },
+    "rows": { "type": "number", "default": 5 },
+    "menuUrl": { "type": "string", "default": "/menu/" },
+    "pdfUrl": { "type": "string", "default": "" },
+    "boardEyebrow": { "type": "string", "default": "By the glass" },
+    "boardTitle": { "type": "string", "default": "Tonight’s Cellar" },
+    "boardMenu": { "type": "string", "default": "cellar" },
+    "boardFoot": { "type": "string", "default": "Ask your sommelier" }
+  },
+  "supports": { "html": false, "align": ["full"] }
+}

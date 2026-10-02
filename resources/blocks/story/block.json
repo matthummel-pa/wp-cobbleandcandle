@@ -1,0 +1,11 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/story",
+  "title": "Story",
+  "category": "cobbleandcandle",
+  "description": "Chef portrait beside your story, pull quote and buttons, with live stats.",
+  "textdomain": "cobbleandcandle",
+  "attributes": { "imageId": { "type": "integer", "default": 0 }, "caption": { "type": "string", "default": "Margot Ellery · Chef-patron since 2014" }, "seatings": { "type": "string", "default": "2" } },
+  "supports": { "html": false, "align": ["full"] }
+}

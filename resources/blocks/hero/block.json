@@ -1,0 +1,11 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/hero",
+  "title": "Hero",
+  "category": "cobbleandcandle",
+  "description": "Full-width photo with the headline, intro and buttons you type on the canvas.",
+  "textdomain": "cobbleandcandle",
+  "attributes": { "imageId": { "type": "integer", "default": 0 }, "caption": { "type": "string", "default": "Chandler’s Wharf at dusk" } },
+  "supports": { "html": false, "align": ["full"] }
+}

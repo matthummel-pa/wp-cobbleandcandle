@@ -7,3 +7,6 @@
 ^\s*wp_get_inline_script_tag\s*\(
 ^\s*\\?App\\icon_symbols\s*\(
 ^\s*\\?App\\locations_json\s*\(
+^\s*wp_get_attachment_image\s*\(
+^\s*\$content\s*$
+^\s*wp_nonce_field\s*\(
