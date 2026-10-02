@@ -2,7 +2,7 @@
 /**
  * Uninstall Cobble & Candle Core.
  *
- * Always removes temporary data (rate-limit counters). Content (locations, menu items, events,
+ * Always removes temporary data (rate-limit counters). Content (locations, menu items, events, rooms, bookings,
  * menus, sections, gallery categories) and the Restaurant settings are deleted only if "Remove data
  * on uninstall" was ticked in Settings → Restaurant. Runs for every site on multisite.
  *
@@ -20,8 +20,10 @@ function cc_uninstall_site() {
 	if ( is_array( $settings ) && ! empty( $settings['remove_data'] ) ) {
 		// The plugin is not loaded during uninstall: register its types so terms can be found and deleted.
 		require_once __DIR__ . '/includes/post-types.php';
+		require_once __DIR__ . '/includes/rooms.php';
 		cc_register_content_types();
-		foreach ( array( 'cc_location', 'cc_menu_item', 'cc_event' ) as $post_type ) {
+		cc_register_room_types();
+		foreach ( array( 'cc_location', 'cc_menu_item', 'cc_event', 'cc_room', 'cc_booking' ) as $post_type ) {
 			$ids = get_posts(
 				array(
 					'post_type'   => $post_type,
@@ -48,6 +50,8 @@ function cc_uninstall_site() {
 		}
 		delete_option( 'cobbleandcandle_brand' );
 	}
+	wp_clear_scheduled_hook( 'cc_ical_sync' );
+	wp_unschedule_hook( 'cc_ical_sync_room' );
 	// Rate-limit counters (transients named cc_rl_*). They expire on their own; removed here for tidiness.
 	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s", $wpdb->esc_like( '_transient_cc_rl_' ) . '%', $wpdb->esc_like( '_transient_timeout_cc_rl_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- one-off cleanup on uninstall; no API deletes transients by prefix.
 }

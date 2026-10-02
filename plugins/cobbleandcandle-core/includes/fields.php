@@ -269,6 +269,76 @@ function cc_field_schema() {
 				),
 			),
 		),
+		'cc_room'      => array(
+			array(
+				'title'  => __( 'Rates & capacity', 'cobbleandcandle-core' ),
+				'fields' => array(
+					'cc_price_night'   => array(
+						'type'  => 'number',
+						'label' => __( 'Price per night', 'cobbleandcandle-core' ),
+					),
+					'cc_price_weekend' => array(
+						'type'  => 'number',
+						'label' => __( 'Friday & Saturday night price (optional)', 'cobbleandcandle-core' ),
+					),
+					'cc_min_nights'    => array(
+						'type'  => 'number',
+						'label' => __( 'Minimum nights', 'cobbleandcandle-core' ),
+					),
+					'cc_max_guests'    => array(
+						'type'  => 'number',
+						'label' => __( 'Maximum guests', 'cobbleandcandle-core' ),
+					),
+					'cc_units'         => array(
+						'type'  => 'number',
+						'label' => __( 'How many rooms of this kind', 'cobbleandcandle-core' ),
+					),
+					'cc_beds'          => array(
+						'type'  => 'text',
+						'label' => __( 'Beds (e.g. 1 king)', 'cobbleandcandle-core' ),
+					),
+					'cc_size'          => array(
+						'type'  => 'text',
+						'label' => __( 'Size (e.g. 28 m²)', 'cobbleandcandle-core' ),
+					),
+					'cc_location'      => array(
+						'type'  => 'location',
+						'label' => __( 'House', 'cobbleandcandle-core' ),
+					),
+				),
+			),
+			array(
+				'title'  => __( 'Amenities', 'cobbleandcandle-core' ),
+				'fields' => array(
+					'cc_amenities' => array(
+						'type'    => 'checkboxes',
+						'label'   => __( 'In the room', 'cobbleandcandle-core' ),
+						'options' => cc_room_amenities(),
+					),
+				),
+			),
+			array(
+				'title'  => __( 'Calendar sync (Airbnb, Booking.com, Vrbo)', 'cobbleandcandle-core' ),
+				'fields' => array(
+					'cc_ical_import' => array(
+						'type'    => 'list',
+						'private' => true, // Platform links carry secret tokens: editors only, never the public REST API.
+						'label'   => __( 'Import calendars (iCal links)', 'cobbleandcandle-core' ),
+						'add'     => __( 'Add calendar', 'cobbleandcandle-core' ),
+						'fields'  => array(
+							'label' => array(
+								'type'  => 'text',
+								'label' => __( 'Name (e.g. Airbnb)', 'cobbleandcandle-core' ),
+							),
+							'url'   => array(
+								'type'  => 'url',
+								'label' => __( 'iCal link', 'cobbleandcandle-core' ),
+							),
+						),
+					),
+				),
+			),
+		),
 	);
 }
 
@@ -395,6 +465,9 @@ function cc_register_fields() {
 		foreach ( $panels as $panel ) {
 			foreach ( $panel['fields'] as $key => $field ) {
 				$schema = cc_field_rest_schema( $field );
+				if ( ! empty( $field['private'] ) ) {
+					$schema['context'] = array( 'edit' );
+				}
 				register_post_meta(
 					$post_type,
 					$key,
@@ -408,7 +481,7 @@ function cc_register_fields() {
 						'auth_callback'     => static function ( $allowed, $meta_key, $post_id ) {
 							return current_user_can( 'edit_post', $post_id );
 						},
-						'show_in_rest'      => 'array' === $schema['type'] || 'object' === $schema['type']
+						'show_in_rest'      => 'array' === $schema['type'] || 'object' === $schema['type'] || ! empty( $field['private'] )
 							? array( 'schema' => $schema )
 							: true,
 					)
