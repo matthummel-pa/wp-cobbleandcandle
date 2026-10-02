@@ -36,7 +36,7 @@ function cc_form_rate_limited( $form ) {
  * Does nothing without LiteSpeed.
  */
 function cc_register_cache_nonces() {
-	foreach ( array( 'cc_inquiry', 'cc_reservation', 'cc_contact' ) as $action ) {
+	foreach ( array( 'cc_inquiry', 'cc_reservation', 'cc_contact', 'cc_newsletter' ) as $action ) {
 		do_action( 'litespeed_nonce', $action );
 	}
 }

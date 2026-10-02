@@ -598,6 +598,15 @@ input::placeholder,textarea::placeholder{color:var(--color-muted);opacity:1}
 [data-theme="ember-arch"] .v-sign{display:inline}
 [data-theme="ember-arch"] .v-lantern{display:none}
 
+/* ---------- atmosphere ---------- */
+::selection{background:var(--color-accent);color:var(--color-accent-contrast)}
+/* The open dot reads as a lit candle. The reduced-motion block below stops it. */
+@keyframes candle{
+  0%,100%{opacity:1;box-shadow:0 0 0 3px color-mix(in srgb,var(--color-status-open) 28%,transparent)}
+  50%{opacity:.86;box-shadow:0 0 0 5px color-mix(in srgb,var(--color-status-open) 14%,transparent)}
+}
+.status[data-state="open"] .dot{animation:candle 4.5s ease-in-out infinite}
+
 /* =========================================================  RESPONSIVE */
 @media (max-width:1179px){
   .nav--l,.nav--r,.hdr-order{display:none}
