@@ -51,6 +51,7 @@ function cc_uninstall_site() {
 		delete_option( 'cobbleandcandle_brand' );
 	}
 	wp_clear_scheduled_hook( 'cc_ical_sync' );
+	wp_unschedule_hook( 'cc_ical_sync_room' );
 	// Rate-limit counters (transients named cc_rl_*). They expire on their own; removed here for tidiness.
 	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s", $wpdb->esc_like( '_transient_cc_rl_' ) . '%', $wpdb->esc_like( '_transient_timeout_cc_rl_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- one-off cleanup on uninstall; no API deletes transients by prefix.
 }

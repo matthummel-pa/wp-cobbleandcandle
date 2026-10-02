@@ -85,6 +85,11 @@ function cc_register_room_types() {
 			'show_in_rest'    => false,
 			'supports'        => array( 'title' ),
 			'capability_type' => 'post',
+			// Guest details: Editors and Administrators only (edit_others_posts), never Authors or Contributors.
+			'capabilities'    => array_fill_keys(
+				array( 'edit_posts', 'edit_others_posts', 'edit_private_posts', 'edit_published_posts', 'publish_posts', 'read_private_posts', 'delete_posts', 'delete_others_posts', 'delete_private_posts', 'delete_published_posts', 'create_posts' ),
+				'edit_others_posts'
+			),
 			'map_meta_cap'    => true,
 		)
 	);
@@ -191,7 +196,7 @@ function cc_stay_nights( $check_in, $check_out ) {
 	$nights = array();
 	$day    = strtotime( $check_in . ' 12:00:00 UTC' );
 	$end    = strtotime( $check_out . ' 12:00:00 UTC' );
-	while ( $day && $end && $day < $end && count( $nights ) < 400 ) {
+	for ( $i = 0; $day && $end && $day < $end && $i < 400; $i++ ) {
 		$nights[] = gmdate( 'Y-m-d', $day );
 		$day     += DAY_IN_SECONDS;
 	}
@@ -242,10 +247,11 @@ function cc_room_taken( $room_id, $from, $to, $exclude = 0 ) {
 		)
 	);
 	foreach ( $bookings as $booking_id ) {
-		foreach ( cc_stay_nights( (string) get_post_meta( $booking_id, 'cc_check_in', true ), (string) get_post_meta( $booking_id, 'cc_check_out', true ) ) as $night ) {
-			if ( $night >= $from && $night < $to ) {
-				$taken[ $night ] = ( $taken[ $night ] ?? 0 ) + 1;
-			}
+		// Walk only the overlap with the window: a long stay never truncates or slows the check.
+		$start = max( (string) get_post_meta( $booking_id, 'cc_check_in', true ), $from );
+		$end   = min( (string) get_post_meta( $booking_id, 'cc_check_out', true ), $to );
+		foreach ( cc_stay_nights( $start, $end ) as $night ) {
+			$taken[ $night ] = ( $taken[ $night ] ?? 0 ) + 1;
 		}
 	}
 	// Imported calendars block the whole room type on those nights.
@@ -254,10 +260,10 @@ function cc_room_taken( $room_id, $from, $to, $exclude = 0 ) {
 		if ( ! is_array( $block ) ) {
 			continue;
 		}
-		foreach ( cc_stay_nights( (string) ( $block['start'] ?? '' ), (string) ( $block['end'] ?? '' ) ) as $night ) {
-			if ( $night >= $from && $night < $to ) {
-				$taken[ $night ] = max( $taken[ $night ] ?? 0, $room ? $room['units'] : 1 );
-			}
+		$start = max( (string) ( $block['start'] ?? '' ), $from );
+		$end   = min( (string) ( $block['end'] ?? '' ), $to );
+		foreach ( cc_stay_nights( $start, $end ) as $night ) {
+			$taken[ $night ] = max( $taken[ $night ] ?? 0, $room ? $room['units'] : 1 );
 		}
 	}
 	return $taken;
@@ -393,7 +399,7 @@ function cc_rest_room_availability( WP_REST_Request $request ) {
 	if ( ! $room || 'publish' !== get_post_status( $room['id'] ) ) {
 		return new WP_Error( 'cc_no_room', __( 'Room not found.', 'cobbleandcandle-core' ), array( 'status' => 404 ) );
 	}
-	$from = (string) $request['from'];
+	$from = max( (string) $request['from'], wp_date( 'Y-m-d' ) ); // Never reveal past occupancy.
 	$to   = (string) $request['to'];
 	if ( $to <= $from || count( cc_stay_nights( $from, $to ) ) > 400 ) {
 		return new WP_Error( 'cc_bad_range', __( 'Choose a shorter date range.', 'cobbleandcandle-core' ), array( 'status' => 400 ) );
@@ -446,6 +452,9 @@ function cc_handle_room_booking() {
 	$problem = cc_stay_problem( $room, $check_in, $check_out, $guests );
 	if ( '' !== $problem ) {
 		$done( $problem );
+	}
+	if ( cc_open_requests_for( $email ) >= 2 ) {
+		$done( 'busy' ); // Stops one address holding many rooms with requests it never means to keep.
 	}
 
 	$total      = cc_stay_total( $room, $check_in, $check_out );
@@ -520,7 +529,7 @@ add_action( 'admin_post_nopriv_cc_room_booking', 'cc_handle_room_booking' );
  * @return string
  */
 function cc_mail_name( $name ) {
-	return '"' . str_replace( array( '"', '<', '>', "\r", "\n" ), '', $name ) . '"';
+	return '"' . str_replace( array( '"', '<', '>', ',', '\\', "\r", "\n" ), '', $name ) . '"';
 }
 
 /**
@@ -576,7 +585,7 @@ function cc_booking_row_actions( $actions, $post ) {
 	}
 	$status = (string) get_post_meta( $post->ID, 'cc_status', true );
 	$link   = static function ( $to ) use ( $post ) {
-		return wp_nonce_url( admin_url( 'admin-post.php?action=cc_booking_status&booking=' . $post->ID . '&to=' . $to ), 'cc_booking_status_' . $post->ID );
+		return wp_nonce_url( admin_url( 'admin-post.php?action=cc_booking_status&booking=' . $post->ID . '&to=' . $to ), 'cc_booking_status_' . $post->ID . '_' . $to );
 	};
 	if ( 'confirmed' !== $status ) {
 		$actions['cc_confirm'] = '<a href="' . esc_url( $link( 'confirmed' ) ) . '">' . esc_html__( 'Confirm', 'cobbleandcandle-core' ) . '</a>';
@@ -595,19 +604,15 @@ add_filter( 'post_row_actions', 'cc_booking_row_actions', 10, 2 );
 function cc_handle_booking_status() {
 	$booking_id = isset( $_GET['booking'] ) ? absint( $_GET['booking'] ) : 0;
 	$to         = isset( $_GET['to'] ) ? sanitize_key( wp_unslash( $_GET['to'] ) ) : '';
-	check_admin_referer( 'cc_booking_status_' . $booking_id );
+	check_admin_referer( 'cc_booking_status_' . $booking_id . '_' . $to );
 	if ( ! $booking_id || 'cc_booking' !== get_post_type( $booking_id ) || ! current_user_can( 'edit_post', $booking_id ) || ! in_array( $to, array( 'confirmed', 'cancelled' ), true ) ) {
 		wp_die( esc_html__( 'You cannot change this booking.', 'cobbleandcandle-core' ), 403 );
 	}
 	$meta = static fn( $key ) => (string) get_post_meta( $booking_id, $key, true );
 	if ( 'confirmed' === $to ) {
 		// Re-check: the nights may have been taken since (another booking or an imported calendar).
-		$room = cc_room( (int) $meta( 'cc_room' ) );
-		$full = $room ? cc_room_taken( $room['id'], $meta( 'cc_check_in' ), $meta( 'cc_check_out' ), $booking_id ) : array();
-		foreach ( $full as $count ) {
-			if ( $count >= ( $room ? $room['units'] : 1 ) ) {
-				wp_die( esc_html__( 'Those nights are no longer free. Cancel this request or move the other booking first.', 'cobbleandcandle-core' ), '', array( 'back_link' => true ) );
-			}
+		if ( '' !== cc_booking_conflict( (int) $meta( 'cc_room' ), $meta( 'cc_check_in' ), $meta( 'cc_check_out' ), $booking_id ) ) {
+			wp_die( esc_html__( 'This booking cannot be confirmed: its room is missing, its dates are wrong, or those nights are no longer free. Edit it or cancel it.', 'cobbleandcandle-core' ), '', array( 'back_link' => true ) );
 		}
 	}
 	update_post_meta( $booking_id, 'cc_status', $to );
@@ -731,6 +736,11 @@ function cc_save_booking_meta_box( $post_id ) {
 			$clean[ $key ] = sanitize_text_field( (string) $raw );
 		}
 	}
+	if ( in_array( $clean['cc_status'], cc_booking_holding_statuses(), true )
+		&& '' !== cc_booking_conflict( $clean['cc_room'], $clean['cc_check_in'], $clean['cc_check_out'], $post_id ) ) {
+		$clean['cc_status'] = 'confirmed' === $clean['cc_status'] ? 'pending' : $clean['cc_status'];
+		set_transient( 'cc_booking_conflict_' . get_current_user_id(), $post_id, MINUTE_IN_SECONDS );
+	}
 	foreach ( $clean as $key => $value ) {
 		update_post_meta( $post_id, $key, $value );
 	}
@@ -759,3 +769,222 @@ function cc_booking_default_title( $data, $postarr ) {
 	return $data;
 }
 add_filter( 'wp_insert_post_data', 'cc_booking_default_title', 10, 2 );
+
+/**
+ * Why a booking can't hold its nights: '' when it can, else 'invalid' or 'unavailable'.
+ *
+ * @param int    $room_id    Room post ID.
+ * @param string $check_in   Y-m-d.
+ * @param string $check_out  Y-m-d.
+ * @param int    $booking_id Booking to leave out of the count.
+ * @return string
+ */
+function cc_booking_conflict( $room_id, $check_in, $check_out, $booking_id = 0 ) {
+	$room = cc_room( $room_id );
+	if ( ! $room || ! cc_is_valid_date( $check_in ) || ! cc_is_valid_date( $check_out ) || $check_out <= $check_in ) {
+		return 'invalid';
+	}
+	foreach ( cc_room_taken( $room['id'], $check_in, $check_out, $booking_id ) as $count ) {
+		if ( $count >= $room['units'] ) {
+			return 'unavailable';
+		}
+	}
+	return '';
+}
+
+/**
+ * Warn after a manual booking was saved over taken nights.
+ */
+function cc_booking_conflict_notice() {
+	$key = 'cc_booking_conflict_' . get_current_user_id();
+	if ( ! get_transient( $key ) ) {
+		return;
+	}
+	delete_transient( $key );
+	echo '<div class="notice notice-warning"><p>' . esc_html__( 'Saved as Pending: the room is missing, the dates are wrong, or those nights are already taken. Fix the dates before confirming.', 'cobbleandcandle-core' ) . '</p></div>';
+}
+add_action( 'admin_notices', 'cc_booking_conflict_notice' );
+
+/**
+ * Open (pending) requests from one email address.
+ *
+ * @param string $email Guest email.
+ * @return int
+ */
+function cc_open_requests_for( $email ) {
+	return count(
+		get_posts(
+			array(
+				'post_type'      => 'cc_booking',
+				'post_status'    => 'publish',
+				'posts_per_page' => 5,
+				'fields'         => 'ids',
+				'no_found_rows'  => true,
+				'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- one lookup per booking request.
+					array(
+						'key'   => 'cc_email',
+						'value' => $email,
+					),
+					array(
+						'key'   => 'cc_status',
+						'value' => 'pending',
+					),
+				),
+			)
+		)
+	);
+}
+
+/**
+ * Release requests the owner hasn't answered, so unanswered (or fake) requests can't hold nights forever.
+ * Runs with the hourly calendar sync.
+ */
+function cc_expire_pending_bookings() {
+	/**
+	 * Hours a booking request holds its nights before it lapses.
+	 *
+	 * @param int $hours Default 48.
+	 */
+	$hours = max( 1, (int) apply_filters( 'cc_pending_hold_hours', 48 ) );
+	$ids   = get_posts(
+		array(
+			'post_type'      => 'cc_booking',
+			'post_status'    => 'publish',
+			'posts_per_page' => 200,
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+			'date_query'     => array( array( 'before' => $hours . ' hours ago' ) ),
+			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- hourly cron.
+				array(
+					'key'   => 'cc_status',
+					'value' => 'pending',
+				),
+				array(
+					'key'   => 'cc_source',
+					'value' => 'site',
+				),
+			),
+		)
+	);
+	foreach ( $ids as $id ) {
+		update_post_meta( $id, 'cc_status', 'cancelled' );
+		update_post_meta( $id, 'cc_expired', 1 );
+	}
+}
+add_action( 'cc_ical_sync', 'cc_expire_pending_bookings' );
+
+/**
+ * Room booking requests: three per IP every 10 minutes.
+ *
+ * @param int    $limit Limit.
+ * @param string $form  Form name.
+ * @return int
+ */
+function cc_room_rate_limit( $limit, $form ) {
+	return 'room' === $form ? min( $limit, 3 ) : $limit;
+}
+add_filter( 'cc_form_rate_limit', 'cc_room_rate_limit', 5, 2 );
+
+/**
+ * Privacy: export a guest's bookings (Tools → Export Personal Data).
+ *
+ * @param string $email Email address.
+ * @return array{data: array<int, array<string, mixed>>, done: bool}
+ */
+function cc_privacy_export_bookings( $email ) {
+	$data = array();
+	foreach ( cc_bookings_for_email( $email ) as $id ) {
+		$items = array();
+		foreach ( cc_booking_fields() as $key => list( $label ) ) {
+			$value   = 'cc_room' === $key ? cc_plain_title( (int) get_post_meta( $id, $key, true ) ) : (string) get_post_meta( $id, $key, true );
+			$items[] = array(
+				'name'  => $label,
+				'value' => $value,
+			);
+		}
+		$data[] = array(
+			'group_id'    => 'cc-bookings',
+			'group_label' => __( 'Room bookings', 'cobbleandcandle-core' ),
+			'item_id'     => 'cc-booking-' . $id,
+			'data'        => $items,
+		);
+	}
+	return array(
+		'data' => $data,
+		'done' => true,
+	);
+}
+
+/**
+ * Privacy: erase a guest's details from their bookings (the dates stay, so the calendar stays right).
+ *
+ * @param string $email Email address.
+ * @return array{items_removed: bool, items_retained: bool, messages: array<int, string>, done: bool}
+ */
+function cc_privacy_erase_bookings( $email ) {
+	$ids = cc_bookings_for_email( $email );
+	foreach ( $ids as $id ) {
+		foreach ( array( 'cc_name', 'cc_email', 'cc_phone', 'cc_message' ) as $key ) {
+			delete_post_meta( $id, $key );
+		}
+		wp_update_post(
+			array(
+				'ID'         => $id,
+				/* translators: %d: booking ID */
+				'post_title' => sprintf( __( 'Booking #%d', 'cobbleandcandle-core' ), $id ),
+			)
+		);
+	}
+	return array(
+		'items_removed'  => (bool) $ids,
+		'items_retained' => false,
+		'messages'       => array(),
+		'done'           => true,
+	);
+}
+
+/**
+ * Booking IDs for a guest email.
+ *
+ * @param string $email Email address.
+ * @return array<int, int>
+ */
+function cc_bookings_for_email( $email ) {
+	return get_posts(
+		array(
+			'post_type'      => 'cc_booking',
+			'post_status'    => 'any',
+			'posts_per_page' => 200,
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- privacy requests are rare.
+				array(
+					'key'   => 'cc_email',
+					'value' => sanitize_email( $email ),
+				),
+			),
+		)
+	);
+}
+
+add_filter(
+	'wp_privacy_personal_data_exporters',
+	static function ( $exporters ) {
+		$exporters['cobbleandcandle-bookings'] = array(
+			'exporter_friendly_name' => __( 'Room bookings', 'cobbleandcandle-core' ),
+			'callback'               => 'cc_privacy_export_bookings',
+		);
+		return $exporters;
+	}
+);
+add_filter(
+	'wp_privacy_personal_data_erasers',
+	static function ( $erasers ) {
+		$erasers['cobbleandcandle-bookings'] = array(
+			'eraser_friendly_name' => __( 'Room bookings', 'cobbleandcandle-core' ),
+			'callback'             => 'cc_privacy_erase_bookings',
+		);
+		return $erasers;
+	}
+);
+

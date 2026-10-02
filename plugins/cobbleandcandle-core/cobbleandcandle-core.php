@@ -66,6 +66,7 @@ register_deactivation_hook(
 			unregister_post_type( $post_type );
 		}
 		wp_clear_scheduled_hook( 'cc_ical_sync' );
+		wp_unschedule_hook( 'cc_ical_sync_room' );
 		flush_rewrite_rules();
 	}
 );

@@ -17,7 +17,12 @@ defined( 'ABSPATH' ) || exit;
  * @return string
  */
 function cc_room_ical_key( $room_id ) {
-	return substr( wp_hash( 'cc_room_ical|' . (int) $room_id ), 0, 16 );
+	$key = (string) get_post_meta( $room_id, '_cc_ical_key', true );
+	if ( '' === $key ) {
+		$key = strtolower( wp_generate_password( 24, false ) ); // Delete this meta to issue a new link.
+		update_post_meta( $room_id, '_cc_ical_key', $key );
+	}
+	return $key;
 }
 
 /**
@@ -94,7 +99,7 @@ function cc_serve_room_ical() {
 		array_push(
 			$lines,
 			'BEGIN:VEVENT',
-			'UID:booking-' . $booking_id . '@' . $host,
+			'UID:' . md5( $booking_id . '|' . cc_room_ical_key( $room_id ) ) . '@' . $host, // No sequential IDs.
 			'DTSTAMP:' . gmdate( 'Ymd\THis\Z' ),
 			'DTSTART;VALUE=DATE:' . str_replace( '-', '', $in ),
 			'DTEND;VALUE=DATE:' . str_replace( '-', '', $out ),
@@ -116,12 +121,16 @@ add_action( 'template_redirect', 'cc_serve_room_ical', 0 );
  * Parse all-day (or timed) VEVENTs from an iCal body into night ranges.
  *
  * @param string $body iCal text.
- * @return array<int, array{start: string, end: string}>
+ * @return array<int, array{start: string, end: string}>|null Null when the body can't be parsed.
  */
 function cc_parse_ical_ranges( $body ) {
 	$body   = preg_replace( "/\r?\n[ \t]/", '', (string) $body ); // Unfold long lines.
 	$ranges = array();
-	if ( ! preg_match_all( '/BEGIN:VEVENT(.*?)END:VEVENT/s', (string) $body, $events ) ) {
+	$found  = null === $body ? false : preg_match_all( '/BEGIN:VEVENT(.*?)END:VEVENT/s', $body, $events );
+	if ( false === $found ) {
+		return null; // PCRE limit hit: treat as a failed read, never as "no bookings".
+	}
+	if ( 0 === $found ) {
 		return $ranges;
 	}
 	$horizon = gmdate( 'Y-m-d', strtotime( '+2 years' ) );
@@ -139,6 +148,8 @@ function cc_parse_ical_ranges( $body ) {
 		if ( $end <= $start ) {
 			$end = gmdate( 'Y-m-d', strtotime( $start . ' 12:00:00 UTC' ) + DAY_IN_SECONDS );
 		}
+		$start    = max( $start, $today ); // Long platform blocks: keep only the part that matters.
+		$end      = min( $end, $horizon );
 		$ranges[] = array(
 			'start' => $start,
 			'end'   => $end,
@@ -158,7 +169,7 @@ function cc_parse_ical_ranges( $body ) {
  * @return array{ok: int, failed: int}
  */
 function cc_sync_room_ical( $room_id ) {
-	$feeds    = (array) get_post_meta( $room_id, 'cc_ical_import', true );
+	$feeds    = array_slice( (array) get_post_meta( $room_id, 'cc_ical_import', true ), 0, 5 );
 	$previous = (array) get_post_meta( $room_id, '_cc_ical_cache', true );
 	$cache    = array();
 	$result   = array(
@@ -181,8 +192,12 @@ function cc_sync_room_ical( $room_id ) {
 			)
 		);
 		$body     = is_wp_error( $response ) ? '' : wp_remote_retrieve_body( $response );
-		if ( 200 === wp_remote_retrieve_response_code( $response ) && false !== strpos( $body, 'BEGIN:VCALENDAR' ) ) {
-			$cache[ $hash ] = cc_parse_ical_ranges( $body );
+		// A complete calendar only: a cut-off body would silently free the nights it lost.
+		$ranges = 200 === (int) wp_remote_retrieve_response_code( $response ) && false !== strpos( $body, 'BEGIN:VCALENDAR' ) && false !== strpos( $body, 'END:VCALENDAR' )
+			? cc_parse_ical_ranges( $body )
+			: null;
+		if ( null !== $ranges ) {
+			$cache[ $hash ] = $ranges;
 			++$result['ok'];
 		} else {
 			$cache[ $hash ] = isset( $previous[ $hash ] ) && is_array( $previous[ $hash ] ) ? $previous[ $hash ] : array();
@@ -203,7 +218,7 @@ function cc_sync_all_room_icals() {
 	$rooms = get_posts(
 		array(
 			'post_type'      => 'cc_room',
-			'post_status'    => array( 'publish', 'private', 'draft' ),
+			'post_status'    => array( 'publish', 'private' ), // Not drafts: only rooms an editor has published fetch remote links.
 			'posts_per_page' => 100,
 			'fields'         => 'ids',
 			'no_found_rows'  => true,
@@ -233,7 +248,7 @@ add_action( 'init', 'cc_schedule_ical_sync' );
  * @param int $room_id Room post ID.
  */
 function cc_sync_room_on_save( $room_id ) {
-	if ( wp_is_post_revision( $room_id ) || wp_is_post_autosave( $room_id ) ) {
+	if ( wp_is_post_revision( $room_id ) || wp_is_post_autosave( $room_id ) || ! in_array( get_post_status( $room_id ), array( 'publish', 'private' ), true ) ) {
 		return;
 	}
 	wp_schedule_single_event( time(), 'cc_ical_sync_room', array( (int) $room_id ) );
