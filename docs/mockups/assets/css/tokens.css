@@ -1,0 +1,132 @@
+/* =========================================================
+   TOKENS — one system, three themes.
+   Primitive -> semantic -> component. Names map 1:1 to Tailwind v4 @theme
+   (--color-*, --font-*, --radius-*, --shadow-*, --text-*).
+   ========================================================= */
+:root{
+  /* fluid type scale (Utopia-style, 390 -> 1440) */
+  --text-xs: clamp(0.75rem, 0.73rem + 0.08vw, 0.8125rem);
+  --text-sm: clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem);
+  --text-base: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  --text-lg: clamp(1.125rem, 1.08rem + 0.2vw, 1.25rem);
+  --text-xl: clamp(1.3rem, 1.18rem + 0.5vw, 1.625rem);
+  --text-2xl: clamp(1.6rem, 1.35rem + 1vw, 2.25rem);
+  --text-3xl: clamp(2rem, 1.6rem + 1.7vw, 3.125rem);
+  --text-4xl: clamp(2.5rem, 1.85rem + 2.8vw, 4.5rem);
+  --text-5xl: clamp(2.75rem, 1.9rem + 3.9vw, 5.75rem);
+  /* spacing */
+  --space-1: .25rem; --space-2: .5rem; --space-3: .75rem; --space-4: 1rem; --space-5: 1.5rem;
+  --space-6: 2rem; --space-7: 3rem; --space-8: 4rem; --space-9: 6rem;
+  --section-y: clamp(3.5rem, 2.5rem + 4vw, 6.5rem);
+  --container: 1240px; --gutter: clamp(1.25rem, .8rem + 2vw, 2.5rem);
+  --tap: 44px;
+  --shadow-card: 0 18px 40px -24px rgb(0 0 0 / .55);
+  --shadow-pop: 0 24px 60px -20px rgb(0 0 0 / .6);
+  --ease: cubic-bezier(.2,.7,.2,1);
+  --dur: .35s;
+  --header-h: 84px;
+  --mbar-h: 64px;
+  --radius-input: 4px;
+  --leader: radial-gradient(circle, currentColor 1px, transparent 1.4px) 0 100% / 7px 4px repeat-x;
+}
+
+/* ---------- Theme 1: Lampwright — Candlelit Old Town (default, dark) ---------- */
+:root, [data-theme="lampwright"]{
+  color-scheme: dark;
+  --color-bg:#15110D; --color-surface:#201A14; --color-surface-2:#2A2219;
+  --color-text:#F2E6D3; --color-muted:#AD9F8A;
+  --color-accent:#C79A55; --color-accent-contrast:#17120B; --color-brand-alt:#5C2A22;
+  --color-hero:#15110D; --color-hero-text:#F2E6D3; --color-hero-accent:#C79A55;
+  --color-focus:#F2E6D3; --color-success:#9CCB8F; --color-warn:#E0A23A;
+  --color-line: color-mix(in srgb, var(--color-text) 14%, transparent);
+  --color-board:#1B1510; --color-board-ink:#E9D9BC; --color-board-frame:#C79A55;
+  --color-glow:#F4B860;
+  /* illustration palette */
+  --il-sky1:#0F0B08; --il-sky2:#2A1D13; --il-stone-far:#1E1711; --il-stone:#3A2C20; --il-wall:#4A2A1E; --il-mortar:#2A1C14;
+  --il-iron:#0B0806; --il-cobble:#2E241B; --il-cobble-bg:#17110C; --il-plate:#2A2119; --il-plate-rim:#C79A55;
+  --il-food1:#7E2F25; --il-food2:#DCC79E; --il-food3:#7A8B4F; --il-art1:#1A140F; --il-art2:#2E2117; --il-map:#201A14;
+  --font-display:"Bodoni Moda", "Didot", Georgia, serif;
+  --font-sans:"Mulish", system-ui, sans-serif;
+  --display-weight:400; --display-fvs-small:"opsz" 11; --em-style:italic;
+  --h1-track:-0.015em; --label-track:.28em; --wm-track:.3em; --wm-transform:uppercase;
+  --btn-transform:uppercase; --btn-track:.2em; --btn-size:.78rem; --btn-weight:700;
+  --radius-card:3px; --radius-btn:2px; --radius-chip:999px; --radius-input:2px;
+  --color-eyebrow:#C79A55;
+  --color-status-open:#9CCB8F; --color-status-warn:#E0A23A; --color-status-off:#8A7D6B;
+  --footer-bg:#0F0C09; --footer-text:#F2E6D3; --footer-muted:#AD9F8A; --footer-accent:#C79A55; --footer-accent-contrast:#17120B; --footer-surface:#1A1510;
+  --board-frame-w:2px; --board-inset:8px; --board-radius:2px;
+  --display-scale:1; --h-weight:400;
+  --texture: radial-gradient(900px 520px at 88% -4%, rgb(244 184 96 / .10), transparent 70%), radial-gradient(700px 600px at 0% 100%, rgb(244 184 96 / .06), transparent 70%);
+  --card-border: 1px solid color-mix(in srgb, var(--color-accent) 28%, transparent);
+  --hero-scrim: linear-gradient(90deg, rgb(21 17 13 / .96) 0%, rgb(21 17 13 / .86) 36%, rgb(21 17 13 / .2) 64%, rgb(21 17 13 / 0) 100%);
+  --hero-scrim-m: linear-gradient(180deg, rgb(21 17 13 / .2) 0%, rgb(21 17 13 / .7) 32%, rgb(21 17 13 / .96) 58%);
+}
+
+/* ---------- Theme 2: The Ember & Arch — Brick & Ember (dark, tavern) ---------- */
+[data-theme="ember-arch"]{
+  color-scheme: dark;
+  --color-bg:#1F1410; --color-surface:#2C1D16; --color-surface-2:#38261D;
+  --color-text:#F6E9D6; --color-muted:#C2AA94;
+  --color-accent:#E2692A; --color-accent-contrast:#1A0E09; --color-brand-alt:#8E3A26;
+  --color-hero:#1F1410; --color-hero-text:#F6E9D6; --color-hero-accent:#F08A4B;
+  --color-focus:#F6E9D6; --color-success:#9CCB8F; --color-warn:#E0A23A;
+  --color-board:#2B2B26; --color-board-ink:#EDE6D6; --color-board-frame:#7A5A3A;
+  --color-glow:#FFAA5C;
+  --il-sky1:#1A0F0B; --il-sky2:#3B2016; --il-stone-far:#2A1913; --il-stone:#4E3326; --il-wall:#7A3221; --il-mortar:#3A1E15;
+  --il-iron:#120A07; --il-cobble:#3A2A20; --il-cobble-bg:#1C130E; --il-plate:#3A281E; --il-plate-rim:#E2692A;
+  --il-food1:#B4532A; --il-food2:#E8C27A; --il-food3:#7F8F4A; --il-art1:#2A1A12; --il-art2:#5A2A1A; --il-map:#2C1D16;
+  --font-display:"EB Garamond", Garamond, Georgia, serif;
+  --font-sans:"Outfit", system-ui, sans-serif;
+  --display-weight:500; --display-fvs-small:normal; --em-style:italic;
+  --h1-track:-0.02em; --label-track:.22em; --wm-track:.02em; --wm-transform:none;
+  --btn-transform:uppercase; --btn-track:.12em; --btn-size:.875rem; --btn-weight:700;
+  --radius-card:6px; --radius-btn:4px; --radius-input:4px;
+  --color-eyebrow:#F08A4B;
+  --color-line: color-mix(in srgb, var(--color-text) 14%, transparent);
+  --color-status-open:#9CCB8F; --color-status-warn:#F2B04A; --color-status-off:#8E7867;
+  --footer-bg:#170F0C; --footer-text:#F6E9D6; --footer-muted:#C2AA94; --footer-accent:#F08A4B; --footer-accent-contrast:#1A0E09; --footer-surface:#24170F;
+  --board-frame-w:12px; --board-inset:10px; --board-radius:8px;
+  --display-scale:1.06; --h-weight:500;
+  --texture: linear-gradient(rgb(31 20 16 / .93), rgb(31 20 16 / .93)), repeating-linear-gradient(0deg, transparent 0 21px, rgb(0 0 0 / .5) 21px 23px), repeating-linear-gradient(90deg, #7A3221 0 42px, #5e2619 42px 44px);
+  --card-border: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
+  --hero-scrim: linear-gradient(90deg, rgb(31 20 16 / .96) 0%, rgb(31 20 16 / .86) 36%, rgb(31 20 16 / .2) 64%, rgb(31 20 16 / 0) 100%);
+  --hero-scrim-m: linear-gradient(180deg, rgb(31 20 16 / .2) 0%, rgb(31 20 16 / .7) 32%, rgb(31 20 16 / .96) 58%);
+}
+
+/* ---------- Theme 3: Ashlar & Iron — Limestone & Iron (light) ---------- */
+[data-theme="ashlar-iron"]{
+  color-scheme: light;
+  --color-bg:#EFE6D6; --color-surface:#F8F1E4; --color-surface-2:#E6D9C2;
+  --color-text:#231C17; --color-muted:#62574B;
+  --color-accent:#7A2A2E; --color-accent-contrast:#FFFFFF; --color-brand-alt:#9A4A2E;
+  --color-hero:#231C17; --color-hero-text:#F8F1E4; --color-hero-accent:#E0AE82;
+  --color-focus:#7A2A2E; --color-success:#3D7A47; --color-warn:#B9781A;
+  --color-board:#E6D9C2; --color-board-ink:#231C17; --color-board-frame:#9A4A2E;
+  --color-glow:#FFC77A;
+  --il-sky1:#2A1E16; --il-sky2:#7A5536; --il-stone-far:#5A4636; --il-stone:#9C8466; --il-wall:#C9AE86; --il-mortar:#8C7457;
+  --il-iron:#1A1410; --il-cobble:#7A6650; --il-cobble-bg:#3A2E24; --il-plate:#F8F1E4; --il-plate-rim:#C9B08A;
+  --il-food1:#7A2A2E; --il-food2:#E2B866; --il-food3:#6F7F45; --il-art1:#D8C6A6; --il-art2:#B8A285; --il-map:#F3EADA;
+  --font-display:"Marcellus", "Trajan Pro", Georgia, serif;
+  --font-sans:"Alegreya Sans", system-ui, sans-serif;
+  --display-weight:400; --display-fvs-small:normal; --em-style:normal;
+  --h1-track:-0.01em; --label-track:.2em; --wm-track:.14em; --wm-transform:uppercase;
+  --btn-transform:none; --btn-track:.02em; --btn-size:1rem; --btn-weight:700;
+  --radius-card:12px; --radius-btn:999px; --radius-input:8px;
+  --color-eyebrow:#9A4A2E;
+  --color-line: color-mix(in srgb, var(--color-text) 16%, transparent);
+  --color-status-open:#3D7A47; --color-status-warn:#B9781A; --color-status-off:#8C7F70;
+  --footer-bg:#231C17; --footer-text:#F8F1E4; --footer-muted:#CDBFAA; --footer-accent:#E0AE82; --footer-accent-contrast:#231C17; --footer-surface:#2E2620;
+  --board-frame-w:6px; --board-inset:8px; --board-radius:14px;
+  --display-scale:1; --h-weight:400;
+  --texture: linear-gradient(rgb(248 241 228 / .9), rgb(248 241 228 / .9)), repeating-linear-gradient(0deg, transparent 0 91px, #B8A285 91px 92px), repeating-linear-gradient(90deg, transparent 0 179px, #B8A285 179px 180px);
+  --card-border: 1px solid color-mix(in srgb, var(--color-text) 14%, transparent);
+  --shadow-card: 0 18px 40px -26px rgb(35 28 23 / .35);
+  --shadow-pop: 0 24px 60px -24px rgb(35 28 23 / .45);
+  --hero-scrim: linear-gradient(90deg, rgb(35 28 23 / .95) 0%, rgb(35 28 23 / .84) 36%, rgb(35 28 23 / .18) 64%, rgb(35 28 23 / 0) 100%);
+  --hero-scrim-m: linear-gradient(180deg, rgb(35 28 23 / .2) 0%, rgb(35 28 23 / .7) 32%, rgb(35 28 23 / .96) 58%);
+}
+
+/* ---------- component-level tokens (still theme-swappable) ---------- */
+:root, [data-theme="lampwright"]{ --wm-size:20px; --nav-transform:uppercase; --nav-track:.16em; --nav-size:.8125rem; --color-board-title:#F4B860; --hero-h1-max:11ch; }
+[data-theme="ember-arch"]{ --wm-size:27px; --nav-transform:none; --nav-track:.01em; --nav-size:1rem; --color-board-title:#FFAA5C; --hero-h1-max:10ch; }
+[data-theme="ashlar-iron"]{ --wm-size:21px; --nav-transform:uppercase; --nav-track:.12em; --nav-size:.875rem; --color-board-title:#7A2A2E; --hero-h1-max:10.5ch; }

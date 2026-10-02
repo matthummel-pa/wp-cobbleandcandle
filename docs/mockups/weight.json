@@ -1,0 +1,314 @@
+{
+ "lampwright@1440": {
+  "requests": 9,
+  "raw_kb": 467,
+  "transfer_kb_gzip": 147,
+  "files": [
+   [
+    "assets/css/tokens.css",
+    9260,
+    2768
+   ],
+   [
+    "assets/css/fonts.css",
+    3505,
+    524
+   ],
+   [
+    "assets/css/main.css",
+    53695,
+    11359
+   ],
+   [
+    "index.html",
+    234719,
+    30393
+   ],
+   [
+    "assets/js/app.js",
+    12735,
+    3939
+   ],
+   [
+    "assets/js/content.js",
+    77845,
+    15581
+   ],
+   [
+    "assets/fonts/BodoniModa-400-normal.woff2",
+    26688,
+    26688
+   ],
+   [
+    "assets/fonts/BodoniModa-400-italic.woff2",
+    29644,
+    29644
+   ],
+   [
+    "assets/fonts/Mulish-var.woff2",
+    29968,
+    29968
+   ]
+  ]
+ },
+ "ember-arch@1440": {
+  "requests": 9,
+  "raw_kb": 465,
+  "transfer_kb_gzip": 146,
+  "files": [
+   [
+    "assets/css/main.css",
+    53695,
+    11359
+   ],
+   [
+    "assets/css/fonts.css",
+    3505,
+    524
+   ],
+   [
+    "assets/css/tokens.css",
+    9260,
+    2768
+   ],
+   [
+    "index.html",
+    234719,
+    30393
+   ],
+   [
+    "assets/js/app.js",
+    12735,
+    3939
+   ],
+   [
+    "assets/js/content.js",
+    77845,
+    15581
+   ],
+   [
+    "assets/fonts/Outfit-var.woff2",
+    32292,
+    32292
+   ],
+   [
+    "assets/fonts/EBGaramond-500-normal.woff2",
+    25264,
+    25264
+   ],
+   [
+    "assets/fonts/EBGaramond-500-italic.woff2",
+    26952,
+    26952
+   ]
+  ]
+ },
+ "ashlar-iron@1440": {
+  "requests": 9,
+  "raw_kb": 443,
+  "transfer_kb_gzip": 124,
+  "files": [
+   [
+    "assets/css/tokens.css",
+    9260,
+    2768
+   ],
+   [
+    "assets/css/main.css",
+    53695,
+    11359
+   ],
+   [
+    "assets/css/fonts.css",
+    3505,
+    524
+   ],
+   [
+    "index.html",
+    234719,
+    30393
+   ],
+   [
+    "assets/js/app.js",
+    12735,
+    3939
+   ],
+   [
+    "assets/js/content.js",
+    77845,
+    15581
+   ],
+   [
+    "assets/fonts/AlegreyaSans-400-normal.woff2",
+    23708,
+    23708
+   ],
+   [
+    "assets/fonts/AlegreyaSans-700-normal.woff2",
+    23976,
+    23976
+   ],
+   [
+    "assets/fonts/Marcellus-400-normal.woff2",
+    14552,
+    14552
+   ]
+  ]
+ },
+ "lampwright@390": {
+  "requests": 9,
+  "raw_kb": 467,
+  "transfer_kb_gzip": 147,
+  "files": [
+   [
+    "assets/css/fonts.css",
+    3505,
+    524
+   ],
+   [
+    "assets/css/main.css",
+    53695,
+    11359
+   ],
+   [
+    "assets/css/tokens.css",
+    9260,
+    2768
+   ],
+   [
+    "index.html",
+    234719,
+    30393
+   ],
+   [
+    "assets/js/content.js",
+    77845,
+    15581
+   ],
+   [
+    "assets/js/app.js",
+    12735,
+    3939
+   ],
+   [
+    "assets/fonts/BodoniModa-400-normal.woff2",
+    26688,
+    26688
+   ],
+   [
+    "assets/fonts/Mulish-var.woff2",
+    29968,
+    29968
+   ],
+   [
+    "assets/fonts/BodoniModa-400-italic.woff2",
+    29644,
+    29644
+   ]
+  ]
+ },
+ "ember-arch@390": {
+  "requests": 9,
+  "raw_kb": 465,
+  "transfer_kb_gzip": 146,
+  "files": [
+   [
+    "assets/css/tokens.css",
+    9260,
+    2768
+   ],
+   [
+    "assets/css/fonts.css",
+    3505,
+    524
+   ],
+   [
+    "assets/css/main.css",
+    53695,
+    11359
+   ],
+   [
+    "index.html",
+    234719,
+    30393
+   ],
+   [
+    "assets/js/app.js",
+    12735,
+    3939
+   ],
+   [
+    "assets/js/content.js",
+    77845,
+    15581
+   ],
+   [
+    "assets/fonts/EBGaramond-500-normal.woff2",
+    25264,
+    25264
+   ],
+   [
+    "assets/fonts/Outfit-var.woff2",
+    32292,
+    32292
+   ],
+   [
+    "assets/fonts/EBGaramond-500-italic.woff2",
+    26952,
+    26952
+   ]
+  ]
+ },
+ "ashlar-iron@390": {
+  "requests": 9,
+  "raw_kb": 443,
+  "transfer_kb_gzip": 124,
+  "files": [
+   [
+    "assets/css/main.css",
+    53695,
+    11359
+   ],
+   [
+    "assets/css/tokens.css",
+    9260,
+    2768
+   ],
+   [
+    "assets/css/fonts.css",
+    3505,
+    524
+   ],
+   [
+    "index.html",
+    234719,
+    30393
+   ],
+   [
+    "assets/js/app.js",
+    12735,
+    3939
+   ],
+   [
+    "assets/js/content.js",
+    77845,
+    15581
+   ],
+   [
+    "assets/fonts/Marcellus-400-normal.woff2",
+    14552,
+    14552
+   ],
+   [
+    "assets/fonts/AlegreyaSans-700-normal.woff2",
+    23976,
+    23976
+   ],
+   [
+    "assets/fonts/AlegreyaSans-400-normal.woff2",
+    23708,
+    23708
+   ]
+  ]
+ }
+}

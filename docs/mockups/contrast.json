@@ -1,0 +1,560 @@
+{
+ "lampwright": [
+  {
+   "pair": "Body text / bg",
+   "fg": "#F2E6D3",
+   "bg": "#15110D",
+   "ratio": 15.24,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Body text / surface",
+   "fg": "#F2E6D3",
+   "bg": "#201A14",
+   "ratio": 13.97,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Body text / surface-2 (popover)",
+   "fg": "#F2E6D3",
+   "bg": "#2A2219",
+   "ratio": 12.7,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Muted / bg",
+   "fg": "#AD9F8A",
+   "bg": "#15110D",
+   "ratio": 7.25,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Muted / surface",
+   "fg": "#AD9F8A",
+   "bg": "#201A14",
+   "ratio": 6.65,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Button text / accent",
+   "fg": "#17120B",
+   "bg": "#C79A55",
+   "ratio": 7.25,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Accent link / bg",
+   "fg": "#C79A55",
+   "bg": "#15110D",
+   "ratio": 7.32,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Accent link / surface",
+   "fg": "#C79A55",
+   "bg": "#201A14",
+   "ratio": 6.71,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Eyebrow / bg",
+   "fg": "#C79A55",
+   "bg": "#15110D",
+   "ratio": 7.32,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Eyebrow / surface",
+   "fg": "#C79A55",
+   "bg": "#201A14",
+   "ratio": 6.71,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Hero text / hero scrim",
+   "fg": "#F2E6D3",
+   "bg": "#15110D",
+   "ratio": 15.24,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Hero accent / hero scrim",
+   "fg": "#C79A55",
+   "bg": "#15110D",
+   "ratio": 7.32,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Hero muted (82% mix) / hero",
+   "fg": "#CAC0AF",
+   "bg": "#15110D",
+   "ratio": 10.44,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Board ink / board",
+   "fg": "#E9D9BC",
+   "bg": "#1B1510",
+   "ratio": 13.02,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Board title / board",
+   "fg": "#F4B860",
+   "bg": "#1B1510",
+   "ratio": 10.22,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Footer text / footer",
+   "fg": "#F2E6D3",
+   "bg": "#0F0C09",
+   "ratio": 15.82,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Footer muted / footer",
+   "fg": "#AD9F8A",
+   "bg": "#0F0C09",
+   "ratio": 7.52,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Footer accent / footer",
+   "fg": "#C79A55",
+   "bg": "#0F0C09",
+   "ratio": 7.6,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Footer button text / footer accent",
+   "fg": "#17120B",
+   "bg": "#C79A55",
+   "ratio": 7.25,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Focus ring / bg",
+   "fg": "#F2E6D3",
+   "bg": "#15110D",
+   "ratio": 15.24,
+   "kind": "ui",
+   "passes": true
+  },
+  {
+   "pair": "Input border (52% mix) / bg",
+   "fg": "#888074",
+   "bg": "#15110D",
+   "ratio": 4.82,
+   "kind": "ui",
+   "passes": true
+  },
+  {
+   "pair": "Open-now dot / surface",
+   "fg": "#9CCB8F",
+   "bg": "#201A14",
+   "ratio": 9.31,
+   "kind": "ui",
+   "passes": true
+  },
+  {
+   "pair": "Closing-soon dot / surface",
+   "fg": "#E0A23A",
+   "bg": "#201A14",
+   "ratio": 7.71,
+   "kind": "ui",
+   "passes": true
+  }
+ ],
+ "ember-arch": [
+  {
+   "pair": "Body text / bg",
+   "fg": "#F6E9D6",
+   "bg": "#1F1410",
+   "ratio": 15.05,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Body text / surface",
+   "fg": "#F6E9D6",
+   "bg": "#2C1D16",
+   "ratio": 13.55,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Body text / surface-2 (popover)",
+   "fg": "#F6E9D6",
+   "bg": "#38261D",
+   "ratio": 11.99,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Muted / bg",
+   "fg": "#C2AA94",
+   "bg": "#1F1410",
+   "ratio": 8.12,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Muted / surface",
+   "fg": "#C2AA94",
+   "bg": "#2C1D16",
+   "ratio": 7.32,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Button text / accent",
+   "fg": "#1A0E09",
+   "bg": "#E2692A",
+   "ratio": 5.66,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Accent link / bg",
+   "fg": "#E2692A",
+   "bg": "#1F1410",
+   "ratio": 5.39,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Accent link / surface",
+   "fg": "#E2692A",
+   "bg": "#2C1D16",
+   "ratio": 4.86,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Eyebrow / bg",
+   "fg": "#F08A4B",
+   "bg": "#1F1410",
+   "ratio": 7.24,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Eyebrow / surface",
+   "fg": "#F08A4B",
+   "bg": "#2C1D16",
+   "ratio": 6.52,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Hero text / hero scrim",
+   "fg": "#F6E9D6",
+   "bg": "#1F1410",
+   "ratio": 15.05,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Hero accent / hero scrim",
+   "fg": "#F08A4B",
+   "bg": "#1F1410",
+   "ratio": 7.24,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Hero muted (82% mix) / hero",
+   "fg": "#CFC3B2",
+   "bg": "#1F1410",
+   "ratio": 10.38,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Board ink / board",
+   "fg": "#EDE6D6",
+   "bg": "#2B2B26",
+   "ratio": 11.44,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Board title / board",
+   "fg": "#FFAA5C",
+   "bg": "#2B2B26",
+   "ratio": 7.56,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Footer text / footer",
+   "fg": "#F6E9D6",
+   "bg": "#170F0C",
+   "ratio": 15.81,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Footer muted / footer",
+   "fg": "#C2AA94",
+   "bg": "#170F0C",
+   "ratio": 8.53,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Footer accent / footer",
+   "fg": "#F08A4B",
+   "bg": "#170F0C",
+   "ratio": 7.6,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Footer button text / footer accent",
+   "fg": "#1A0E09",
+   "bg": "#F08A4B",
+   "ratio": 7.6,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Focus ring / bg",
+   "fg": "#F6E9D6",
+   "bg": "#1F1410",
+   "ratio": 15.05,
+   "kind": "ui",
+   "passes": true
+  },
+  {
+   "pair": "Input border (52% mix) / bg",
+   "fg": "#8F8377",
+   "bg": "#1F1410",
+   "ratio": 4.87,
+   "kind": "ui",
+   "passes": true
+  },
+  {
+   "pair": "Open-now dot / surface",
+   "fg": "#9CCB8F",
+   "bg": "#2C1D16",
+   "ratio": 8.77,
+   "kind": "ui",
+   "passes": true
+  },
+  {
+   "pair": "Closing-soon dot / surface",
+   "fg": "#F2B04A",
+   "bg": "#2C1D16",
+   "ratio": 8.56,
+   "kind": "ui",
+   "passes": true
+  }
+ ],
+ "ashlar-iron": [
+  {
+   "pair": "Body text / bg",
+   "fg": "#231C17",
+   "bg": "#EFE6D6",
+   "ratio": 13.57,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Body text / surface",
+   "fg": "#231C17",
+   "bg": "#F8F1E4",
+   "ratio": 14.96,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Body text / surface-2 (popover)",
+   "fg": "#231C17",
+   "bg": "#E6D9C2",
+   "ratio": 12.06,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Muted / bg",
+   "fg": "#62574B",
+   "bg": "#EFE6D6",
+   "ratio": 5.68,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Muted / surface",
+   "fg": "#62574B",
+   "bg": "#F8F1E4",
+   "ratio": 6.26,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Button text / accent",
+   "fg": "#FFFFFF",
+   "bg": "#7A2A2E",
+   "ratio": 9.55,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Accent link / bg",
+   "fg": "#7A2A2E",
+   "bg": "#EFE6D6",
+   "ratio": 7.72,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Accent link / surface",
+   "fg": "#7A2A2E",
+   "bg": "#F8F1E4",
+   "ratio": 8.5,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Eyebrow / bg",
+   "fg": "#9A4A2E",
+   "bg": "#EFE6D6",
+   "ratio": 5.0,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Eyebrow / surface",
+   "fg": "#9A4A2E",
+   "bg": "#F8F1E4",
+   "ratio": 5.51,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Hero text / hero scrim",
+   "fg": "#F8F1E4",
+   "bg": "#231C17",
+   "ratio": 14.96,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Hero accent / hero scrim",
+   "fg": "#E0AE82",
+   "bg": "#231C17",
+   "ratio": 8.44,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Hero muted (82% mix) / hero",
+   "fg": "#D2CBBF",
+   "bg": "#231C17",
+   "ratio": 10.43,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Board ink / board",
+   "fg": "#231C17",
+   "bg": "#E6D9C2",
+   "ratio": 12.06,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Board title / board",
+   "fg": "#7A2A2E",
+   "bg": "#E6D9C2",
+   "ratio": 6.86,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Footer text / footer",
+   "fg": "#F8F1E4",
+   "bg": "#231C17",
+   "ratio": 14.96,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Footer muted / footer",
+   "fg": "#CDBFAA",
+   "bg": "#231C17",
+   "ratio": 9.3,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Footer accent / footer",
+   "fg": "#E0AE82",
+   "bg": "#231C17",
+   "ratio": 8.44,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Footer button text / footer accent",
+   "fg": "#231C17",
+   "bg": "#E0AE82",
+   "ratio": 8.44,
+   "kind": "text",
+   "passes": true
+  },
+  {
+   "pair": "Focus ring / bg",
+   "fg": "#7A2A2E",
+   "bg": "#EFE6D6",
+   "ratio": 7.72,
+   "kind": "ui",
+   "passes": true
+  },
+  {
+   "pair": "Input border (52% mix) / bg",
+   "fg": "#857D73",
+   "bg": "#EFE6D6",
+   "ratio": 3.28,
+   "kind": "ui",
+   "passes": true
+  },
+  {
+   "pair": "Open-now dot / surface",
+   "fg": "#3D7A47",
+   "bg": "#F8F1E4",
+   "ratio": 4.59,
+   "kind": "ui",
+   "passes": true
+  },
+  {
+   "pair": "Closing-soon dot / surface",
+   "fg": "#B9781A",
+   "bg": "#F8F1E4",
+   "ratio": 3.24,
+   "kind": "ui",
+   "passes": true
+  }
+ ]
+}
