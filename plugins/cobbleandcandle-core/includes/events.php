@@ -113,7 +113,7 @@ function cc_event_schema( $event_id ) {
 			'url'   => home_url( '/' ),
 		),
 	);
-	$image = get_the_post_thumbnail_url( $event_id, 'full' );
+	$image  = get_the_post_thumbnail_url( $event_id, 'full' );
 	if ( $image ) {
 		$schema['image'] = array( $image );
 	}

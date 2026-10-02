@@ -30,3 +30,13 @@ Merging to `main` runs `.github/workflows/deploy-theme.yml`: Composer (no dev) +
 - Core-block styling that must beat WordPress global styles lives in `resources/css/core-blocks.css`,
   which is imported **without** a CSS layer. Layered rules always lose to WordPress's unlayered CSS.
 - Demo content: `studio wp cobbleandcandle seed --path ~/Studio/cobbleandcandle` (Core plugin active).
+- Blocks that read the current page (Page Hero, Location Details, Event Details) use `App\context_post()`:
+  the queried object on the front end, the global post in the editor preview (`?post_id=` is passed by
+  `resources/js/editor.js`). Alpine directives in block views need an `x-data` ancestor in the block itself.
+- Location and Events pages are post type archives (`/locations/`, `/events/`), rendered by
+  `templates/archive-cc_location.html` and `archive-cc_event.html`. A Page with the same slug is shadowed.
+- Forms post to `admin-post.php` handlers in the Core plugin (`cc_inquiry`, `cc_reservation`, `cc_contact`)
+  and redirect back with `?inquiry=` / `?reservation=` / `?contact=` = sent | invalid | expired | error.
+  Locally a valid submission shows "error" unless a mail catcher is set up.
+- OpenTable / Resy booking modes load the location's "Provider booking page" URL in an iframe only after
+  the guest clicks; with no URL the panel falls back to call-to-book.
