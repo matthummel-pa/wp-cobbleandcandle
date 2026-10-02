@@ -20,7 +20,7 @@ tar -C "$root" \
   --exclude='*.zip' --exclude='.mcp.json' --exclude='.wp-env.json' --exclude='.pa11yci.json' \
   --exclude='.wp-review-allow' --exclude='.gitignore' --exclude='.editorconfig' \
   --exclude='CLAUDE.md' --exclude='AGENTS.md' --exclude='phpcs.xml.dist' --exclude='phpstan*.neon*' \
-  --exclude='lighthouse-report*' --exclude='plugins' --exclude='child-theme' --exclude='resources/lang/.views' \
+  --exclude='lighthouse-report*' --exclude='plugins' --exclude='resources/lang/.views' \
   -cf - . | tar -C "$stage/$slug" -xf -
 
 [[ -f "$stage/$slug/style.css" ]] || { echo "style.css missing from pack" >&2; exit 1; }
