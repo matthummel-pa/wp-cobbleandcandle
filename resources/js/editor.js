@@ -1,8 +1,9 @@
 import { registerBlockType } from '@wordpress/blocks'
 import { createElement as el, Fragment } from '@wordpress/element'
 import { InspectorControls, InnerBlocks, MediaUpload, MediaUploadCheck, useBlockProps } from '@wordpress/block-editor'
-import { Button, PanelBody, TextControl, ToggleControl } from '@wordpress/components'
+import { Button, PanelBody, TextareaControl, TextControl, ToggleControl } from '@wordpress/components'
 import ServerSideRender from '@wordpress/server-side-render'
+import { useSelect } from '@wordpress/data'
 import { __ } from '@wordpress/i18n'
 
 /* Every resources/blocks/<name>/block.json is registered here and rendered by Blade (app/blocks.php).
@@ -42,8 +43,33 @@ const LABELS = {
   press: __('Press names (comma separated)', 'cobbleandcandle'),
   seatings: __('Seatings nightly', 'cobbleandcandle'),
   imageId: __('Photo', 'cobbleandcandle'),
-  imageIds: __('Photos (5)', 'cobbleandcandle'),
+  imageIds: __('Photos', 'cobbleandcandle'),
+  lede: __('Intro (empty = the page excerpt)', 'cobbleandcandle'),
+  art: __('Placeholder art when there is no photo', 'cobbleandcandle'),
+  showCrumbs: __('Show breadcrumbs', 'cobbleandcandle'),
+  picks: __('Chef’s picks to show (0 = none)', 'cobbleandcandle'),
+  allergenNote: __('Allergen note', 'cobbleandcandle'),
+  orderTitle: __('Order card title (empty = hide)', 'cobbleandcandle'),
+  orderText: __('Order card text', 'cobbleandcandle'),
+  notes: __('Good to know (one per line)', 'cobbleandcandle'),
+  callHours: __('Phone hours note', 'cobbleandcandle'),
+  reserveLabel: __('Reserve button label', 'cobbleandcandle'),
+  contacts: __('Direct contacts (one per line, Label: value)', 'cobbleandcandle'),
+  showFeatured: __('Feature the next event', 'cobbleandcandle'),
+  listTitle: __('List heading', 'cobbleandcandle'),
+  emptyText: __('Text when there are no events', 'cobbleandcandle'),
+  regularsEyebrow: __('Regulars eyebrow', 'cobbleandcandle'),
+  regularsTitle: __('Regulars heading', 'cobbleandcandle'),
+  regularsIntro: __('Regulars intro', 'cobbleandcandle'),
+  regulars: __('Regulars (one per line)', 'cobbleandcandle'),
+  related: __('More events to show', 'cobbleandcandle'),
+  items: __('Items (one per line, parts separated by |)', 'cobbleandcandle'),
+  reverse: __('Photo on the right', 'cobbleandcandle'),
+  showStats: __('Show stats', 'cobbleandcandle'),
 }
+
+/* Settings typed as several lines. */
+const MULTILINE = ['notes', 'contacts', 'regulars', 'items', 'allergenNote', 'intro', 'regularsIntro']
 
 /* Starting copy for content blocks: real core blocks, styled with the mockup classes. */
 const p = (className, content) => ['core/paragraph', { className, content }]
@@ -75,6 +101,11 @@ const CONTENT = {
     ['core/list', { className: 'rooms' }, [['core/list-item', { content: '<strong>The Lamp Room</strong> Seats 28' }], ['core/list-item', { content: '<strong>The Cellar Table</strong> Seats 22' }], ['core/list-item', { content: '<strong>The Snug</strong> Seats 10' }]]],
   ],
 }
+CONTENT['cobbleandcandle/cta-band'] = [
+  ['core/heading', { level: 2, className: 'h2', content: 'Your table is waiting.' }],
+  buttons([['Reserve a table', '/reservations/', 'is-style-fill'], ['Private dining', '/#private-dining', 'is-style-outline']]),
+]
+
 const ALLOWED = {
   'cobbleandcandle/reviews': ['core/quote'],
 }
@@ -103,6 +134,7 @@ function control(key, schema, value, setAttributes) {
   const onChange = (next) => setAttributes({ [key]: next })
   if (key === 'imageIds') return el(ImageControl, { key, label, value, onChange, multiple: true })
   if (key === 'imageId') return el(ImageControl, { key, label, value, onChange, multiple: false })
+  if (MULTILINE.includes(key)) return el(TextareaControl, { key, label, value: value || '', onChange, rows: 5, __nextHasNoMarginBottom: true })
   if (schema.type === 'boolean') return el(ToggleControl, { key, label, checked: !!value, onChange, __nextHasNoMarginBottom: true })
   if (schema.type === 'number' || schema.type === 'integer') {
     return el(TextControl, { key, label, type: 'number', min: 1, value: value ?? '', onChange: (v) => onChange(Number(v) || 0), __next40pxDefaultSize: true, __nextHasNoMarginBottom: true })
@@ -132,9 +164,11 @@ Object.values(manifests).forEach((metadata) => {
     : {
         edit({ attributes, setAttributes }) {
           const blockProps = useBlockProps()
+          // Pass the post being edited so blocks like Page Hero can preview its title and image.
+          const postId = useSelect((select) => select('core/editor')?.getCurrentPostId?.(), [])
           return el(Fragment, null,
             el(Settings, { metadata, attributes, setAttributes }),
-            el('div', blockProps, el(ServerSideRender, { block: metadata.name, attributes })))
+            el('div', blockProps, el(ServerSideRender, { block: metadata.name, attributes, urlQueryArgs: postId ? { post_id: postId } : {} })))
         },
         save: () => null,
       })

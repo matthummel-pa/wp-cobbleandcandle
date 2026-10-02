@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/full-menu",
+  "title": "Full Menu",
+  "category": "cobbleandcandle",
+  "description": "Every menu as tabs, with section links, dietary filters, chef's picks, the allergen key and an order card.",
+  "keywords": ["menu", "dishes", "food", "allergens", "filter"],
+  "textdomain": "cobbleandcandle",
+  "attributes": {
+    "picks": { "type": "number", "default": 3 },
+    "pdfUrl": { "type": "string", "default": "" },
+    "allergenNote": { "type": "string", "default": "Please tell your server about any allergies before ordering. Our kitchens handle nuts, gluten and shellfish; we cannot guarantee any dish is allergen-free." },
+    "orderTitle": { "type": "string", "default": "Order online" },
+    "orderText": { "type": "string", "default": "Collect from any of our houses from 5pm." },
+    "orderUrl": { "type": "string", "default": "" }
+  },
+  "supports": { "html": false, "align": ["full"] }
+}

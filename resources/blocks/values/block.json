@@ -1,0 +1,16 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/values",
+  "title": "Values",
+  "category": "cobbleandcandle",
+  "description": "Three short promises with icons. One per line: icon | Title | Text (icons: flame, leaf, clock, star, glass, users).",
+  "keywords": ["values", "about", "promises", "features"],
+  "textdomain": "cobbleandcandle",
+  "attributes": {
+    "eyebrow": { "type": "string", "default": "What we believe" },
+    "title": { "type": "string", "default": "House rules" },
+    "items": { "type": "string", "default": "flame | Lit by hand | Every candle and lamp is lit at dusk by the front-of-house team.\nleaf | Coast & garden | Fish from boats we know by name; vegetables from two walled gardens.\nclock | Nothing rushed | Two seatings a night, so your table is yours for the evening." }
+  },
+  "supports": { "html": false, "align": ["full"] }
+}

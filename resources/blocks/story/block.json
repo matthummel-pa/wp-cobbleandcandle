@@ -4,8 +4,38 @@
   "name": "cobbleandcandle/story",
   "title": "Story",
   "category": "cobbleandcandle",
-  "description": "Chef portrait beside your story, pull quote and buttons, with live stats.",
+  "description": "Portrait beside your story typed on the canvas, with optional live stats. Flip the photo to the right for inner pages.",
   "textdomain": "cobbleandcandle",
-  "attributes": { "imageId": { "type": "integer", "default": 0 }, "caption": { "type": "string", "default": "Margot Ellery · Chef-patron since 2014" }, "seatings": { "type": "string", "default": "2" } },
-  "supports": { "html": false, "align": ["full"] }
+  "attributes": {
+    "imageId": {
+      "type": "integer",
+      "default": 0
+    },
+    "caption": {
+      "type": "string",
+      "default": "Margot Ellery · Chef-patron since 2014"
+    },
+    "seatings": {
+      "type": "string",
+      "default": "2"
+    },
+    "art": {
+      "type": "string",
+      "default": "chef"
+    },
+    "reverse": {
+      "type": "boolean",
+      "default": false
+    },
+    "showStats": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": [
+      "full"
+    ]
+  }
 }

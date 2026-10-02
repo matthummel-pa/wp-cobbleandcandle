@@ -2,15 +2,16 @@
 @php($houses = count(\App\locations()))
 <div {!! $wrapper !!}>
   <section class="section">
-    <div class="container story">
+    <div class="container story{{ $attributes['reverse'] ? ' story--rev' : '' }}">
       <figure class="story-m">
-        <x-media :image-id="$attributes['imageId']" kind="chef" ratio="r-4x5" />
+        <x-media :image-id="$attributes['imageId']" kind="{{ $attributes['art'] }}" ratio="r-4x5" />
         @if ($attributes['caption'] !== '')
           <figcaption>{{ $attributes['caption'] }}</figcaption>
         @endif
       </figure>
       <div class="story-c">
         {!! $content !!}
+        @if ($attributes['showStats'])
         <dl class="stats">
           @if (\App\brand('est') !== '')
             <div><dt>{{ __('Established', 'cobbleandcandle') }}</dt><dd>{{ \App\brand('est') }}</dd></div>
@@ -22,6 +23,7 @@
             <div><dt>{{ __('Seatings nightly', 'cobbleandcandle') }}</dt><dd>{{ $attributes['seatings'] }}</dd></div>
           @endif
         </dl>
+        @endif
       </div>
     </div>
   </section>

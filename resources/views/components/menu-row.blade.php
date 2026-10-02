@@ -1,7 +1,7 @@
 {{-- Menu row (.mrow): name……price with dotted leader, description, badges. --}}
 @props(['item' => [], 'heading' => null])
 @php($tag = $heading ?: 'span')
-<li class="mrow" data-diet="{{ implode(' ', $item['diet'] ?? []) }}">
+<li {{ $attributes->merge(['class' => 'mrow']) }} data-diet="{{ implode(' ', $item['diet'] ?? []) }}">
   <div class="mrow-top">
     <{{ $tag }} class="mrow-name">{{ $item['name'] }}</{{ $tag }}>
     @if (($item['flag'] ?? '') !== '')

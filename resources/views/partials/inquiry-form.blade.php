@@ -9,6 +9,7 @@
       'sent' => __('Thank you. We’ll be in touch within one working day.', 'cobbleandcandle'),
       'invalid' => __('Please check the highlighted details and try again.', 'cobbleandcandle'),
       'expired' => __('This form had expired. Please send it again.', 'cobbleandcandle'),
+      'busy' => __('Too many messages from this connection. Please wait a few minutes or call us.', 'cobbleandcandle'),
       'error' => __('We couldn’t send your inquiry. Please call us instead.', 'cobbleandcandle'),
   ];
   $fid = wp_unique_id('pd-');
