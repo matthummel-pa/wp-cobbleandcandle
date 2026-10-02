@@ -850,7 +850,7 @@ function cc_expire_pending_bookings() {
 		array(
 			'post_type'      => 'cc_booking',
 			'post_status'    => 'publish',
-			'posts_per_page' => 200,
+			'posts_per_page' => 100,
 			'fields'         => 'ids',
 			'no_found_rows'  => true,
 			'date_query'     => array( array( 'before' => $hours . ' hours ago' ) ),
@@ -954,7 +954,7 @@ function cc_bookings_for_email( $email ) {
 		array(
 			'post_type'      => 'cc_booking',
 			'post_status'    => 'any',
-			'posts_per_page' => 200,
+			'posts_per_page' => 100,
 			'fields'         => 'ids',
 			'no_found_rows'  => true,
 			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- privacy requests are rare.
