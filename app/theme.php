@@ -64,7 +64,9 @@ add_filter('language_attributes', function (string $output): string {
         return $output;
     }
 
-    return $output.' data-theme="'.esc_attr(direction()).'"';
+    $location = current_location();
+
+    return $output.' data-theme="'.esc_attr(direction()).'"'.($location ? ' data-loc="'.esc_attr($location['slug']).'"' : '');
 });
 
 /**

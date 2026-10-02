@@ -7,3 +7,11 @@
 @import "./wp.css" layer(components);
 
 @source "../**/*.blade.php";
+
+/* Unlayered on purpose: WordPress's editor reset is unlayered, and layered rules always lose to it. */
+.editor-styles-wrapper {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+}
+.editor-styles-wrapper .is-root-container { padding-inline: var(--gutter); }

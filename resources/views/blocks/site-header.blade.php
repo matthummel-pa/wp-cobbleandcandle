@@ -2,10 +2,16 @@
 @php
   $reserveUrl = $attributes['reserveUrl'] ?: '';
   $orderUrl = $attributes['orderUrl'] ?: '';
-  $phone = \App\brand('phone');
-  $showUtility = $attributes['showUtilityBar'] && ($phone !== '' || $attributes['showStyleSwitcher']);
+  $locations = \App\locations();
+  $current = \App\current_location();
+  $phone = $current['phone'] ?? \App\brand('phone');
+  $orderUrl = $orderUrl ?: ($current['order_url'] ?? '');
+  $showUtility = $attributes['showUtilityBar'] && ($locations || $phone !== '' || $attributes['showStyleSwitcher']);
 @endphp
 <div {!! $wrapper !!} x-data="siteHeader">
+  @if ($locations)
+    <script type="application/json" id="cc-locations">{!! \App\locations_json() !!}</script>
+  @endif
   @if ($attributes['showStyleSwitcher'])
     {{-- Demo only: re-apply a visitor's chosen direction (or ?theme=) before the page paints. --}}
     {!! wp_get_inline_script_tag("(function(d){try{var t=new URLSearchParams(location.search).get('theme')||localStorage.getItem('rm-theme');if(/^(lampwright|ember-arch|ashlar-iron)$/.test(t)){d.documentElement.dataset.theme=t;localStorage.setItem('rm-theme',t)}}catch(e){}})(document);") !!}
@@ -14,8 +20,14 @@
     <div class="util" role="region" aria-label="{{ __('Contact and style', 'cobbleandcandle') }}">
       <div class="container util-in">
         <div class="util-l">
+          @if (count($locations) > 1)
+            @include('partials.location-switcher', ['locations' => $locations, 'current' => $current])
+          @endif
+          @if ($current)
+            <span class="util-status"><x-status :status="$current['status']" bind="$store.site.loc.status" /></span>
+          @endif
           @if ($phone !== '')
-            <a class="util-phone" href="{{ 'tel:'.preg_replace('/[^0-9+]/', '', $phone) }}"><x-icon name="phone" />{{ $phone }}</a>
+            <a class="util-phone" href="{{ 'tel:'.preg_replace('/[^0-9+]/', '', $phone) }}" @if ($current) :href="$store.site.loc.tel" @endif><x-icon name="phone" /><span @if ($current) x-text="$store.site.loc.phone" @endif>{{ $phone }}</span></a>
           @endif
         </div>
         <div class="util-r">

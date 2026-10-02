@@ -24,6 +24,7 @@
 	     Sage's index.php (echo view(...)->render()) is left out on purpose: Blade escapes {{ }}. -->
 	<file>./app</file>
 	<file>./functions.php</file>
+	<file>./plugins</file>
 
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
@@ -70,6 +71,7 @@
 		<properties>
 			<property name="text_domain" type="array">
 				<element value="cobbleandcandle"/>
+				<element value="cobbleandcandle-core"/>
 			</property>
 		</properties>
 	</rule>

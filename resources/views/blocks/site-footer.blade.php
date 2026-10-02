@@ -24,6 +24,19 @@
             </div>
           @endif
         </div>
+        @foreach (\App\locations() as $l)
+          <div class="f-loc">
+            <h3 class="h4"><a href="{{ $l['url'] }}">{{ $l['name'] }}</a></h3>
+            <x-status :status="$l['status']" size="sm" />
+            @if ($l['street'] !== '')
+              <p><a href="{{ $l['map_url'] }}">{{ $l['street'] }}@if ($l['locality'] !== '')<br>{{ $l['locality'] }}@endif</a></p>
+            @endif
+            @if ($l['phone'] !== '')
+              <p><a href="{{ $l['tel'] }}">{{ $l['phone'] }}</a></p>
+            @endif
+            <x-hours :rows="$l['hours']" />
+          </div>
+        @endforeach
         @if (has_nav_menu('footer_navigation'))
           <nav class="f-nav" aria-label="{{ __('Footer', 'cobbleandcandle') }}">{!! \App\menu('footer_navigation') !!}</nav>
         @endif

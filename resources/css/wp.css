@@ -16,9 +16,6 @@
 :where(.wp-block-heading, h1, h2, h3, h4) { font-family: var(--font-display); font-weight: var(--display-weight); }
 :where(.wp-block-button__link) { border-radius: var(--radius-btn); }
 
-/* Editor canvas uses the page background and text tokens. */
-.editor-styles-wrapper { background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); }
-
 /* Longer brand names than the mockup's "Lampwright": keep the wordmark inside phone widths. */
 .hdr-in > .brand, .brand-t { min-width: 0; }
 @media (max-width: 40rem) {
