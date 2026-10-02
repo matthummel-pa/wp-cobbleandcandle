@@ -71,7 +71,7 @@ function cc_sanitize_settings( $input ) {
 	$input = is_array( $input ) ? $input : array();
 	$out   = array();
 	foreach ( cc_settings_fields() as $key => list( , $type ) ) {
-		$value = isset( $input[ $key ] ) ? wp_unslash( $input[ $key ] ) : '';
+		$value = isset( $input[ $key ] ) && is_scalar( $input[ $key ] ) ? (string) $input[ $key ] : ''; // options.php has already unslashed.
 		if ( 'image' === $type ) {
 			$id          = absint( $value );
 			$out[ $key ] = $id && wp_attachment_is_image( $id ) ? $id : 0;

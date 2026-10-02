@@ -14,8 +14,10 @@ const STATUS = readJson('cc-status', {})
 /* The visitor's location: ?loc= (what the server rendered), then their saved choice, then the first.
    The saved cookie is applied here rather than on the server so cached pages stay shareable. */
 function initialLocation() {
-  const wanted = new URLSearchParams(location.search).get('loc') || document.cookie.match(/(?:^|; )cc_loc=([^;]*)/)?.[1] || root.dataset.loc
-  return Math.max(0, LOCATIONS.findIndex((l) => l.slug === decodeURIComponent(wanted || '')))
+  let saved = ''
+  try { saved = decodeURIComponent(document.cookie.match(/(?:^|; )cc_loc=([^;]*)/)?.[1] || '') } catch {}
+  const wanted = new URLSearchParams(location.search).get('loc') || saved || root.dataset.loc || ''
+  return Math.max(0, LOCATIONS.findIndex((l) => l.slug === wanted))
 }
 const initial = initialLocation()
 

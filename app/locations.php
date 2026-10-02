@@ -22,7 +22,7 @@ function locations(): array
 }
 
 /**
- * The visitor's current location (?loc=slug, then the cc_loc cookie, then the first).
+ * The server-rendered location (?loc=slug, else the first). The visitor's saved choice is applied in the browser.
  *
  * @return array<string, mixed>
  */

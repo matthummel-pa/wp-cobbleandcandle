@@ -1,22 +1,28 @@
 {{-- Site Footer block: brand, about line, social links, footer + legal menus (location columns arrive with the Locations CPT). --}}
 @php
   $about = $attributes['about'] ?: get_bloginfo('description');
-  // Profiles from Settings → Restaurant, with this block's own fields as a fallback.
+  // Profiles from Settings → Restaurant, with this block's own fields (sanitized) as a fallback.
   $profiles = function_exists('cc_social_profiles') ? cc_social_profiles() : [];
-  $profiles += array_filter(['instagram' => $attributes['instagram'], 'facebook' => $attributes['facebook']]);
+  $profiles += array_filter(['instagram' => esc_url_raw($attributes['instagram']), 'facebook' => esc_url_raw($attributes['facebook'])]);
   if ($attributes['email'] !== '' && is_email($attributes['email'])) {
       $profiles['mail'] = 'mailto:'.sanitize_email($attributes['email']);
   }
-  // Core Social Links block: an icon for every network (Tripadvisor has none, so it uses the link icon).
-  $links = '';
+  // Core Social Links block, built as block arrays (no markup parsing). Tripadvisor has no core icon.
+  $links = [];
   foreach ($profiles as $service => $url) {
-      $links .= sprintf('<!-- wp:social-link %s /-->', wp_json_encode(array_filter([
+      $links[] = ['blockName' => 'core/social-link', 'attrs' => array_filter([
           'url' => $url,
           'service' => $service === 'tripadvisor' ? 'chain' : $service,
           'label' => $service === 'tripadvisor' ? 'Tripadvisor' : null,
-      ])));
+      ]), 'innerBlocks' => [], 'innerHTML' => '', 'innerContent' => []];
   }
-  $social = $links !== '' ? do_blocks('<!-- wp:social-links {"className":"is-style-logos-only"} --><ul class="wp-block-social-links is-style-logos-only">'.$links.'</ul><!-- /wp:social-links -->') : '';
+  $footerSocialLinks = $links ? render_block([
+      'blockName' => 'core/social-links',
+      'attrs' => ['className' => 'is-style-logos-only'],
+      'innerBlocks' => $links,
+      'innerHTML' => '<ul class="wp-block-social-links is-style-logos-only"></ul>',
+      'innerContent' => array_merge(['<ul class="wp-block-social-links is-style-logos-only">'], array_fill(0, count($links), null), ['</ul>']),
+  ]) : '';
 @endphp
 <footer {!! $wrapper !!}>
   <div class="ftr">
@@ -27,8 +33,8 @@
           @if ($about)
             <p class="muted">{{ $about }}</p>
           @endif
-          @if ($social !== '')
-            <div class="social">{!! $social !!}</div>
+          @if ($footerSocialLinks !== '')
+            <div class="social">{!! $footerSocialLinks !!}</div>
           @endif
         </div>
         @if (\App\locations())
