@@ -22,7 +22,7 @@
 </div>
 <div class="ldetail">
   <{{ $heading ?? 'h2' }} class="h2">{{ $l['name'] }}</{{ $heading ?? 'h2' }}>
-  <x-status :status="$l['status']" />
+  <x-status :status="$l['status']" :of="$l['slug']" />
   @if ($l['address'] !== '')
     <address class="laddr"><x-icon name="pin" /><span>{{ $l['address'] }}</span></address>
   @endif

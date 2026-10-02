@@ -1,11 +1,22 @@
 {{-- Site Footer block: brand, about line, social links, footer + legal menus (location columns arrive with the Locations CPT). --}}
 @php
   $about = $attributes['about'] ?: get_bloginfo('description');
-  $social = array_filter([
-    'insta' => ['url' => $attributes['instagram'], 'label' => __('Instagram', 'cobbleandcandle')],
-    'fb' => ['url' => $attributes['facebook'], 'label' => __('Facebook', 'cobbleandcandle')],
-    'mail' => ['url' => $attributes['email'] ? 'mailto:'.antispambot(sanitize_email($attributes['email'])) : '', 'label' => __('Email', 'cobbleandcandle')],
-  ], fn ($s) => $s['url'] !== '');
+  // Profiles from Settings → Restaurant, with this block's own fields as a fallback.
+  $profiles = function_exists('cc_social_profiles') ? cc_social_profiles() : [];
+  $profiles += array_filter(['instagram' => $attributes['instagram'], 'facebook' => $attributes['facebook']]);
+  if ($attributes['email'] !== '' && is_email($attributes['email'])) {
+      $profiles['mail'] = 'mailto:'.sanitize_email($attributes['email']);
+  }
+  // Core Social Links block: an icon for every network (Tripadvisor has none, so it uses the link icon).
+  $links = '';
+  foreach ($profiles as $service => $url) {
+      $links .= sprintf('<!-- wp:social-link %s /-->', wp_json_encode(array_filter([
+          'url' => $url,
+          'service' => $service === 'tripadvisor' ? 'chain' : $service,
+          'label' => $service === 'tripadvisor' ? 'Tripadvisor' : null,
+      ])));
+  }
+  $social = $links !== '' ? do_blocks('<!-- wp:social-links {"className":"is-style-logos-only"} --><ul class="wp-block-social-links is-style-logos-only">'.$links.'</ul><!-- /wp:social-links -->') : '';
 @endphp
 <footer {!! $wrapper !!}>
   <div class="ftr">
@@ -16,12 +27,8 @@
           @if ($about)
             <p class="muted">{{ $about }}</p>
           @endif
-          @if ($social)
-            <div class="social">
-              @foreach ($social as $icon => $s)
-                <a class="icon-btn" href="{!! esc_url($s['url']) !!}"><x-icon :name="$icon" /><span class="sr">{{ $s['label'] }}</span></a>
-              @endforeach
-            </div>
+          @if ($social !== '')
+            <div class="social">{!! $social !!}</div>
           @endif
         </div>
         @if (\App\locations())
@@ -30,7 +37,7 @@
         @foreach (\App\locations() as $l)
           <div class="f-loc">
             <h3 class="h4"><a href="{!! esc_url($l['url']) !!}">{{ $l['name'] }}</a></h3>
-            <x-status :status="$l['status']" size="sm" />
+            <x-status :status="$l['status']" :of="$l['slug']" size="sm" />
             @if ($l['street'] !== '')
               <p><a href="{!! esc_url($l['map_url']) !!}">{{ $l['street'] }}@if ($l['locality'] !== '')<br>{{ $l['locality'] }}@endif</a></p>
             @endif

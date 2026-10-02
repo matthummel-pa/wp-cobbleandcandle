@@ -11,3 +11,7 @@
 ^\s*\$content\s*$
 ^\s*wp_nonce_field\s*\(
 ^\s*get_the_password_form\s*\(
+# JSON for Alpine, encoded with JSON_HEX_TAG (app/locations.php).
+^\s*\\?App\\status_json\s*\(
+# Footer social profiles: core Social Links block output from do_blocks() (core escapes the URLs).
+^\s*\$social\s*$

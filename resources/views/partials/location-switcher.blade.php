@@ -12,7 +12,7 @@
       <li role="option" id="{{ $uid }}-{{ $i }}" tabindex="-1" aria-selected="{{ $l['slug'] === $current['slug'] ? 'true' : 'false' }}"
           :aria-selected="($store.site.current === {{ $i }}).toString()" @click="choose({{ $i }})">
         <span class="lo-n">{{ $l['name'] }}</span>
-        <x-status :status="$l['status']" size="sm" />
+        <x-status :status="$l['status']" :of="$l['slug']" size="sm" />
         <x-icon name="check" class="i lo-check" />
       </li>
     @endforeach

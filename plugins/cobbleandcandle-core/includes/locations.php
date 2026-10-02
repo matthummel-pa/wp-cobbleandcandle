@@ -77,7 +77,10 @@ function cc_location( $location ) {
 }
 
 /**
- * The visitor's current location: ?loc=slug, then the cc_loc cookie, then the first location.
+ * The current location for server rendering: ?loc=slug, else the first location.
+ *
+ * The visitor's saved choice (the cc_loc cookie) is applied in the browser, so a cached page never
+ * shows one visitor's location to everyone. Filter `cc_current_location_slug` to change the default.
  *
  * @return array<string, mixed> Empty when there are no locations.
  */
@@ -88,9 +91,7 @@ function cc_current_location() {
 	}
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only display preference.
 	$wanted = isset( $_GET['loc'] ) ? sanitize_title( wp_unslash( $_GET['loc'] ) ) : '';
-	if ( '' === $wanted && isset( $_COOKIE['cc_loc'] ) ) {
-		$wanted = sanitize_title( wp_unslash( $_COOKIE['cc_loc'] ) );
-	}
+	$wanted = (string) apply_filters( 'cc_current_location_slug', $wanted );
 	foreach ( $locations as $post ) {
 		if ( $post->post_name === $wanted ) {
 			return cc_location( $post );

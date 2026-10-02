@@ -28,7 +28,7 @@
                 <button type="button" class="lcard" aria-pressed="{{ $l['id'] === $current['id'] ? 'true' : 'false' }}"
                         :aria-pressed="($store.site.current === {{ $i }}).toString()" @click="$store.site.setLocation({{ $i }})">
                   <span class="lcard-n">{{ $l['name'] }}</span>
-                  <x-status :status="$l['status']" size="sm" />
+                  <x-status :status="$l['status']" :of="$l['slug']" size="sm" />
                   <span class="lcard-b">{{ ['native' => __('Book online', 'cobbleandcandle'), 'opentable' => __('Book via OpenTable', 'cobbleandcandle'), 'resy' => __('Book via Resy', 'cobbleandcandle'), 'call' => __('Book by phone', 'cobbleandcandle')][$l['booking_mode'] ?: 'native'] ?? '' }}</span>
                   <x-icon name="check" class="i lcard-check" />
                 </button>
@@ -133,7 +133,7 @@
             <div class="resv-side-in" @if ($l['id'] !== $current['id']) hidden @endif :hidden="$store.site.current !== {{ $i }}">
               <div class="card">
                 <h2 class="h4"><x-icon name="clock" /> {{ sprintf(__('Hours at %s', 'cobbleandcandle'), $l['name']) }}</h2>
-                <x-status :status="$l['status']" />
+                <x-status :status="$l['status']" :of="$l['slug']" />
                 <x-hours :rows="$l['hours']" />
               </div>
               @if ($notes)

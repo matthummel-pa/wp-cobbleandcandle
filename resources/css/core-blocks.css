@@ -32,3 +32,10 @@
 }
 .wp-block-post-content > :first-child:not(.alignfull) { margin-top: clamp(40px, 6vw, 72px); }
 .wp-block-post-content > :last-child:not(.alignfull) { margin-bottom: clamp(56px, 8vw, 96px); }
+
+/* Footer social profiles (core Social Links, logos only) as the theme's round icon buttons. */
+.social .wp-block-social-links { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; }
+.social .wp-block-social-links .wp-social-link { margin: 0; background: none; color: inherit; }
+.social .wp-block-social-links .wp-social-link a { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent); border-radius: var(--radius-chip); color: var(--color-text); }
+.social .wp-block-social-links .wp-social-link a:hover { border-color: var(--color-accent); color: var(--color-accent); }
+.social .wp-block-social-links .wp-social-link svg { width: 20px; height: 20px; fill: currentColor; }

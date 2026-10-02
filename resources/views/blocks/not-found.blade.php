@@ -24,7 +24,7 @@
           <h2 class="h4">{{ __('Or visit one of our houses', 'cobbleandcandle') }}</h2>
           <ul class="nf-locs">
             @foreach ($locations as $l)
-              <li><a href="{!! esc_url($l['url']) !!}">{{ $l['name'] }}</a><x-status :status="$l['status']" size="sm" /></li>
+              <li><a href="{!! esc_url($l['url']) !!}">{{ $l['name'] }}</a><x-status :status="$l['status']" :of="$l['slug']" size="sm" /></li>
             @endforeach
           </ul>
         @endif

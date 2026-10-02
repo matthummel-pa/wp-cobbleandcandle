@@ -37,23 +37,27 @@ function direction(): string
 }
 
 /**
- * Brand settings (est. year, tagline, cuisine, price range). Editable later from the
- * theme settings page; filter `cobbleandcandle/brand` to override.
+ * Brand settings (logo, brand line, est. year, cuisine, price range) from Settings → Restaurant
+ * (Core plugin). Empty by default; filter `cobbleandcandle/brand` to override.
  */
 function brand(string $key, string $default = ''): string
 {
     static $brand = null;
     if ($brand === null) {
         $saved = get_option('cobbleandcandle_brand', []);
-        $brand = (array) apply_filters('cobbleandcandle/brand', array_merge([
-            'est' => '1888',
-            'tagline' => __('Dining rooms', 'cobbleandcandle'),
-            'cuisine' => __('Modern European', 'cobbleandcandle'),
-            'price_range' => '$$$',
-        ], is_array($saved) ? $saved : []));
+        $brand = (array) apply_filters('cobbleandcandle/brand', is_array($saved) ? $saved : []);
     }
+    $value = (string) ($brand[$key] ?? '');
 
-    return (string) ($brand[$key] ?? $default);
+    return $value !== '' ? $value : $default;
+}
+
+/**
+ * The logo attachment: Settings → Restaurant, else the core Site Logo (custom-logo).
+ */
+function logo_id(): int
+{
+    return (int) brand('logo_id') ?: (int) get_theme_mod('custom_logo');
 }
 
 /**
