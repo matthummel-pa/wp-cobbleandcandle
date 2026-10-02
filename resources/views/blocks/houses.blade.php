@@ -18,7 +18,7 @@
                   <p class="muted">{{ $l['address'] }}</p>
                 @endif
                 <x-status :status="$l['status']" size="sm" />
-                <a class="link-arrow" href="{{ $l['url'] }}">{{ __('Visit', 'cobbleandcandle') }}<x-icon name="arrow" /><span class="sr"> {{ $l['name'] }}</span></a>
+                <a class="link-arrow" href="{!! esc_url($l['url']) !!}">{{ __('Visit', 'cobbleandcandle') }}<x-icon name="arrow" /><span class="sr"> {{ $l['name'] }}</span></a>
               </div>
             </article>
           @endforeach

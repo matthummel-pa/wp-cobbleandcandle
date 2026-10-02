@@ -8,6 +8,17 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * A post title as plain text. get_the_title() returns texturized HTML ("&#038;", "&#8217;"),
+ * which templates that escape on output would encode a second time.
+ *
+ * @param int|\WP_Post $post Post or ID.
+ * @return string
+ */
+function cc_plain_title( $post ) {
+	return html_entity_decode( get_the_title( $post ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+}
+
+/**
  * Register post types and taxonomies.
  */
 function cc_register_content_types() {

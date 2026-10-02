@@ -12,7 +12,7 @@
       <div class="gmosaic">
         @foreach ($tiles as $i => $tile)
           @php($label = isset($ids[$i]) ? (get_post_meta($ids[$i], '_wp_attachment_image_alt', true) ?: __('Open the gallery', 'cobbleandcandle')) : __('Open the gallery', 'cobbleandcandle'))
-          <a class="gtile {{ $tile }}" href="{{ $attributes['linkUrl'] ?: '#' }}">
+          <a class="gtile {{ $tile }}" href="{!! esc_url($attributes['linkUrl'] ?: '#') !!}">
             <x-media :image-id="$ids[$i] ?? 0" :kind="$art[$i]" ratio="r-fill" size="medium_large" />
             <span class="sr">{{ $label }}</span>
           </a>

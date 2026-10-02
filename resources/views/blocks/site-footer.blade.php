@@ -19,20 +19,23 @@
           @if ($social)
             <div class="social">
               @foreach ($social as $icon => $s)
-                <a class="icon-btn" href="{{ $s['url'] }}"><x-icon :name="$icon" /><span class="sr">{{ $s['label'] }}</span></a>
+                <a class="icon-btn" href="{!! esc_url($s['url']) !!}"><x-icon :name="$icon" /><span class="sr">{{ $s['label'] }}</span></a>
               @endforeach
             </div>
           @endif
         </div>
+        @if (\App\locations())
+          <h2 class="sr">{{ __('Our locations', 'cobbleandcandle') }}</h2>
+        @endif
         @foreach (\App\locations() as $l)
           <div class="f-loc">
-            <h3 class="h4"><a href="{{ $l['url'] }}">{{ $l['name'] }}</a></h3>
+            <h3 class="h4"><a href="{!! esc_url($l['url']) !!}">{{ $l['name'] }}</a></h3>
             <x-status :status="$l['status']" size="sm" />
             @if ($l['street'] !== '')
-              <p><a href="{{ $l['map_url'] }}">{{ $l['street'] }}@if ($l['locality'] !== '')<br>{{ $l['locality'] }}@endif</a></p>
+              <p><a href="{!! esc_url($l['map_url']) !!}">{{ $l['street'] }}@if ($l['locality'] !== '')<br>{{ $l['locality'] }}@endif</a></p>
             @endif
             @if ($l['phone'] !== '')
-              <p><a href="{{ $l['tel'] }}">{{ $l['phone'] }}</a></p>
+              <p><a href="{!! esc_url($l['tel']) !!}">{{ $l['phone'] }}</a></p>
             @endif
             <x-hours :rows="$l['hours']" />
           </div>

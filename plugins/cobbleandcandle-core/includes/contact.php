@@ -79,7 +79,7 @@ function cc_handle_contact() {
 			__( 'Name', 'cobbleandcandle-core' ) . ': ' . $name,
 			__( 'Email', 'cobbleandcandle-core' ) . ': ' . $email,
 			__( 'Phone', 'cobbleandcandle-core' ) . ': ' . ( '' !== $phone ? $phone : '—' ),
-			__( 'Location', 'cobbleandcandle-core' ) . ': ' . ( $location ? get_the_title( $location ) : '—' ),
+			__( 'Location', 'cobbleandcandle-core' ) . ': ' . ( $location ? cc_plain_title( $location ) : '—' ),
 			'',
 			$message,
 		)

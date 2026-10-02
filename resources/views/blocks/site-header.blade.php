@@ -27,7 +27,7 @@
             <span class="util-status"><x-status :status="$current['status']" bind="$store.site.loc.status" /></span>
           @endif
           @if ($phone !== '')
-            <a class="util-phone" href="{{ 'tel:'.preg_replace('/[^0-9+]/', '', $phone) }}" @if ($current) :href="$store.site.loc.tel" @endif><x-icon name="phone" /><span @if ($current) x-text="$store.site.loc.phone" @endif>{{ $phone }}</span></a>
+            <a class="util-phone" href="{!! esc_url('tel:'.preg_replace('/[^0-9+]/', '', $phone)) !!}" @if ($current) :href="$store.site.loc.tel" @endif><x-icon name="phone" /><span @if ($current) x-text="$store.site.loc.phone" @endif>{{ $phone }}</span></a>
           @endif
         </div>
         <div class="util-r">

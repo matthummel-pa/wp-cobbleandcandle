@@ -49,7 +49,7 @@ function cc_menu_item( $item ) {
 	}
 	return array(
 		'id'        => $post->ID,
-		'name'      => get_the_title( $post ),
+		'name'      => cc_plain_title( $post ),
 		'desc'      => $post->post_excerpt,
 		'price'     => (string) get_post_meta( $post->ID, 'cc_price', true ),
 		'variants'  => (array) get_post_meta( $post->ID, 'cc_variants', true ),
@@ -174,7 +174,7 @@ function cc_event( $event ) {
 	$location = (int) get_post_meta( $post->ID, 'cc_location', true );
 	return array(
 		'id'           => $post->ID,
-		'title'        => get_the_title( $post ),
+		'title'        => cc_plain_title( $post ),
 		'url'          => get_permalink( $post ),
 		'excerpt'      => $post->post_excerpt,
 		'image_id'     => (int) get_post_thumbnail_id( $post ),
@@ -185,7 +185,7 @@ function cc_event( $event ) {
 		'day'          => $time ? wp_date( 'j', $time->getTimestamp() ) : '',
 		'month'        => $time ? wp_date( 'M', $time->getTimestamp() ) : '',
 		'when'         => $time ? wp_date( 'D j M · g:i a', $time->getTimestamp() ) : '',
-		'location'     => $location ? get_the_title( $location ) : '',
+		'location'     => $location ? cc_plain_title( $location ) : '',
 		'price'        => (string) get_post_meta( $post->ID, 'cc_price', true ),
 		'availability' => (string) get_post_meta( $post->ID, 'cc_availability', true ),
 		'location_id'  => $location,

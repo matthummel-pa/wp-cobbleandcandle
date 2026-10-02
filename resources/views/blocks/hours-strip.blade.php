@@ -18,13 +18,13 @@
           <p class="eyebrow">{{ __('Find us', 'cobbleandcandle') }}</p>
           <p>{{ $current['address'] }}</p>
           @if ($current['map_url'] !== '')
-            <a class="link-arrow" href="{{ $current['map_url'] }}" :href="$store.site.loc.map_url">{{ __('Directions', 'cobbleandcandle') }}<x-icon name="arrow" /></a>
+            <a class="link-arrow" href="{!! esc_url($current['map_url']) !!}" :href="$store.site.loc.map_url">{{ __('Directions', 'cobbleandcandle') }}<x-icon name="arrow" /></a>
           @endif
         </div>
         <div class="strip-c">
           <p class="eyebrow">{{ __('Call to book', 'cobbleandcandle') }}</p>
           @if ($current['phone'] !== '')
-            <p><a class="strip-phone" href="{{ $current['tel'] }}" :href="$store.site.loc.tel" x-text="$store.site.loc.phone">{{ $current['phone'] }}</a></p>
+            <p><a class="strip-phone" href="{!! esc_url($current['tel']) !!}" :href="$store.site.loc.tel" x-text="$store.site.loc.phone">{{ $current['phone'] }}</a></p>
           @endif
           <p class="muted">{{ sprintf(__('Today %s', 'cobbleandcandle'), $current['today']) }}</p>
         </div>
@@ -33,7 +33,7 @@
             <p class="eyebrow">{{ sprintf(_n('%s house', '%s houses', count($locations), 'cobbleandcandle'), number_format_i18n(count($locations))) }}</p>
             <p>{{ wp_sprintf('%l', array_column($locations, 'name')) }}</p>
             @if ($attributes['locationsUrl'] !== '')
-              <a class="link-arrow" href="{{ $attributes['locationsUrl'] }}">{{ __('All locations', 'cobbleandcandle') }}<x-icon name="arrow" /></a>
+              <a class="link-arrow" href="{!! esc_url($attributes['locationsUrl']) !!}">{{ __('All locations', 'cobbleandcandle') }}<x-icon name="arrow" /></a>
             @endif
           </div>
         @endif

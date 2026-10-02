@@ -20,7 +20,7 @@
           <x-media :image-id="$featured['image_id']" kind="table" ratio="r-16x9" class="feature-m" size="large" />
           <div class="feature-b">
             <p class="eyebrow">{{ $featured['type'] !== '' ? sprintf(__('Next up · %s', 'cobbleandcandle'), $featured['type']) : __('Next up', 'cobbleandcandle') }}</p>
-            <h2 class="h2"><a href="{{ $featured['url'] }}">{{ $featured['title'] }}</a></h2>
+            <h2 class="h2"><a href="{!! esc_url($featured['url']) !!}">{{ $featured['title'] }}</a></h2>
             @if ($featured['excerpt'] !== '')
               <p>{{ $featured['excerpt'] }}</p>
             @endif
@@ -66,7 +66,7 @@
                 @endif
                 <div class="evrow-b">
                   <p class="ev-type">{{ implode(' · ', array_filter([$event['type'], $event['location']])) }}</p>
-                  <h3 class="h4"><a href="{{ $event['url'] }}">{{ $event['title'] }}</a></h3>
+                  <h3 class="h4"><a href="{!! esc_url($event['url']) !!}">{{ $event['title'] }}</a></h3>
                   @if ($event['excerpt'] !== '')
                     <p class="muted">{{ $event['excerpt'] }}</p>
                   @endif
@@ -82,7 +82,7 @@
                     <span class="chip chip--quiet">{{ $event['availability'] }}</span>
                   @endif
                 </div>
-                <div class="evrow-a"><a class="btn btn--secondary btn--sm" href="{{ $event['url'] }}"><span>{{ __('Details', 'cobbleandcandle') }}</span><span class="sr"> {{ sprintf(__('about %s', 'cobbleandcandle'), $event['title']) }}</span></a></div>
+                <div class="evrow-a"><a class="btn btn--secondary btn--sm" href="{!! esc_url($event['url']) !!}"><span>{{ __('Details', 'cobbleandcandle') }}</span><span class="sr"> {{ sprintf(__('about %s', 'cobbleandcandle'), $event['title']) }}</span></a></div>
               </li>
             @endforeach
           </ol>

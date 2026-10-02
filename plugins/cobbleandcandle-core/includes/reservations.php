@@ -162,7 +162,7 @@ function cc_handle_reservation() {
 	$body    = implode(
 		"\n",
 		array(
-			__( 'Location', 'cobbleandcandle-core' ) . ': ' . get_the_title( $location ),
+			__( 'Location', 'cobbleandcandle-core' ) . ': ' . cc_plain_title( $location ),
 			__( 'Date', 'cobbleandcandle-core' ) . ': ' . $date,
 			__( 'Time', 'cobbleandcandle-core' ) . ': ' . cc_time_label( $time ),
 			__( 'Party size', 'cobbleandcandle-core' ) . ': ' . $party,

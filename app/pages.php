@@ -21,6 +21,14 @@ function context_post(): ?\WP_Post
 }
 
 /**
+ * A post title as plain text for Blade's {{ }} (get_the_title() returns texturized HTML entities).
+ */
+function plain_title(int|\WP_Post $post): string
+{
+    return html_entity_decode(get_the_title($post), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+}
+
+/**
  * Breadcrumb trail: Home → (archive or parent pages) → current. The last item has no URL.
  *
  * @return list<array{0: string, 1: string}> [label, url]
@@ -36,9 +44,9 @@ function crumbs(): array
             $trail[] = [$type->labels->name, (string) get_post_type_archive_link($post->post_type)];
         }
         foreach (array_reverse(get_post_ancestors($post)) as $ancestor) {
-            $trail[] = [get_the_title($ancestor), (string) get_permalink($ancestor)];
+            $trail[] = [plain_title($ancestor), (string) get_permalink($ancestor)];
         }
-        $trail[] = [get_the_title($post), ''];
+        $trail[] = [plain_title($post), ''];
     } elseif (is_post_type_archive()) {
         $trail[] = [post_type_archive_title('', false), ''];
     } elseif (is_search()) {
@@ -67,7 +75,7 @@ function page_hero(array $attributes): array
     $image = (int) ($attributes['imageId'] ?? 0);
 
     if ($post) {
-        $title = $title !== '' ? $title : get_the_title($post);
+        $title = $title !== '' ? $title : plain_title($post);
         $lede = $lede !== '' ? $lede : (has_excerpt($post) ? get_the_excerpt($post) : '');
         $image = $image ?: (int) get_post_thumbnail_id($post);
     } elseif (is_archive()) {
