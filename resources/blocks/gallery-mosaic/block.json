@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/gallery-mosaic",
+  "title": "Gallery Mosaic",
+  "category": "cobbleandcandle",
+  "description": "Five photos in a dense mosaic, linking to the gallery.",
+  "keywords": ["gallery", "photos", "images"],
+  "textdomain": "cobbleandcandle",
+  "attributes": {
+    "eyebrow": { "type": "string", "default": "Gallery" },
+    "title": { "type": "string", "default": "Inside the houses" },
+    "linkUrl": { "type": "string", "default": "/gallery/" },
+    "linkLabel": { "type": "string", "default": "View the gallery" },
+    "imageIds": { "type": "array", "items": { "type": "integer" }, "default": [] }
+  },
+  "supports": { "html": false, "align": ["full"] }
+}

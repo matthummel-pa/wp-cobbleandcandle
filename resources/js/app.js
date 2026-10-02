@@ -68,6 +68,26 @@ Alpine.data('locationSwitcher', () => ({
   },
 }))
 
+/* ARIA tabs (menu teaser, menu page): arrows / Home / End, roving tabindex (HANDOFF §8). */
+Alpine.data('tabs', () => ({
+  active: 0,
+  tabs() {
+    return [...this.$root.querySelectorAll('[role="tab"]')]
+  },
+  select(index, focus = false) {
+    this.active = index
+    if (focus) this.$nextTick(() => this.tabs()[index]?.focus())
+  },
+  keys(event) {
+    const count = this.tabs().length
+    const go = (i) => { event.preventDefault(); this.select((i + count) % count, true) }
+    if (event.key === 'ArrowRight') go(this.active + 1)
+    else if (event.key === 'ArrowLeft') go(this.active - 1)
+    else if (event.key === 'Home') go(0)
+    else if (event.key === 'End') go(count - 1)
+  },
+}))
+
 /* Site Header drawer: focus trap, inert page, scroll lock, Esc, focus return (HANDOFF §8). */
 Alpine.data('siteHeader', () => ({
   open: false,

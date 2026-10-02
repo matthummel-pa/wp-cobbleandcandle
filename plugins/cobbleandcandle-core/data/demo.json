@@ -283,7 +283,7 @@
        "variants": [],
        "diet": [],
        "flag": "Popular",
-       "chef_pick": false
+       "chef_pick": true
       },
       {
        "name": "Turbot on the bone",

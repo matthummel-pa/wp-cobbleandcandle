@@ -72,6 +72,7 @@ function cc_location( $location ) {
 		'booking_url'  => (string) $meta( 'cc_booking_url' ),
 		'status'       => cc_location_status( $id ),
 		'hours'        => cc_hours_grouped( $id ),
+		'today'        => cc_today_hours( $id ),
 	);
 }
 

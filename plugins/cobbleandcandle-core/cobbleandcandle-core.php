@@ -26,6 +26,8 @@ require_once CC_CORE_DIR . 'includes/post-types.php';
 require_once CC_CORE_DIR . 'includes/fields.php';
 require_once CC_CORE_DIR . 'includes/hours.php';
 require_once CC_CORE_DIR . 'includes/locations.php';
+require_once CC_CORE_DIR . 'includes/menus.php';
+require_once CC_CORE_DIR . 'includes/inquiry.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	require_once CC_CORE_DIR . 'includes/seed.php';

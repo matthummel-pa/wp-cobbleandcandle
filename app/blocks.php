@@ -51,3 +51,10 @@ add_filter('block_categories_all', function (array $categories): array {
 
     return $categories;
 });
+
+/**
+ * "Cobble & Candle" pattern category (patterns/*.php register themselves).
+ */
+add_action('init', function () {
+    register_block_pattern_category('cobbleandcandle', ['label' => __('Cobble & Candle', 'cobbleandcandle')]);
+});

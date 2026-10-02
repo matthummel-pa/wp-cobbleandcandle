@@ -1,0 +1,23 @@
+/* Unlayered on purpose: WordPress's global block styles (e.g. :root :where(.wp-element-button)) are
+   unlayered, and any layered rule loses to them regardless of specificity. */
+/* ---------- Core blocks dressed as mockup components (copied from components.css rules) ---------- */
+.wp-block-buttons { display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-top:28px; }
+.wp-block-button__link {--h:52px;display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:var(--h);padding:0 26px;border-radius:var(--radius-btn);font:var(--btn-weight) var(--btn-size)/1.1 var(--font-sans);letter-spacing:var(--btn-track);text-transform:var(--btn-transform);border:1.5px solid transparent;text-decoration:none;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),border-color var(--dur) var(--ease),transform var(--dur) var(--ease);white-space:nowrap}
+.wp-block-button:not(.is-style-outline) .wp-block-button__link {background:var(--color-accent);color:var(--color-accent-contrast);border-color:var(--color-accent);box-shadow:0 10px 26px -12px color-mix(in srgb,var(--color-accent) 75%,transparent)}
+.wp-block-button:not(.is-style-outline) .wp-block-button__link:hover {color:var(--color-accent-contrast);background:color-mix(in srgb,var(--color-accent) 86%,var(--color-text));border-color:color-mix(in srgb,var(--color-accent) 86%,var(--color-text))}
+.wp-block-button.is-style-outline .wp-block-button__link {background:transparent;color:var(--color-text);border-color:color-mix(in srgb,var(--color-text) 55%,transparent)}
+.wp-block-button.is-style-outline .wp-block-button__link:hover {border-color:var(--color-accent);color:var(--color-accent)}
+.hero .wp-block-button.is-style-outline .wp-block-button__link {color:var(--color-hero-text);border-color:color-mix(in srgb,var(--color-hero-text) 60%,transparent)}
+
+/* Reviews: core quotes as .quote cards, decorative stars, citation as the byline. */
+.reviews-grid .wp-block-quote {margin:0;padding:32px;background:var(--color-surface);border:var(--card-border);border-radius:var(--radius-card);display:flex;flex-direction:column}
+.section--alt .reviews-grid .wp-block-quote { background:var(--color-bg); }
+.reviews-grid .wp-block-quote::before { content:"★★★★★" / ""; color:var(--color-accent); letter-spacing:3px; font-size:17px; line-height:1; }
+.reviews-grid .wp-block-quote > p {font-size:var(--text-xl);line-height:1.38;margin:0; margin:18px 0 22px; flex:1;}
+.reviews-grid .wp-block-quote cite {font-size:var(--text-sm);color:var(--color-muted); font-style:normal;}
+.reviews-grid .wp-block-quote cite strong { display:block; color:var(--color-text); font-size:var(--text-base); }
+
+/* Story pull quote and private-dining rooms from core quote/list blocks. */
+.story-c .wp-block-quote.pull { border-radius:0; }
+.rooms li { color:var(--color-muted); font-size:var(--text-sm); }
+.rooms li strong { display:block; color:var(--color-text); font-family:var(--font-display); font-weight:var(--display-weight); font-size:var(--text-lg); }

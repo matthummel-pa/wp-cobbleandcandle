@@ -5,6 +5,7 @@
 @import "./tokens.css";
 @import "./components.css" layer(components);
 @import "./wp.css" layer(components);
+@import "./core-blocks.css";
 
 @source "../**/*.blade.php";
 
