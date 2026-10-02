@@ -22,7 +22,7 @@ function locations(): array
 }
 
 /**
- * The visitor's current location (?loc=slug, then the cc_loc cookie, then the first).
+ * The server-rendered location (?loc=slug, else the first). The visitor's saved choice is applied in the browser.
  *
  * @return array<string, mixed>
  */
@@ -44,7 +44,20 @@ function locations_json(): string
         'map_url' => $l['map_url'],
         'order_url' => $l['order_url'],
         'status' => $l['status'],
+        'windows' => function_exists('cc_status_windows') ? cc_status_windows($l['id']) : null,
     ], locations()), JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+}
+
+/**
+ * Open-now settings for the browser: site timezone and the status phrases (Core plugin).
+ */
+function status_json(): string
+{
+    if (! function_exists('cc_status_labels')) {
+        return '{}';
+    }
+
+    return (string) wp_json_encode(['tz' => wp_timezone_string(), 'labels' => cc_status_labels()], JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
 }
 
 /**

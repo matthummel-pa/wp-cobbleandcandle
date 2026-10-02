@@ -113,6 +113,13 @@ add_action('after_setup_theme', function () {
     add_theme_support('responsive-embeds');
 
     /**
+     * Site logo (core Site Logo block / custom logo). Settings → Restaurant can also set one.
+     *
+     * @link https://developer.wordpress.org/themes/functionality/custom-logo/
+     */
+    add_theme_support('custom-logo', ['height' => 120, 'width' => 360, 'flex-height' => true, 'flex-width' => true]);
+
+    /**
      * Enable HTML5 markup support.
      *
      * @link https://developer.wordpress.org/reference/functions/add_theme_support/#html5

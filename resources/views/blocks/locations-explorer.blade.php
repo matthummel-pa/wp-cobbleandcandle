@@ -13,7 +13,7 @@
               <button type="button" class="ltab" aria-pressed="{{ $l['id'] === $current['id'] ? 'true' : 'false' }}"
                       :aria-pressed="($store.site.current === {{ $i }}).toString()" @click="$store.site.setLocation({{ $i }})">
                 <span class="ltab-n">{{ $i + 1 }}</span>
-                <span><b>{{ $l['name'] }}</b><x-status :status="$l['status']" size="sm" /></span>
+                <span><b>{{ $l['name'] }}</b><x-status :status="$l['status']" :of="$l['slug']" size="sm" /></span>
               </button>
             @endforeach
           </div>

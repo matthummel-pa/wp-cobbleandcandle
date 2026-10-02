@@ -4,12 +4,74 @@ const root = document.documentElement
 const DIRECTIONS = ['lampwright', 'ember-arch', 'ashlar-iron']
 const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select,textarea,[tabindex]:not([tabindex="-1"])'
 
-/* Locations from the Core plugin (printed by the Site Header as JSON); the server renders the current one first. */
-function readLocations() {
-  try { return JSON.parse(document.getElementById('cc-locations')?.textContent || '[]') } catch { return [] }
+/* Locations and open-now settings from the Core plugin (printed by the Site Header as JSON). */
+function readJson(id, fallback) {
+  try { return JSON.parse(document.getElementById(id)?.textContent || '') } catch { return fallback }
 }
-const LOCATIONS = readLocations()
-const initial = Math.max(0, LOCATIONS.findIndex((l) => l.slug === root.dataset.loc))
+const LOCATIONS = readJson('cc-locations', [])
+const STATUS = readJson('cc-status', {})
+
+/* The visitor's location: ?loc= (what the server rendered), then their saved choice, then the first.
+   The saved cookie is applied here rather than on the server so cached pages stay shareable. */
+function initialLocation() {
+  let saved = ''
+  try { saved = decodeURIComponent(document.cookie.match(/(?:^|; )cc_loc=([^;]*)/)?.[1] || '') } catch {}
+  const wanted = new URLSearchParams(location.search).get('loc') || saved || root.dataset.loc || ''
+  return Math.max(0, LOCATIONS.findIndex((l) => l.slug === wanted))
+}
+const initial = initialLocation()
+
+/* Open-now status, recomputed in the browser in the restaurant's timezone (mirrors cc_location_status). */
+const pad = (n) => String(n).padStart(2, '0')
+function siteNow() {
+  const tz = STATUS.tz || ''
+  let y, mo, d, h, mi
+  if (tz.includes('/')) {
+    const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date()).map((p) => [p.type, p.value]))
+    ;({ year: y, month: mo, day: d, hour: h, minute: mi } = parts)
+  } else {
+    const m = tz.match(/^([+-])(\d{2}):(\d{2})$/)
+    const offset = m ? (m[1] === '-' ? -1 : 1) * (Number(m[2]) * 60 + Number(m[3])) : 0
+    const t = new Date(Date.now() + offset * 60000)
+    ;[y, mo, d, h, mi] = [t.getUTCFullYear(), pad(t.getUTCMonth() + 1), pad(t.getUTCDate()), t.getUTCHours(), t.getUTCMinutes()]
+  }
+  return { date: new Date(Date.UTC(Number(y), Number(mo) - 1, Number(d))), minutes: Number(h) * 60 + Number(mi) }
+}
+const isoDay = (date) => date.toISOString().slice(0, 10)
+const addDays = (date, n) => new Date(date.getTime() + n * 86400000)
+function windowOn(windows, date) {
+  const iso = isoDay(date)
+  if (windows.holidays && iso in windows.holidays) return windows.holidays[iso]
+  return windows.week[(date.getUTCDay() + 6) % 7]
+}
+function timeLabel(minutes) {
+  const L = STATUS.labels
+  const m = ((minutes % 1440) + 1440) % 1440
+  if (L.clock24) return `${pad(Math.floor(m / 60))}:${pad(m % 60)}`
+  if (m === 0) return L.midnight
+  if (m === 720) return L.noon
+  const h = Math.floor(m / 60), h12 = h % 12 || 12, suffix = h < 12 ? 'am' : 'pm'
+  return m % 60 ? `${h12}:${pad(m % 60)}${suffix}` : `${h12}${suffix}`
+}
+function computeStatus(windows) {
+  const L = STATUS.labels
+  const { date, minutes } = siteNow()
+  const open = (left, close) => ({ state: left <= 60 ? 'warn' : 'open', text: (left <= 60 ? L.soon : L.open).replace('%s', timeLabel(close)) })
+  const yesterday = windowOn(windows, addDays(date, -1))
+  if (yesterday && yesterday[1] > 1440 && minutes < yesterday[1] - 1440) return open(yesterday[1] - 1440 - minutes, yesterday[1])
+  const today = windowOn(windows, date)
+  if (today && minutes >= today[0] && minutes < today[1]) return open(today[1] - minutes, today[1])
+  if (today && minutes < today[0]) return { state: 'off', text: L.opensToday.replace('%s', timeLabel(today[0])) }
+  for (let k = 1; k <= 7; k++) {
+    const day = addDays(date, k)
+    const w = windowOn(windows, day)
+    if (w) {
+      const when = k === 1 ? L.tomorrow : new Intl.DateTimeFormat(root.lang || undefined, { weekday: 'short', timeZone: 'UTC' }).format(day)
+      return { state: 'off', text: L.opensLater.replace('%1$s', when).replace('%2$s', timeLabel(w[0])) }
+    }
+  }
+  return { state: 'off', text: L.closed }
+}
 
 /* Site-wide state: demo style direction (HANDOFF §2.3) and the current location (§8). */
 Alpine.store('site', {
@@ -30,6 +92,24 @@ Alpine.store('site', {
     this.theme = theme
     root.dataset.theme = theme
     try { localStorage.setItem('rm-theme', theme) } catch {}
+  },
+  /* Recompute every location's status; badges bound to the store update reactively, the rest by slug. */
+  refreshStatus() {
+    if (!STATUS.labels) return
+    this.locations.forEach((loc) => {
+      if (!loc.windows) return
+      loc.status = computeStatus(loc.windows)
+      document.querySelectorAll(`[data-status-of="${CSS.escape(loc.slug)}"]`).forEach((el) => {
+        el.dataset.state = loc.status.state
+        const text = el.querySelector('.status-t')
+        if (text) text.textContent = loc.status.text
+      })
+    })
+  },
+  init() {
+    root.dataset.loc = this.loc.slug || root.dataset.loc
+    this.refreshStatus()
+    setInterval(() => this.refreshStatus(), 60000)
   },
 })
 
@@ -142,7 +222,6 @@ Alpine.data('catbar', () => ({
 
 /* Native table request: time slots for the chosen date from the location's hours (Core plugin's
    cc_booking_windows: Monday-first [first, last seating] minutes plus holiday overrides). */
-const pad = (n) => String(n).padStart(2, '0')
 const isoDate = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
 const timeFormat = new Intl.DateTimeFormat(root.lang || undefined, { hour: 'numeric', minute: '2-digit' })
 const dayFormat = new Intl.DateTimeFormat(root.lang || undefined, { weekday: 'short', day: 'numeric', month: 'short' })

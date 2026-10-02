@@ -27,6 +27,7 @@ require_once CC_CORE_DIR . 'includes/fields.php';
 require_once CC_CORE_DIR . 'includes/hours.php';
 require_once CC_CORE_DIR . 'includes/locations.php';
 require_once CC_CORE_DIR . 'includes/menus.php';
+require_once CC_CORE_DIR . 'includes/settings.php';
 require_once CC_CORE_DIR . 'includes/forms.php';
 require_once CC_CORE_DIR . 'includes/inquiry.php';
 require_once CC_CORE_DIR . 'includes/reservations.php';

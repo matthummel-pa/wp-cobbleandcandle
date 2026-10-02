@@ -17,7 +17,7 @@
                 @if ($l['address'] !== '')
                   <p class="muted">{{ $l['address'] }}</p>
                 @endif
-                <x-status :status="$l['status']" size="sm" />
+                <x-status :status="$l['status']" :of="$l['slug']" size="sm" />
                 <a class="link-arrow" href="{!! esc_url($l['url']) !!}">{{ __('Visit', 'cobbleandcandle') }}<x-icon name="arrow" /><span class="sr"> {{ $l['name'] }}</span></a>
               </div>
             </article>

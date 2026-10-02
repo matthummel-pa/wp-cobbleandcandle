@@ -24,7 +24,16 @@ function cc_minutes( $time ) {
 }
 
 /**
- * Human time: "5:30pm", "11pm", "noon", "midnight".
+ * Whether the site's time format (Settings → General) is a 24-hour clock.
+ *
+ * @return bool
+ */
+function cc_uses_24_hour_clock() {
+	return (bool) preg_match( '/[GH]/', (string) get_option( 'time_format', 'g:i a' ) );
+}
+
+/**
+ * Human time: "5:30pm", "11pm", "noon", "midnight" (or "17:30" on 24-hour sites).
  *
  * @param string $time "HH:MM".
  * @return string
@@ -35,14 +44,17 @@ function cc_time_label( $time ) {
 		return '';
 	}
 	$minutes %= 1440;
+	$h        = intdiv( $minutes, 60 );
+	$m        = $minutes % 60;
+	if ( cc_uses_24_hour_clock() ) {
+		return sprintf( '%02d:%02d', $h, $m );
+	}
 	if ( 0 === $minutes ) {
 		return __( 'midnight', 'cobbleandcandle-core' );
 	}
 	if ( 720 === $minutes ) {
 		return __( 'noon', 'cobbleandcandle-core' );
 	}
-	$h      = intdiv( $minutes, 60 );
-	$m      = $minutes % 60;
 	$suffix = $h < 12 ? 'am' : 'pm';
 	$h12    = $h % 12 ? $h % 12 : 12;
 	return 0 === $m ? $h12 . $suffix : sprintf( '%d:%02d%s', $h12, $m, $suffix );
@@ -207,4 +219,52 @@ function cc_today_hours( $location_id ) {
 	return $window
 		? cc_time_label( cc_minutes_to_time( $window[0] ) ) . ' – ' . cc_time_label( cc_minutes_to_time( $window[1] ) )
 		: __( 'Closed', 'cobbleandcandle-core' );
+}
+
+/**
+ * Opening windows for the browser to compute open-now itself (cached pages would otherwise show a
+ * stale status): Monday-first [open, close] minutes (close may pass 1440) and holiday overrides.
+ *
+ * @param int $location_id Location post ID.
+ * @return array{week: array<int, array{0: int, 1: int}|null>, holidays: array<string, array{0: int, 1: int}|null>}
+ */
+function cc_status_windows( $location_id ) {
+	$week = array();
+	$rows = (array) get_post_meta( $location_id, 'cc_hours', true );
+	for ( $i = 0; $i < 7; $i++ ) {
+		$week[] = cc_day_window( $rows[ $i ] ?? null );
+	}
+	$holidays = array();
+	foreach ( (array) get_post_meta( $location_id, 'cc_holiday_hours', true ) as $holiday ) {
+		if ( is_array( $holiday ) && ! empty( $holiday['date'] ) ) {
+			$holidays[ $holiday['date'] ] = cc_day_window( $holiday );
+		}
+	}
+	return array(
+		'week'     => $week,
+		'holidays' => (object) $holidays,
+	);
+}
+
+/**
+ * Status phrases for the browser, matching cc_location_status() and cc_time_label().
+ *
+ * @return array<string, string|bool>
+ */
+function cc_status_labels() {
+	return array(
+		/* translators: %s: closing time */
+		'open'       => __( 'Open now · closes %s', 'cobbleandcandle-core' ),
+		/* translators: %s: closing time */
+		'soon'       => __( 'Closing soon · closes %s', 'cobbleandcandle-core' ),
+		/* translators: %s: opening time, e.g. 5:30pm */
+		'opensToday' => __( 'Closed · opens %s', 'cobbleandcandle-core' ),
+		/* translators: 1: "tomorrow" or a weekday, 2: opening time */
+		'opensLater' => __( 'Closed · opens %1$s %2$s', 'cobbleandcandle-core' ),
+		'closed'     => __( 'Closed', 'cobbleandcandle-core' ),
+		'tomorrow'   => __( 'tomorrow', 'cobbleandcandle-core' ),
+		'midnight'   => __( 'midnight', 'cobbleandcandle-core' ),
+		'noon'       => __( 'noon', 'cobbleandcandle-core' ),
+		'clock24'    => cc_uses_24_hour_clock(),
+	);
 }

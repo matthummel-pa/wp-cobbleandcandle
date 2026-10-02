@@ -120,6 +120,20 @@ function cc_cli_seed( $args, $assoc_args ) {
 		);
 	}
 
+	// Demo brand details, only on a site that has none yet.
+	if ( ! get_option( 'cobbleandcandle_brand' ) ) {
+		update_option(
+			'cobbleandcandle_brand',
+			array(
+				'tagline'     => 'Dining rooms',
+				'est'         => '1888',
+				'cuisine'     => 'Modern European',
+				'price_range' => '$$$',
+				'currency'    => 'USD',
+			)
+		);
+	}
+
 	WP_CLI::success( sprintf( 'Demo content: %d created, %d updated, %d skipped.', $counts['created'], $counts['updated'], $counts['skipped'] ) );
 }
 

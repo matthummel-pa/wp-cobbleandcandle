@@ -96,3 +96,6 @@
 .search-form .search-field:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 1px; border-color: var(--color-focus); }
 .search-form .search-submit { min-height: 50px; padding: 0 22px; font: 700 var(--text-xs)/1 var(--font-sans); letter-spacing: .14em; text-transform: uppercase; color: var(--color-text); background: transparent; border: 1px solid color-mix(in srgb, var(--color-text) 60%, transparent); border-radius: var(--radius-btn); cursor: pointer; }
 .search-form .search-submit:hover { border-color: var(--color-accent); color: var(--color-accent); }
+
+/* Uploaded logo in the header/footer brand (replaces the crest). */
+.brand-logo { display: block; height: 52px; width: auto; max-width: 180px; object-fit: contain; }
