@@ -988,3 +988,50 @@ add_filter(
 	}
 );
 
+/**
+ * Schema.org HotelRoom for a room page, offered nightly by its house (or the organization).
+ *
+ * @param int $room_id Room post ID.
+ * @return array<string, mixed>
+ */
+function cc_schema_room( $room_id ) {
+	$room = cc_room( $room_id );
+	if ( ! $room ) {
+		return array();
+	}
+	$node = array(
+		'@type'       => 'HotelRoom',
+		'@id'         => $room['url'] . '#room',
+		'name'        => $room['name'],
+		'url'         => $room['url'],
+		'description' => $room['excerpt'],
+		'image'       => $room['image_id'] ? wp_get_attachment_image_url( $room['image_id'], 'full' ) : null,
+		'occupancy'   => array(
+			'@type'    => 'QuantitativeValue',
+			'maxValue' => $room['max_guests'],
+		),
+		'bed'         => '' !== $room['beds'] ? $room['beds'] : null,
+		'amenityFeature' => array_map(
+			static fn( $label ) => array(
+				'@type' => 'LocationFeatureSpecification',
+				'name'  => $label,
+				'value' => true,
+			),
+			$room['amenities']
+		),
+		'containedInPlace' => $room['location_id'] && function_exists( 'cc_schema_id' ) ? array( '@id' => cc_schema_id( 'restaurant', $room['location_id'] ) ) : null,
+	);
+	if ( $room['price_night'] > 0 ) {
+		$node['offers'] = array(
+			'@type'              => 'Offer',
+			'price'              => $room['price_night'],
+			'priceCurrency'      => (string) apply_filters( 'cc_currency', 'USD' ),
+			'unitCode'           => 'DAY',
+			'url'                => $room['url'] . '#book',
+			'availability'       => 'https://schema.org/InStock',
+			'businessFunction'   => 'http://purl.org/goodrelations/v1#LeaseOut',
+		);
+	}
+	return array_filter( $node, static fn( $value ) => null !== $value && '' !== $value && array() !== $value );
+}
+

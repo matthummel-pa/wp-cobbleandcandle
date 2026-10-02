@@ -350,6 +350,9 @@ function cc_schema_page_nodes() {
 		unset( $event['@context'] );
 		$nodes[] = $event;
 	}
+	if ( is_singular( 'cc_room' ) && function_exists( 'cc_schema_room' ) ) {
+		$nodes[] = cc_schema_room( get_queried_object_id() );
+	}
 	if ( is_page() && has_block( 'cobbleandcandle/full-menu', get_queried_object() ) ) {
 		$nodes = array_merge( $nodes, cc_schema_menus( get_queried_object_id() ) );
 	}

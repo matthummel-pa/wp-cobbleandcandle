@@ -63,6 +63,8 @@ function page_link(string $path): string
         $url = (string) get_post_type_archive_link('cc_location');
     } elseif ($path === '/events/' && post_type_exists('cc_event')) {
         $url = (string) get_post_type_archive_link('cc_event');
+    } elseif ($path === '/rooms/' && post_type_exists('cc_room')) {
+        $url = (string) get_post_type_archive_link('cc_room');
     }
 
     return (string) apply_filters('cobbleandcandle/page_link', $url !== '' ? $url : home_url($path), $path);

@@ -265,6 +265,125 @@ Alpine.data('bookingForm', (windows) => ({
   },
 }))
 
+/* Room booking: live availability calendar (two months), check-in/out picking that skips booked
+   nights, minimum stay, and a running total. The native date inputs stay the accessible source of truth. */
+Alpine.data('stayPicker', (cfg) => ({
+  full: new Set(),
+  today: isoDate(new Date()),
+  ready: false,
+  offset: 0,
+  checkIn: '',
+  checkOut: '',
+  weekdays: [...Array(7)].map((_, i) => new Intl.DateTimeFormat(root.lang || undefined, { weekday: 'narrow' }).format(new Date(2024, 0, 1 + i))),
+  async init() {
+    const to = new Date()
+    to.setDate(to.getDate() + 380)
+    try {
+      const url = new URL(cfg.rest)
+      url.searchParams.set('from', this.today)
+      url.searchParams.set('to', isoDate(to))
+      const res = await fetch(url, { credentials: 'same-origin' })
+      if (!res.ok) return
+      const data = await res.json()
+      this.full = new Set(data.full || [])
+      this.today = data.today || this.today
+      this.ready = true
+    } catch (e) {
+      // Calendar stays hidden; the date inputs still work and the server re-checks every request.
+    }
+  },
+  addDays(iso, n) {
+    const d = new Date(`${iso}T12:00`)
+    d.setDate(d.getDate() + n)
+    return isoDate(d)
+  },
+  nights(from, to) {
+    const out = []
+    for (let d = from; d < to && out.length < 400; d = this.addDays(d, 1)) out.push(d)
+    return out
+  },
+  rangeFree(from, to) {
+    return this.nights(from, to).every((n) => !this.full.has(n))
+  },
+  pick(iso) {
+    if (this.checkIn && !this.checkOut && iso > this.checkIn && this.rangeFree(this.checkIn, iso)) {
+      this.checkOut = iso
+      return
+    }
+    if (!this.full.has(iso)) {
+      this.checkIn = iso
+      this.checkOut = ''
+    }
+  },
+  shift(n) {
+    this.offset = Math.min(11, Math.max(0, this.offset + n))
+  },
+  get months() {
+    const base = new Date(`${this.today}T12:00`)
+    const fmt = new Intl.DateTimeFormat(root.lang || undefined, { month: 'long', year: 'numeric' })
+    const long = new Intl.DateTimeFormat(root.lang || undefined, { weekday: 'long', day: 'numeric', month: 'long' })
+    const { free, full } = this.$root.dataset
+    return [0, 1].map((k) => {
+      const first = new Date(base.getFullYear(), base.getMonth() + this.offset + k, 1, 12)
+      const count = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate()
+      const days = []
+      for (let d = 1; d <= count; d++) {
+        const date = new Date(first.getFullYear(), first.getMonth(), d, 12)
+        const iso = isoDate(date)
+        const taken = this.full.has(iso)
+        const canOut = this.checkIn && !this.checkOut && iso > this.checkIn && this.rangeFree(this.checkIn, iso)
+        const inStay = this.checkIn && this.checkOut && iso >= this.checkIn && iso <= this.checkOut
+        days.push({
+          iso,
+          n: d,
+          disabled: iso < this.today || (taken && !canOut),
+          selected: iso === this.checkIn || iso === this.checkOut,
+          cls: { 'is-full': taken, 'is-past': iso < this.today, 'is-in': inStay, 'is-end': iso === this.checkIn || iso === this.checkOut },
+          label: `${long.format(date)}, ${taken ? full : free}`,
+        })
+      }
+      return { key: `${first.getFullYear()}-${first.getMonth()}`, label: fmt.format(first), blank: (first.getDay() + 6) % 7, days }
+    })
+  },
+  clearOut() {
+    if (this.checkOut <= this.checkIn) this.checkOut = ''
+  },
+  get atEnd() {
+    return this.offset >= 11
+  },
+  get minOut() {
+    return this.checkIn ? this.addDays(this.checkIn, cfg.minNights || 1) : ''
+  },
+  get stay() {
+    return this.checkIn && this.checkOut > this.checkIn ? this.nights(this.checkIn, this.checkOut) : []
+  },
+  get problem() {
+    if (!this.stay.length) return ''
+    if (this.stay.length < (cfg.minNights || 1)) return this.$root.dataset.min
+    if (this.stay.some((n) => this.full.has(n))) return this.$root.dataset.taken
+    return ''
+  },
+  get valid() {
+    return this.stay.length > 0 && this.problem === ''
+  },
+  get nightsLabel() {
+    const n = this.stay.length
+    return (n === 1 ? this.$root.dataset.nights : this.$root.dataset.nightsPlural).replace('%d', n)
+  },
+  get total() {
+    if (!this.valid || !cfg.priceNight) return ''
+    const sum = this.stay.reduce((t, n) => {
+      const day = new Date(`${n}T12:00`).getDay()
+      return t + ((day === 5 || day === 6) && cfg.priceWeekend ? cfg.priceWeekend : cfg.priceNight)
+    }, 0)
+    try {
+      return new Intl.NumberFormat(root.lang || undefined, { style: 'currency', currency: cfg.currency, maximumFractionDigits: sum % 1 ? 2 : 0 }).format(sum)
+    } catch (e) {
+      return String(sum)
+    }
+  },
+}))
+
 /* Gallery: category filter and a <dialog> lightbox over the visible tiles (arrows, Esc, focus return). */
 Alpine.data('gallery', () => ({
   filter: 'all',

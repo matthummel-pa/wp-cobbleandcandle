@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/room-details",
+  "title": "Room Details",
+  "category": "cobbleandcandle",
+  "description": "A single room: photo, story, amenities, house notes and a live availability calendar with the booking request form.",
+  "keywords": ["room", "booking", "availability", "single"],
+  "textdomain": "cobbleandcandle",
+  "attributes": {
+    "notes": {
+      "type": "string",
+      "default": "Check-in from 3pm, check-out by 11am.\nCooked breakfast served 8–10am in the bar.\nFree cancellation up to 7 days before arrival."
+    },
+    "related": { "type": "number", "default": 3 }
+  },
+  "supports": { "html": false, "align": ["full"], "inserter": false }
+}
