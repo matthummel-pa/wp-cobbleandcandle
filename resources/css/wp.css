@@ -38,3 +38,8 @@
 /* Placeholder map: the pin for the location on show. */
 .pin.is-current .pin-c { fill: var(--color-accent); }
 .pin.is-current .pin-n { fill: var(--color-accent-contrast); }
+
+/* 404 on one column: the message first, the illustration after it as a short band. */
+@media (max-width: 1023px) {
+  .nf-m { order: 2; aspect-ratio: 16 / 9; }
+}

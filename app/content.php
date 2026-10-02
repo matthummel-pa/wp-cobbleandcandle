@@ -55,3 +55,21 @@ function dish_art(int $index): string
 {
     return ['dish-plate', 'dish-duck', 'dish-dessert', 'dish-pie', 'dish-board'][$index % 5];
 }
+
+/**
+ * Split "a | b | c" lines (block textarea settings) into rows of exactly $columns trimmed strings.
+ *
+ * @return list<list<string>>
+ */
+function pipe_lines(string $text, int $columns): array
+{
+    $rows = [];
+    foreach (preg_split('/\R/', $text) ?: [] as $line) {
+        if (trim($line) === '') {
+            continue;
+        }
+        $rows[] = array_pad(array_slice(array_map('trim', explode('|', $line, $columns)), 0, $columns), $columns, '');
+    }
+
+    return $rows;
+}
