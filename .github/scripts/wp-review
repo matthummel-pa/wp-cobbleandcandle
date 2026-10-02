@@ -218,8 +218,18 @@ def run_blade(files, report, strict):
     return f"{len(targets)} Blade file(s) checked"
 
 
+def pint_excluded(path):
+    """True when pint.json's "exclude" lists this path or a parent folder (Pint ignores it for explicit paths)."""
+    try:
+        excludes = json.loads(Path("pint.json").read_text()).get("exclude", [])
+    except (OSError, ValueError):
+        return False
+    return any(path == e.rstrip("/") or path.startswith(e.rstrip("/") + "/") for e in excludes)
+
+
 def run_pint(files, report):
-    targets = [p for p in files if p.endswith(".php") and not p.endswith(".blade.php") and keep(p)]
+    targets = [p for p in files if p.endswith(".php") and not p.endswith(".blade.php") and keep(p)
+               and not pint_excluded(p)]
     pint = Path("vendor/bin/pint")
     if not targets:
         return "no PHP changes"

@@ -47,16 +47,23 @@ jobs:
       - name: Pack theme zip
         run: bash .github/scripts/pack-theme.sh "$THEME_SLUG" "$GITHUB_WORKSPACE/$THEME_SLUG.zip"
 
+      - name: Pack companion plugin zip
+        run: |
+          cd plugins
+          zip -rq "$GITHUB_WORKSPACE/cobbleandcandle-core.zip" cobbleandcandle-core -x '*.DS_Store'
+
       - name: Publish release theme-latest
         uses: softprops/action-gh-release@v2
         with:
           tag_name: theme-latest
           name: Latest theme build
           body: |
-            Built Sage theme (Composer vendor + Vite `public/build`).
+            Built Sage theme (Composer vendor + Vite `public/build`) and the Cobble & Candle Core plugin.
             Commit: ${{ github.sha }}
-            Unzip into `wp-content/themes/${{ env.THEME_SLUG }}/`, then purge the page cache.
-          files: ${{ env.THEME_SLUG }}.zip
+            Install both: the theme zip in Appearance → Themes, the plugin zip in Plugins → Add New → Upload. Then purge the page cache.
+          files: |
+            ${{ env.THEME_SLUG }}.zip
+            cobbleandcandle-core.zip
           fail_on_unmatched_files: true
           make_latest: true
           target_commitish: ${{ github.sha }}
