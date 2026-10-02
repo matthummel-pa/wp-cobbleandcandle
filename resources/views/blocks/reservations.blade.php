@@ -155,6 +155,16 @@
               </div>
             </div>
           @endforeach
+          @php($stays = \App\rooms())
+          @php($cheapest = $stays ? min(array_map(fn ($r) => $r['price_weekend'] > 0 ? min($r['price_night'], $r['price_weekend']) : $r['price_night'], $stays)) : 0)
+          @if ($stays)
+            <div class="card stay-x">
+              <h2 class="h4"><x-icon name="bed" /> {{ __('Staying the night?', 'cobbleandcandle') }}</h2>
+              {{-- translators: %s: lowest nightly room price --}}
+              <p>{{ $cheapest > 0 ? sprintf(__('Rooms upstairs from %s a night, breakfast included. Add your dinner table when you book.', 'cobbleandcandle'), cc_money($cheapest)) : __('Rooms upstairs, breakfast included. Add your dinner table when you book.', 'cobbleandcandle') }}</p>
+              <a class="link-arrow" href="{!! esc_url(\App\page_link('/rooms/')) !!}">{{ __('See rooms & dates', 'cobbleandcandle') }}<x-icon name="arrow" /></a>
+            </div>
+          @endif
         </aside>
       </div>
     </section>

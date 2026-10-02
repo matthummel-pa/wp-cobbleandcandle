@@ -623,6 +623,8 @@ input::placeholder,textarea::placeholder{color:var(--color-muted);opacity:1}
 .stay-form .form-grid{grid-template-columns:1fr 1fr;gap:12px;margin-bottom:6px}
 .stay-form .form-grid > .field{min-width:0}
 .stay-form input[type=date]{min-width:0;padding-inline:10px}
+.dine{border:0;padding:0;margin:0 0 16px}
+.dine .check{margin-bottom:12px}
 .stay-total{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;margin-bottom:12px;border-block:1px solid var(--color-line)}
 .stay-total b{font-size:var(--text-xl);color:var(--color-accent)}
 .cal{position:relative;margin:4px 0 18px}
