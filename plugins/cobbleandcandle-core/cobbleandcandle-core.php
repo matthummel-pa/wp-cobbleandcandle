@@ -55,4 +55,13 @@ register_activation_hook(
 		flush_rewrite_rules();
 	}
 );
-register_deactivation_hook( __FILE__, 'flush_rewrite_rules' );
+register_deactivation_hook(
+	__FILE__,
+	static function () {
+		// Unregister first so the flush drops this plugin's rewrite rules.
+		foreach ( array( 'cc_location', 'cc_menu_item', 'cc_event' ) as $post_type ) {
+			unregister_post_type( $post_type );
+		}
+		flush_rewrite_rules();
+	}
+);

@@ -29,6 +29,7 @@ function cc_settings_fields() {
 		'tripadvisor' => array( 'Tripadvisor', 'url', '' ),
 		'yelp'        => array( 'Yelp', 'url', '' ),
 		'google'      => array( __( 'Google Business Profile', 'cobbleandcandle-core' ), 'url', '' ),
+		'remove_data' => array( __( 'Remove data on uninstall', 'cobbleandcandle-core' ), 'checkbox', __( 'Delete all locations, menus, menu items, events and gallery categories when this plugin is deleted. Leave unticked to keep your content.', 'cobbleandcandle-core' ) ),
 	);
 }
 
@@ -75,6 +76,8 @@ function cc_sanitize_settings( $input ) {
 		if ( 'image' === $type ) {
 			$id          = absint( $value );
 			$out[ $key ] = $id && wp_attachment_is_image( $id ) ? $id : 0;
+		} elseif ( 'checkbox' === $type ) {
+			$out[ $key ] = '1' === $value ? '1' : '';
 		} elseif ( 'url' === $type ) {
 			$out[ $key ] = esc_url_raw( (string) $value );
 		} elseif ( 'currency' === $key ) {
@@ -152,6 +155,8 @@ function cc_render_settings_page() {
 									<button type="button" class="button cc-image-choose"><?php esc_html_e( 'Choose logo', 'cobbleandcandle-core' ); ?></button>
 									<button type="button" class="button-link cc-image-remove"<?php echo $value ? '' : ' hidden'; ?>><?php esc_html_e( 'Remove', 'cobbleandcandle-core' ); ?></button>
 								</div>
+							<?php elseif ( 'checkbox' === $type ) : ?>
+								<input type="checkbox" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="1" <?php checked( $value, '1' ); ?>>
 							<?php else : ?>
 								<input type="<?php echo 'url' === $type ? 'url' : 'text'; ?>" class="regular-text" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $value ); ?>">
 							<?php endif; ?>

@@ -20,7 +20,7 @@ tar -C "$root" \
   --exclude='*.zip' --exclude='.mcp.json' --exclude='.wp-env.json' --exclude='.pa11yci.json' \
   --exclude='.wp-review-allow' --exclude='.gitignore' --exclude='.editorconfig' \
   --exclude='CLAUDE.md' --exclude='AGENTS.md' --exclude='phpcs.xml.dist' --exclude='phpstan*.neon*' \
-  --exclude='lighthouse-report*' --exclude='plugins' \
+  --exclude='lighthouse-report*' --exclude='plugins' --exclude='child-theme' --exclude='resources/lang/.views' \
   -cf - . | tar -C "$stage/$slug" -xf -
 
 [[ -f "$stage/$slug/style.css" ]] || { echo "style.css missing from pack" >&2; exit 1; }
@@ -28,6 +28,10 @@ tar -C "$root" \
 [[ -f "$stage/$slug/vendor/autoload.php" ]] || { echo "Composer vendor missing: run composer install --no-dev first" >&2; exit 1; }
 grep -q "base: './'" "$root/vite.config.js" \
   || { echo "vite.config.js base must be './' so built CSS finds its fonts in any install path" >&2; exit 1; }
+
+# The companion plugin ships inside the theme; the admin notice installs it from here (app/admin.php).
+mkdir -p "$stage/$slug/plugins"
+(cd "$root/plugins" && zip -rq "$stage/$slug/plugins/cobbleandcandle-core.zip" cobbleandcandle-core -x '*.DS_Store')
 
 rm -f "$stage/$slug/public/hot"
 (cd "$stage" && zip -rq "$out" "$slug")

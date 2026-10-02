@@ -24,14 +24,14 @@
 
 /* Page content: ordinary blocks sit in a centred reading column with side gutters; full-width
    blocks (the theme's sections) still span the screen. Unlayered so it beats WordPress's layout CSS. */
-.wp-block-post-content.is-layout-constrained > :not(.alignfull):not(.alignwide):not(.alignleft):not(.alignright) {
+main > .wp-block-post-content.is-layout-constrained > :not(.alignfull):not(.alignwide):not(.alignleft):not(.alignright) {
   max-width: min(var(--wp--style--global--content-size, 48rem), calc(100% - var(--gutter) * 2));
 }
-.wp-block-post-content.is-layout-constrained > .alignwide {
+main > .wp-block-post-content.is-layout-constrained > .alignwide {
   max-width: min(var(--wp--style--global--wide-size, 1240px), calc(100% - var(--gutter) * 2));
 }
-.wp-block-post-content > :first-child:not(.alignfull) { margin-top: clamp(40px, 6vw, 72px); }
-.wp-block-post-content > :last-child:not(.alignfull) { margin-bottom: clamp(56px, 8vw, 96px); }
+main > .wp-block-post-content > :first-child:not(.alignfull) { margin-top: clamp(40px, 6vw, 72px); }
+main > .wp-block-post-content > :last-child:not(.alignfull) { margin-bottom: clamp(56px, 8vw, 96px); }
 
 /* Footer social profiles (core Social Links, logos only) as the theme's round icon buttons. */
 .social .wp-block-social-links { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; }
@@ -39,3 +39,16 @@
 .social .wp-block-social-links .wp-social-link a { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent); border-radius: var(--radius-chip); color: var(--color-text); }
 .social .wp-block-social-links .wp-social-link a:hover { border-color: var(--color-accent); color: var(--color-accent); }
 .social .wp-block-social-links .wp-social-link svg { width: 20px; height: 20px; fill: currentColor; }
+
+/* Header, main and footer sit flush: WordPress adds a block gap between the site's top-level parts. */
+.wp-site-blocks > * + * { margin-block-start: 0; }
+
+/* Blog post: meta row, tags, previous/next and comments in the theme's tone. */
+.post-single .post-meta { gap: 6px 18px; color: var(--color-muted); font-size: var(--text-sm); margin-bottom: 28px; }
+.post-single .post-meta a, .post-single .post-tags a, .post-single .post-nav a { color: var(--color-accent); }
+.post-single .post-tags { margin-top: 32px; font-size: var(--text-sm); }
+.post-single .post-nav { margin-block: 48px 0; padding-top: 24px; border-top: 1px solid var(--color-line); gap: 16px; }
+.post-single .post-comments { margin-top: 56px; }
+.post-single .comment { padding-block: 20px; border-bottom: 1px solid var(--color-line); }
+.post-single .post-comments :where(input:not([type=submit]), textarea) { width: 100%; padding: 12px 14px; color: var(--color-text); background: color-mix(in srgb, var(--color-text) 5%, var(--color-bg)); border: 1px solid color-mix(in srgb, var(--color-text) 52%, var(--color-bg)); border-radius: var(--radius-input); }
+.post-single .post-comments .wp-block-button__link, .post-single .post-comments input[type=submit] { padding: 14px 24px; color: var(--color-accent-contrast); background: var(--color-accent); border: 0; border-radius: var(--radius-btn); font-weight: 700; cursor: pointer; }

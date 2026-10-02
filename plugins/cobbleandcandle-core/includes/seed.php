@@ -216,7 +216,16 @@ function cc_seed_post( $post_type, $title, array $postarr, array $meta, $update,
  */
 function cc_seed_term( $taxonomy, $name, $slug, $order, $intro = '' ) {
 	$term = get_term_by( 'slug', $slug, $taxonomy );
-	$id   = $term ? (int) $term->term_id : (int) ( wp_insert_term( $name, $taxonomy, array( 'slug' => $slug ) )['term_id'] ?? 0 );
+	if ( $term ) {
+		$id = (int) $term->term_id;
+	} else {
+		$created = wp_insert_term( $name, $taxonomy, array( 'slug' => $slug ) );
+		if ( is_wp_error( $created ) ) {
+			WP_CLI::warning( $name . ': ' . $created->get_error_message() );
+			return 0;
+		}
+		$id = (int) $created['term_id'];
+	}
 	if ( $id ) {
 		update_term_meta( $id, 'cc_order', (int) $order );
 		if ( '' !== $intro ) {
