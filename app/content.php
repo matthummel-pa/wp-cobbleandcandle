@@ -73,3 +73,19 @@ function pipe_lines(string $text, int $columns): array
 
     return $rows;
 }
+
+/**
+ * Rooms with a "from" price label for cards.
+ *
+ * @return list<array<string, mixed>>
+ */
+function rooms(int $limit = 50): array
+{
+    if (! function_exists('cc_get_rooms')) {
+        return [];
+    }
+
+    return array_map(fn (array $room): array => $room + [
+        'from' => $room['price_night'] > 0 ? cc_money(min(array_filter([$room['price_night'], $room['price_weekend']]))) : '',
+    ], array_slice(cc_get_rooms(), 0, $limit));
+}

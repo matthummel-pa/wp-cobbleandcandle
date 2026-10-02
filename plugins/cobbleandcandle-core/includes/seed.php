@@ -120,6 +120,35 @@ function cc_cli_seed( $args, $assoc_args ) {
 		);
 	}
 
+	foreach ( (array) ( $data['rooms'] ?? array() ) as $order => $room ) {
+		$content = '';
+		foreach ( (array) ( $room['content'] ?? array() ) as $paragraph ) {
+			$content .= "<!-- wp:paragraph -->\n<p>" . esc_html( $paragraph ) . "</p>\n<!-- /wp:paragraph -->\n\n";
+		}
+		cc_seed_post(
+			'cc_room',
+			$room['title'],
+			array(
+				'post_excerpt' => $room['excerpt'],
+				'post_content' => $content,
+				'menu_order'   => $order,
+			),
+			array(
+				'cc_price_night'   => $room['price_night'],
+				'cc_price_weekend' => $room['price_weekend'],
+				'cc_min_nights'    => $room['min_nights'],
+				'cc_max_guests'    => $room['max_guests'],
+				'cc_units'         => $room['units'],
+				'cc_beds'          => $room['beds'],
+				'cc_size'          => $room['size'],
+				'cc_amenities'     => $room['amenities'],
+				'cc_location'      => $location_ids[ $room['location'] ] ?? 0,
+			),
+			$update,
+			$counts
+		);
+	}
+
 	// Demo brand details, only on a site that has none yet.
 	if ( ! get_option( 'cobbleandcandle_brand' ) ) {
 		update_option(

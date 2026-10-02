@@ -111,6 +111,20 @@ Smart-casual; no dress code.', 'cobbleandcandle');
     __('Kind words', 'cobbleandcandle');
     /* translators: Default for the Reviews & Press block setting "press". */
     __('The Old Town Courier, Harbour & Hearth, Coastal Table, The Night Ledger', 'cobbleandcandle');
+    /* translators: Default for the Room Details block setting "notes". */
+    __('Check-in from 3pm, check-out by 11am.
+Cooked breakfast served 8–10am in the bar.
+Free cancellation up to 7 days before arrival.', 'cobbleandcandle');
+    /* translators: Default for the Rooms block setting "eyebrow". */
+    __('Stay with us', 'cobbleandcandle');
+    /* translators: Default for the Rooms block setting "title". */
+    __('Rooms upstairs', 'cobbleandcandle');
+    /* translators: Default for the Rooms block setting "intro". */
+    __('Sleep above the tavern. Breakfast is on us.', 'cobbleandcandle');
+    /* translators: Default for the Rooms block setting "linkLabel". */
+    __('All rooms', 'cobbleandcandle');
+    /* translators: Default for the Rooms block setting "emptyText". */
+    __('Rooms are being readied. Call us to book a stay.', 'cobbleandcandle');
     /* translators: Default for the Site Header block setting "reserveLabel". */
     __('Reserve a table', 'cobbleandcandle');
     /* translators: Default for the Site Header block setting "orderLabel". */

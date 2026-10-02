@@ -68,6 +68,7 @@ function hero_eyebrow(): string
     return match (true) {
         is_post_type_archive('cc_location') => __('Locations & contact', 'cobbleandcandle'),
         is_post_type_archive('cc_event') => __('Events & specials', 'cobbleandcandle'),
+        is_post_type_archive('cc_room') => __('Rooms & stays', 'cobbleandcandle'),
         is_singular('cc_location') => __('Our houses', 'cobbleandcandle'),
         default => '',
     };
@@ -97,6 +98,9 @@ function page_hero(array $attributes): array
     } elseif (is_post_type_archive('cc_event')) {
         $title = $title !== '' ? $title : __('What’s on', 'cobbleandcandle');
         $lede = $lede !== '' ? $lede : __('Seasonal suppers, live music and holiday nights across our houses.', 'cobbleandcandle');
+    } elseif (is_post_type_archive('cc_room')) {
+        $title = $title !== '' ? $title : __('Stay the night', 'cobbleandcandle');
+        $lede = $lede !== '' ? $lede : __('Rooms upstairs from the bar: supper, a proper bed and breakfast in the morning.', 'cobbleandcandle');
     } elseif (is_archive()) {
         $title = $title !== '' ? $title : wp_strip_all_tags(is_post_type_archive() ? post_type_archive_title('', false) : get_the_archive_title());
         $lede = $lede !== '' ? $lede : wp_strip_all_tags(get_the_archive_description());

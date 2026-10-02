@@ -162,6 +162,7 @@ function cc_get_rooms() {
 		array(
 			'post_type'      => 'cc_room',
 			'post_status'    => 'publish',
+			'has_password'   => false, // Password-protected rooms are for invited guests: never listed.
 			'posts_per_page' => 50,
 			'orderby'        => array(
 				'menu_order' => 'ASC',
@@ -396,7 +397,7 @@ add_action( 'rest_api_init', 'cc_register_room_routes' );
  */
 function cc_rest_room_availability( WP_REST_Request $request ) {
 	$room = cc_room( (int) $request['id'] );
-	if ( ! $room || 'publish' !== get_post_status( $room['id'] ) ) {
+	if ( ! $room || 'publish' !== get_post_status( $room['id'] ) || post_password_required( $room['id'] ) ) {
 		return new WP_Error( 'cc_no_room', __( 'Room not found.', 'cobbleandcandle-core' ), array( 'status' => 404 ) );
 	}
 	$from = max( (string) $request['from'], wp_date( 'Y-m-d' ) ); // Never reveal past occupancy.
@@ -446,7 +447,7 @@ function cc_handle_room_booking() {
 	$phone     = isset( $_POST['cc_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_phone'] ) ) : '';
 	$message   = isset( $_POST['cc_message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['cc_message'] ) ) : '';
 
-	if ( ! $room || 'publish' !== get_post_status( $room['id'] ) || '' === $name || ! is_email( $email ) || '' === $phone ) {
+	if ( ! $room || 'publish' !== get_post_status( $room['id'] ) || post_password_required( $room['id'] ) || '' === $name || ! is_email( $email ) || '' === $phone ) {
 		$done( 'invalid' );
 	}
 	$problem = cc_stay_problem( $room, $check_in, $check_out, $guests );
@@ -987,4 +988,51 @@ add_filter(
 		return $erasers;
 	}
 );
+
+/**
+ * Schema.org HotelRoom for a room page, offered nightly by its house (or the organization).
+ *
+ * @param int $room_id Room post ID.
+ * @return array<string, mixed>
+ */
+function cc_schema_room( $room_id ) {
+	$room = cc_room( $room_id );
+	if ( ! $room ) {
+		return array();
+	}
+	$node = array(
+		'@type'       => 'HotelRoom',
+		'@id'         => $room['url'] . '#room',
+		'name'        => $room['name'],
+		'url'         => $room['url'],
+		'description' => post_password_required( $room['id'] ) ? null : wp_strip_all_tags( get_the_excerpt( $room['id'] ) ),
+		'image'       => $room['image_id'] ? wp_get_attachment_image_url( $room['image_id'], 'full' ) : null,
+		'occupancy'   => array(
+			'@type'    => 'QuantitativeValue',
+			'maxValue' => $room['max_guests'],
+		),
+		'bed'         => '' !== $room['beds'] ? $room['beds'] : null,
+		'amenityFeature' => array_map(
+			static fn( $label ) => array(
+				'@type' => 'LocationFeatureSpecification',
+				'name'  => $label,
+				'value' => true,
+			),
+			$room['amenities']
+		),
+		'containedInPlace' => $room['location_id'] && function_exists( 'cc_schema_id' ) ? array( '@id' => cc_schema_id( 'restaurant', $room['location_id'] ) ) : null,
+	);
+	if ( $room['price_night'] > 0 ) {
+		$node['offers'] = array(
+			'@type'              => 'Offer',
+			'price'              => $room['price_night'],
+			'priceCurrency'      => (string) apply_filters( 'cc_currency', 'USD' ),
+			'unitCode'           => 'DAY',
+			'url'                => $room['url'] . '#book',
+			'availability'       => 'https://schema.org/InStock',
+			'businessFunction'   => 'http://purl.org/goodrelations/v1#LeaseOut',
+		);
+	}
+	return array_filter( $node, static fn( $value ) => null !== $value && '' !== $value && array() !== $value );
+}
 

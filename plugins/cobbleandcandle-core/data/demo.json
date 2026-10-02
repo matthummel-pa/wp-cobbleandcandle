@@ -1,837 +1,935 @@
 {
- "brand": {
-  "est": "1888",
-  "tagline": "Dining rooms"
- },
- "locations": [
-  {
-   "name": "Chandler’s Wharf",
-   "street": "7 Chandler’s Wharf",
-   "locality": "Old Harbour",
-   "phone": "(555) 014-1888",
-   "email": "wharf@cobbleandcandle.test",
-   "hours": [
-    {
-     "open": "",
-     "close": "",
-     "closed": true
-    },
-    {
-     "open": "",
-     "close": "",
-     "closed": true
-    },
-    {
-     "open": "17:30",
-     "close": "23:00",
-     "closed": false
-    },
-    {
-     "open": "17:30",
-     "close": "23:00",
-     "closed": false
-    },
-    {
-     "open": "17:30",
-     "close": "23:00",
-     "closed": false
-    },
-    {
-     "open": "17:30",
-     "close": "23:00",
-     "closed": false
-    },
-    {
-     "open": "17:00",
-     "close": "22:00",
-     "closed": false
-    }
-   ],
-   "holiday_hours": [
-    {
-     "date": "2026-11-26",
-     "label": "Thanksgiving",
-     "open": "13:00",
-     "close": "20:00",
-     "closed": false
-    },
-    {
-     "date": "2026-12-24",
-     "label": "Christmas Eve",
-     "open": "17:00",
-     "close": "23:00",
-     "closed": false
-    },
-    {
-     "date": "2026-12-25",
-     "label": "Christmas Day",
-     "open": "",
-     "close": "",
-     "closed": true
-    }
-   ],
-   "parking": "Harbour Street garage (2 min walk), validated after 6pm. Cobbled lane, no drop-off at the door.",
-   "transit": "Harbour ferry stop, 3 min. Tram 4 to Customs Steps.",
-   "accessibility": "Step-free entrance via Ropewalk Lane; accessible restroom on ground floor.",
-   "booking_mode": "native",
-   "price_range": "$$$"
-  },
-  {
-   "name": "Cathedral Close",
-   "street": "2 Vestry Row",
-   "locality": "Cathedral Close",
-   "phone": "(555) 014-1898",
-   "email": "close@cobbleandcandle.test",
-   "hours": [
-    {
-     "open": "",
-     "close": "",
-     "closed": true
-    },
-    {
-     "open": "17:00",
-     "close": "22:00",
-     "closed": false
-    },
-    {
-     "open": "17:00",
-     "close": "22:00",
-     "closed": false
-    },
-    {
-     "open": "17:00",
-     "close": "22:00",
-     "closed": false
-    },
-    {
-     "open": "17:00",
-     "close": "23:00",
-     "closed": false
-    },
-    {
-     "open": "17:00",
-     "close": "23:00",
-     "closed": false
-    },
-    {
-     "open": "12:00",
-     "close": "21:00",
-     "closed": false
-    }
-   ],
-   "holiday_hours": [
-    {
-     "date": "2026-11-26",
-     "label": "Thanksgiving",
-     "open": "",
-     "close": "",
-     "closed": true
-    },
-    {
-     "date": "2026-12-24",
-     "label": "Christmas Eve",
-     "open": "16:00",
-     "close": "22:00",
-     "closed": false
-    },
-    {
-     "date": "2026-12-25",
-     "label": "Christmas Day",
-     "open": "",
-     "close": "",
-     "closed": true
-    }
-   ],
-   "parking": "Pay-and-display on Deanery Street. No parking inside the Close.",
-   "transit": "Bus 12 and 19 to Cathedral Gate.",
-   "accessibility": "Two steps at the entrance; portable ramp on request.",
-   "booking_mode": "opentable",
-   "price_range": "$$$"
-  },
-  {
-   "name": "Old Mint Quarter",
-   "street": "41 Coiners’ Yard",
-   "locality": "Old Mint Quarter",
-   "phone": "(555) 014-1902",
-   "email": "mint@cobbleandcandle.test",
-   "hours": [
-    {
-     "open": "",
-     "close": "",
-     "closed": true
-    },
-    {
-     "open": "",
-     "close": "",
-     "closed": true
-    },
-    {
-     "open": "",
-     "close": "",
-     "closed": true
-    },
-    {
-     "open": "",
-     "close": "",
-     "closed": true
-    },
-    {
-     "open": "17:30",
-     "close": "23:30",
-     "closed": false
-    },
-    {
-     "open": "17:30",
-     "close": "23:30",
-     "closed": false
-    },
-    {
-     "open": "17:00",
-     "close": "22:00",
-     "closed": false
-    }
-   ],
-   "holiday_hours": [
-    {
-     "date": "2026-11-26",
-     "label": "Thanksgiving",
-     "open": "",
-     "close": "",
-     "closed": true
-    },
-    {
-     "date": "2026-12-24",
-     "label": "Christmas Eve",
-     "open": "17:00",
-     "close": "23:00",
-     "closed": false
-    },
-    {
-     "date": "2026-12-25",
-     "label": "Christmas Day",
-     "open": "",
-     "close": "",
-     "closed": true
-    }
-   ],
-   "parking": "Mint Yard car park, evenings $6 flat.",
-   "transit": "Tram 2 to Mint Square.",
-   "accessibility": "Fully step-free; lift to the mezzanine.",
-   "booking_mode": "call",
-   "price_range": "$$$"
-  }
- ],
- "menus": [
-  {
-   "name": "Tasting",
-   "intro": "Seven courses · $125 · wine pairing $85",
-   "sections": [
-    {
-     "name": "To begin",
-     "items": [
-      {
-       "name": "Oyster, cucumber & dill",
-       "desc": "Chandler’s Bay oyster, buttermilk, caviar",
-       "price": "$9",
-       "variants": [],
-       "diet": [
-        "gf"
-       ],
-       "flag": "",
-       "chef_pick": false
-      },
-      {
-       "name": "Ember-roasted beetroot",
-       "desc": "Aged goat’s curd, rye crumb, dill oil",
-       "price": "$22",
-       "variants": [],
-       "diet": [
-        "v"
-       ],
-       "flag": "",
-       "chef_pick": false
-      },
-      {
-       "name": "Hand-dived scallop",
-       "desc": "Brown butter, cider, smoked hazelnut",
-       "price": "$34",
-       "variants": [],
-       "diet": [
-        "gf"
-       ],
-       "flag": "Chef’s pick",
-       "chef_pick": true
-      },
-      {
-       "name": "Chicken liver parfait",
-       "desc": "Madeira jelly, toasted brioche",
-       "price": "$19",
-       "variants": [],
-       "diet": [],
-       "flag": "",
-       "chef_pick": false
-      }
-     ]
-    },
-    {
-     "name": "Main courses",
-     "items": [
-      {
-       "name": "Dry-aged duck, two ways",
-       "desc": "Cherry jus, celeriac, black garlic",
-       "price": "$58",
-       "variants": [],
-       "diet": [],
-       "flag": "Popular",
-       "chef_pick": true
-      },
-      {
-       "name": "Turbot on the bone",
-       "desc": "Mussels, champagne, sea vegetables",
-       "price": "$54",
-       "variants": [],
-       "diet": [
-        "gf"
-       ],
-       "flag": "",
-       "chef_pick": false
-      },
-      {
-       "name": "Wild mushroom pithivier",
-       "desc": "Truffle, Madeira, pickled walnut",
-       "price": "$38",
-       "variants": [],
-       "diet": [
-        "v"
-       ],
-       "flag": "",
-       "chef_pick": false
-      },
-      {
-       "name": "Venison loin, juniper",
-       "desc": "Smoked chilli, pear, chard",
-       "price": "$52",
-       "variants": [],
-       "diet": [
-        "gf",
-        "spicy"
-       ],
-       "flag": "",
-       "chef_pick": false
-      }
-     ]
-    },
-    {
-     "name": "On the side",
-     "items": [
-      {
-       "name": "Buttered heritage carrots",
-       "desc": "Honey, thyme",
-       "price": "$9",
-       "variants": [],
-       "diet": [
-        "v",
-        "gf"
-       ],
-       "flag": "",
-       "chef_pick": false
-      },
-      {
-       "name": "Duck-fat potatoes",
-       "desc": "Rosemary salt",
-       "price": "$9",
-       "variants": [],
-       "diet": [
-        "gf"
-       ],
-       "flag": "",
-       "chef_pick": false
-      },
-      {
-       "name": "Leaves from the walled garden",
-       "desc": "Mustard dressing",
-       "price": "$8",
-       "variants": [],
-       "diet": [
-        "vg",
-        "gf"
-       ],
-       "flag": "",
-       "chef_pick": false
-      },
-      {
-       "name": "Sourdough & cultured butter",
-       "desc": "Baked in the house oven",
-       "price": "$6",
-       "variants": [],
-       "diet": [
-        "v"
-       ],
-       "flag": "",
-       "chef_pick": false
-      }
-     ]
-    },
-    {
-     "name": "Sweets",
-     "items": [
-      {
-       "name": "Burnt honey custard",
-       "desc": "Bee pollen, shortbread, candied lemon",
-       "price": "$16",
-       "variants": [],
-       "diet": [
-        "v"
-       ],
-       "flag": "Chef’s pick",
-       "chef_pick": true
-      },
-      {
-       "name": "Dark chocolate & stout",
-       "desc": "Malt ice cream, cocoa nib",
-       "price": "$15",
-       "variants": [],
-       "diet": [
-        "v"
-       ],
-       "flag": "",
-       "chef_pick": false
-      },
-      {
-       "name": "Poached quince",
-       "desc": "Spiced syrup, oat crumble",
-       "price": "$14",
-       "variants": [],
-       "diet": [
-        "vg"
-       ],
-       "flag": "",
-       "chef_pick": false
-      },
-      {
-       "name": "British cheeses",
-       "desc": "Quince paste, oatcakes, celery",
-       "price": "$18",
-       "variants": [],
-       "diet": [
-        "v"
-       ],
-       "flag": "",
-       "chef_pick": false
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "name": "À la carte",
-   "intro": "Served in the front parlour from 5:30pm",
-   "sections": [
-    {
-     "name": "Small plates",
-     "items": [
-      {
-       "name": "Smoked eel croquettes",
-       "desc": "Horseradish cream",
-       "price": "$14",
-       "variants": [],
-       "diet": [],
-       "flag": "",
-       "chef_pick": false
-      },
-      {
-       "name": "Devilled hen’s eggs",
-       "desc": "Cayenne, cress",
-       "price": "$9",
-       "variants": [],
-       "diet": [
-        "v",
-        "gf",
-        "spicy"
-       ],
-       "flag": "",
-       "chef_pick": false
-      },
-      {
-       "name": "Potted shrimp",
-       "desc": "Mace butter, toast",
-       "price": "$16",
-       "variants": [],
-       "diet": [],
-       "flag": "Popular",
-       "chef_pick": false
-      },
-      {
-       "name": "Charred leeks",
-       "desc": "Hazelnut romesco",
-       "price": "$12",
-       "variants": [],
-       "diet": [
-        "vg",
-        "gf"
-       ],
-       "flag": "",
-       "chef_pick": false
-      }
-     ]
-    },
-    {
-     "name": "Larger plates",
-     "items": [
-      {
-       "name": "Lamp-roasted chicken",
-       "desc": "Bread sauce, roast juices · for two",
-       "price": "$68",
-       "variants": [],
-       "diet": [],
-       "flag": "",
-       "chef_pick": false
-      },
-      {
-       "name": "Market fish",
-       "desc": "Brown shrimp, capers, sorrel",
-       "price": "$36",
-       "variants": [],
-       "diet": [
-        "gf"
-       ],
-       "flag": "",
-       "chef_pick": false
-      },
-      {
-       "name": "Barley risotto",
-       "desc": "Squash, sage, aged cheddar",
-       "price": "",
-       "variants": [
-        {
-         "label": "Starter",
-         "price": "$18"
-        },
-        {
-         "label": "Main",
-         "price": "$29"
-        }
-       ],
-       "diet": [
-        "v"
-       ],
-       "flag": "",
-       "chef_pick": false
-      },
-      {
-       "name": "Rib of beef",
-       "desc": "Bone marrow, watercress · 32oz",
-       "price": "$110",
-       "variants": [],
-       "diet": [
-        "gf"
-       ],
-       "flag": "",
-       "chef_pick": false
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "name": "Cellar",
-   "intro": "1,400 bins · ask for the sommelier’s ledger",
-   "sections": [
-    {
-     "name": "By the glass",
-     "items": [
-      {
-       "name": "Côte de Beaune, 2019",
-       "desc": "Burgundy · red cherry, forest floor",
-       "price": "",
-       "variants": [
-        {
-         "label": "Glass",
-         "price": "$24"
-        },
-        {
-         "label": "Bottle",
-         "price": "$96"
-        }
-       ],
-       "diet": [
-        "vg"
-       ],
-       "flag": "Sommelier’s pick",
-       "chef_pick": false
-      },
-      {
-       "name": "Rioja Gran Reserva, 2015",
-       "desc": "Spain · leather, dried plum",
-       "price": "",
-       "variants": [
-        {
-         "label": "Glass",
-         "price": "$19"
-        },
-        {
-         "label": "Bottle",
-         "price": "$76"
-        }
-       ],
-       "diet": [
-        "vg"
-       ],
-       "flag": "",
-       "chef_pick": false
-      },
-      {
-       "name": "Chablis 1er Cru, 2021",
-       "desc": "Burgundy · oyster shell, lemon",
-       "price": "",
-       "variants": [
-        {
-         "label": "Glass",
-         "price": "$21"
-        },
-        {
-         "label": "Bottle",
-         "price": "$84"
-        }
-       ],
-       "diet": [
-        "vg"
-       ],
-       "flag": "",
-       "chef_pick": false
-      },
-      {
-       "name": "English sparkling, Brut",
-       "desc": "Sussex · brioche, green apple",
-       "price": "",
-       "variants": [
-        {
-         "label": "Glass",
-         "price": "$17"
-        },
-        {
-         "label": "Bottle",
-         "price": "$72"
-        }
-       ],
-       "diet": [
-        "vg"
-       ],
-       "flag": "",
-       "chef_pick": false
-      }
-     ]
-    },
-    {
-     "name": "Fortified & after dinner",
-     "items": [
-      {
-       "name": "Vintage port, 20-year tawny",
-       "desc": "Served with Stilton & oatcakes",
-       "price": "",
-       "variants": [
-        {
-         "label": "Glass",
-         "price": "$18"
-        },
-        {
-         "label": "Bottle",
-         "price": "$140"
-        }
-       ],
-       "diet": [
-        "v"
-       ],
-       "flag": "",
-       "chef_pick": false
-      },
-      {
-       "name": "Malmsey Madeira, 10-year",
-       "desc": "Burnt sugar, walnut",
-       "price": "",
-       "variants": [
-        {
-         "label": "Glass",
-         "price": "$16"
-        },
-        {
-         "label": "Bottle",
-         "price": "$110"
-        }
-       ],
-       "diet": [
-        "vg"
-       ],
-       "flag": "",
-       "chef_pick": false
-      },
-      {
-       "name": "Cobble & Candle Old Fashioned",
-       "desc": "Rye, burnt honey, orange",
-       "price": "$17",
-       "variants": [],
-       "diet": [
-        "vg"
-       ],
-       "flag": "House cocktail",
-       "chef_pick": false
-      },
-      {
-       "name": "Calvados, Pays d’Auge",
-       "desc": "15-year · baked apple",
-       "price": "",
-       "variants": [
-        {
-         "label": "25ml",
-         "price": "$15"
-        },
-        {
-         "label": "50ml",
-         "price": "$28"
-        }
-       ],
-       "diet": [
-        "vg"
-       ],
-       "flag": "",
-       "chef_pick": false
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "name": "Sweets",
-   "intro": "Served until 10:30pm",
-   "sections": [
-    {
-     "name": "Puddings & cheese",
-     "items": [
-      {
-       "name": "Burnt honey custard",
-       "desc": "Bee pollen, shortbread",
-       "price": "$16",
-       "variants": [],
-       "diet": [
-        "v"
-       ],
-       "flag": "Chef’s pick",
-       "chef_pick": true
-      },
-      {
-       "name": "Dark chocolate & stout",
-       "desc": "Malt ice cream, cocoa nib",
-       "price": "$15",
-       "variants": [],
-       "diet": [
-        "v"
-       ],
-       "flag": "",
-       "chef_pick": false
-      },
-      {
-       "name": "Poached quince",
-       "desc": "Spiced syrup, oat crumble",
-       "price": "$14",
-       "variants": [],
-       "diet": [
-        "vg",
-        "gf"
-       ],
-       "flag": "",
-       "chef_pick": false
-      },
-      {
-       "name": "British cheeses",
-       "desc": "Three, five or seven",
-       "price": "",
-       "variants": [
-        {
-         "label": "3",
-         "price": "$14"
-        },
-        {
-         "label": "5",
-         "price": "$20"
-        },
-        {
-         "label": "7",
-         "price": "$26"
-        }
-       ],
-       "diet": [
-        "v"
-       ],
-       "flag": "",
-       "chef_pick": false
-      }
-     ]
-    }
-   ]
-  }
- ],
- "events": [
-  {
-   "title": "Candlelit Cellar Supper",
-   "type": "Tasting",
-   "start": "2026-10-15T19:00",
-   "location": 0,
-   "price": "$145 pp",
-   "availability": "12 seats left",
-   "excerpt": "Six courses in the vaulted cellar, paired with rare Burgundy from the ledger.",
-   "content": [
-    "Once a season we carry the candelabra down into the cellar and set a single table of twenty-two between the racks. Chef Margot cooks six courses around a handful of bottles our sommelier has been saving.",
-    "Expect hand-written place cards, a short talk from the cellar master and a nightcap of 20-year tawny by the old coal chute. Smart dress; the cellar stays at 14°C, so bring a layer."
-   ],
-   "courses": [
-    {
-     "name": "Oyster, cucumber & dill",
-     "note": ""
-    },
-    {
-     "name": "Scallop, brown butter, hazelnut",
-     "note": ""
-    },
-    {
-     "name": "Turbot on the bone, champagne",
-     "note": ""
-    },
-    {
-     "name": "Venison loin, juniper, pear",
-     "note": ""
-    },
-    {
-     "name": "Burnt honey custard",
-     "note": ""
-    }
-   ]
-  },
-  {
-   "title": "Harvest Moon Dinner",
-   "type": "Seasonal",
-   "start": "2026-10-24T18:30",
-   "location": 1,
-   "price": "$120 pp",
-   "availability": "Booking now",
-   "excerpt": "A long-table feast of game, orchard fruit and cider under the cathedral windows."
-  },
-  {
-   "title": "String quartet in the parlour",
-   "type": "Live music",
-   "start": "2026-10-31T20:00",
-   "location": 0,
-   "price": "No cover",
-   "availability": "Walk-ins welcome",
-   "excerpt": "Hallowe’en by lamplight with Schubert, Dvořák and a smoked-pumpkin menu."
-  },
-  {
-   "title": "Christmas Eve by Lamplight",
-   "type": "Holiday",
-   "start": "2026-12-24T17:00",
-   "location": 2,
-   "price": "$165 pp",
-   "availability": "Waitlist",
-   "excerpt": "Our most-requested night: goose, mulled claret and carols on the Mint steps."
-  }
- ]
+	"brand": {
+		"est": "1888",
+		"tagline": "Dining rooms"
+	},
+	"locations": [
+		{
+			"name": "Chandler’s Wharf",
+			"street": "7 Chandler’s Wharf",
+			"locality": "Old Harbour",
+			"phone": "(555) 014-1888",
+			"email": "wharf@cobbleandcandle.test",
+			"hours": [
+				{
+					"open": "",
+					"close": "",
+					"closed": true
+				},
+				{
+					"open": "",
+					"close": "",
+					"closed": true
+				},
+				{
+					"open": "17:30",
+					"close": "23:00",
+					"closed": false
+				},
+				{
+					"open": "17:30",
+					"close": "23:00",
+					"closed": false
+				},
+				{
+					"open": "17:30",
+					"close": "23:00",
+					"closed": false
+				},
+				{
+					"open": "17:30",
+					"close": "23:00",
+					"closed": false
+				},
+				{
+					"open": "17:00",
+					"close": "22:00",
+					"closed": false
+				}
+			],
+			"holiday_hours": [
+				{
+					"date": "2026-11-26",
+					"label": "Thanksgiving",
+					"open": "13:00",
+					"close": "20:00",
+					"closed": false
+				},
+				{
+					"date": "2026-12-24",
+					"label": "Christmas Eve",
+					"open": "17:00",
+					"close": "23:00",
+					"closed": false
+				},
+				{
+					"date": "2026-12-25",
+					"label": "Christmas Day",
+					"open": "",
+					"close": "",
+					"closed": true
+				}
+			],
+			"parking": "Harbour Street garage (2 min walk), validated after 6pm. Cobbled lane, no drop-off at the door.",
+			"transit": "Harbour ferry stop, 3 min. Tram 4 to Customs Steps.",
+			"accessibility": "Step-free entrance via Ropewalk Lane; accessible restroom on ground floor.",
+			"booking_mode": "native",
+			"price_range": "$$$"
+		},
+		{
+			"name": "Cathedral Close",
+			"street": "2 Vestry Row",
+			"locality": "Cathedral Close",
+			"phone": "(555) 014-1898",
+			"email": "close@cobbleandcandle.test",
+			"hours": [
+				{
+					"open": "",
+					"close": "",
+					"closed": true
+				},
+				{
+					"open": "17:00",
+					"close": "22:00",
+					"closed": false
+				},
+				{
+					"open": "17:00",
+					"close": "22:00",
+					"closed": false
+				},
+				{
+					"open": "17:00",
+					"close": "22:00",
+					"closed": false
+				},
+				{
+					"open": "17:00",
+					"close": "23:00",
+					"closed": false
+				},
+				{
+					"open": "17:00",
+					"close": "23:00",
+					"closed": false
+				},
+				{
+					"open": "12:00",
+					"close": "21:00",
+					"closed": false
+				}
+			],
+			"holiday_hours": [
+				{
+					"date": "2026-11-26",
+					"label": "Thanksgiving",
+					"open": "",
+					"close": "",
+					"closed": true
+				},
+				{
+					"date": "2026-12-24",
+					"label": "Christmas Eve",
+					"open": "16:00",
+					"close": "22:00",
+					"closed": false
+				},
+				{
+					"date": "2026-12-25",
+					"label": "Christmas Day",
+					"open": "",
+					"close": "",
+					"closed": true
+				}
+			],
+			"parking": "Pay-and-display on Deanery Street. No parking inside the Close.",
+			"transit": "Bus 12 and 19 to Cathedral Gate.",
+			"accessibility": "Two steps at the entrance; portable ramp on request.",
+			"booking_mode": "opentable",
+			"price_range": "$$$"
+		},
+		{
+			"name": "Old Mint Quarter",
+			"street": "41 Coiners’ Yard",
+			"locality": "Old Mint Quarter",
+			"phone": "(555) 014-1902",
+			"email": "mint@cobbleandcandle.test",
+			"hours": [
+				{
+					"open": "",
+					"close": "",
+					"closed": true
+				},
+				{
+					"open": "",
+					"close": "",
+					"closed": true
+				},
+				{
+					"open": "",
+					"close": "",
+					"closed": true
+				},
+				{
+					"open": "",
+					"close": "",
+					"closed": true
+				},
+				{
+					"open": "17:30",
+					"close": "23:30",
+					"closed": false
+				},
+				{
+					"open": "17:30",
+					"close": "23:30",
+					"closed": false
+				},
+				{
+					"open": "17:00",
+					"close": "22:00",
+					"closed": false
+				}
+			],
+			"holiday_hours": [
+				{
+					"date": "2026-11-26",
+					"label": "Thanksgiving",
+					"open": "",
+					"close": "",
+					"closed": true
+				},
+				{
+					"date": "2026-12-24",
+					"label": "Christmas Eve",
+					"open": "17:00",
+					"close": "23:00",
+					"closed": false
+				},
+				{
+					"date": "2026-12-25",
+					"label": "Christmas Day",
+					"open": "",
+					"close": "",
+					"closed": true
+				}
+			],
+			"parking": "Mint Yard car park, evenings $6 flat.",
+			"transit": "Tram 2 to Mint Square.",
+			"accessibility": "Fully step-free; lift to the mezzanine.",
+			"booking_mode": "call",
+			"price_range": "$$$"
+		}
+	],
+	"menus": [
+		{
+			"name": "Tasting",
+			"intro": "Seven courses · $125 · wine pairing $85",
+			"sections": [
+				{
+					"name": "To begin",
+					"items": [
+						{
+							"name": "Oyster, cucumber & dill",
+							"desc": "Chandler’s Bay oyster, buttermilk, caviar",
+							"price": "$9",
+							"variants": [],
+							"diet": [
+								"gf"
+							],
+							"flag": "",
+							"chef_pick": false
+						},
+						{
+							"name": "Ember-roasted beetroot",
+							"desc": "Aged goat’s curd, rye crumb, dill oil",
+							"price": "$22",
+							"variants": [],
+							"diet": [
+								"v"
+							],
+							"flag": "",
+							"chef_pick": false
+						},
+						{
+							"name": "Hand-dived scallop",
+							"desc": "Brown butter, cider, smoked hazelnut",
+							"price": "$34",
+							"variants": [],
+							"diet": [
+								"gf"
+							],
+							"flag": "Chef’s pick",
+							"chef_pick": true
+						},
+						{
+							"name": "Chicken liver parfait",
+							"desc": "Madeira jelly, toasted brioche",
+							"price": "$19",
+							"variants": [],
+							"diet": [],
+							"flag": "",
+							"chef_pick": false
+						}
+					]
+				},
+				{
+					"name": "Main courses",
+					"items": [
+						{
+							"name": "Dry-aged duck, two ways",
+							"desc": "Cherry jus, celeriac, black garlic",
+							"price": "$58",
+							"variants": [],
+							"diet": [],
+							"flag": "Popular",
+							"chef_pick": true
+						},
+						{
+							"name": "Turbot on the bone",
+							"desc": "Mussels, champagne, sea vegetables",
+							"price": "$54",
+							"variants": [],
+							"diet": [
+								"gf"
+							],
+							"flag": "",
+							"chef_pick": false
+						},
+						{
+							"name": "Wild mushroom pithivier",
+							"desc": "Truffle, Madeira, pickled walnut",
+							"price": "$38",
+							"variants": [],
+							"diet": [
+								"v"
+							],
+							"flag": "",
+							"chef_pick": false
+						},
+						{
+							"name": "Venison loin, juniper",
+							"desc": "Smoked chilli, pear, chard",
+							"price": "$52",
+							"variants": [],
+							"diet": [
+								"gf",
+								"spicy"
+							],
+							"flag": "",
+							"chef_pick": false
+						}
+					]
+				},
+				{
+					"name": "On the side",
+					"items": [
+						{
+							"name": "Buttered heritage carrots",
+							"desc": "Honey, thyme",
+							"price": "$9",
+							"variants": [],
+							"diet": [
+								"v",
+								"gf"
+							],
+							"flag": "",
+							"chef_pick": false
+						},
+						{
+							"name": "Duck-fat potatoes",
+							"desc": "Rosemary salt",
+							"price": "$9",
+							"variants": [],
+							"diet": [
+								"gf"
+							],
+							"flag": "",
+							"chef_pick": false
+						},
+						{
+							"name": "Leaves from the walled garden",
+							"desc": "Mustard dressing",
+							"price": "$8",
+							"variants": [],
+							"diet": [
+								"vg",
+								"gf"
+							],
+							"flag": "",
+							"chef_pick": false
+						},
+						{
+							"name": "Sourdough & cultured butter",
+							"desc": "Baked in the house oven",
+							"price": "$6",
+							"variants": [],
+							"diet": [
+								"v"
+							],
+							"flag": "",
+							"chef_pick": false
+						}
+					]
+				},
+				{
+					"name": "Sweets",
+					"items": [
+						{
+							"name": "Burnt honey custard",
+							"desc": "Bee pollen, shortbread, candied lemon",
+							"price": "$16",
+							"variants": [],
+							"diet": [
+								"v"
+							],
+							"flag": "Chef’s pick",
+							"chef_pick": true
+						},
+						{
+							"name": "Dark chocolate & stout",
+							"desc": "Malt ice cream, cocoa nib",
+							"price": "$15",
+							"variants": [],
+							"diet": [
+								"v"
+							],
+							"flag": "",
+							"chef_pick": false
+						},
+						{
+							"name": "Poached quince",
+							"desc": "Spiced syrup, oat crumble",
+							"price": "$14",
+							"variants": [],
+							"diet": [
+								"vg"
+							],
+							"flag": "",
+							"chef_pick": false
+						},
+						{
+							"name": "British cheeses",
+							"desc": "Quince paste, oatcakes, celery",
+							"price": "$18",
+							"variants": [],
+							"diet": [
+								"v"
+							],
+							"flag": "",
+							"chef_pick": false
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "À la carte",
+			"intro": "Served in the front parlour from 5:30pm",
+			"sections": [
+				{
+					"name": "Small plates",
+					"items": [
+						{
+							"name": "Smoked eel croquettes",
+							"desc": "Horseradish cream",
+							"price": "$14",
+							"variants": [],
+							"diet": [],
+							"flag": "",
+							"chef_pick": false
+						},
+						{
+							"name": "Devilled hen’s eggs",
+							"desc": "Cayenne, cress",
+							"price": "$9",
+							"variants": [],
+							"diet": [
+								"v",
+								"gf",
+								"spicy"
+							],
+							"flag": "",
+							"chef_pick": false
+						},
+						{
+							"name": "Potted shrimp",
+							"desc": "Mace butter, toast",
+							"price": "$16",
+							"variants": [],
+							"diet": [],
+							"flag": "Popular",
+							"chef_pick": false
+						},
+						{
+							"name": "Charred leeks",
+							"desc": "Hazelnut romesco",
+							"price": "$12",
+							"variants": [],
+							"diet": [
+								"vg",
+								"gf"
+							],
+							"flag": "",
+							"chef_pick": false
+						}
+					]
+				},
+				{
+					"name": "Larger plates",
+					"items": [
+						{
+							"name": "Lamp-roasted chicken",
+							"desc": "Bread sauce, roast juices · for two",
+							"price": "$68",
+							"variants": [],
+							"diet": [],
+							"flag": "",
+							"chef_pick": false
+						},
+						{
+							"name": "Market fish",
+							"desc": "Brown shrimp, capers, sorrel",
+							"price": "$36",
+							"variants": [],
+							"diet": [
+								"gf"
+							],
+							"flag": "",
+							"chef_pick": false
+						},
+						{
+							"name": "Barley risotto",
+							"desc": "Squash, sage, aged cheddar",
+							"price": "",
+							"variants": [
+								{
+									"label": "Starter",
+									"price": "$18"
+								},
+								{
+									"label": "Main",
+									"price": "$29"
+								}
+							],
+							"diet": [
+								"v"
+							],
+							"flag": "",
+							"chef_pick": false
+						},
+						{
+							"name": "Rib of beef",
+							"desc": "Bone marrow, watercress · 32oz",
+							"price": "$110",
+							"variants": [],
+							"diet": [
+								"gf"
+							],
+							"flag": "",
+							"chef_pick": false
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Cellar",
+			"intro": "1,400 bins · ask for the sommelier’s ledger",
+			"sections": [
+				{
+					"name": "By the glass",
+					"items": [
+						{
+							"name": "Côte de Beaune, 2019",
+							"desc": "Burgundy · red cherry, forest floor",
+							"price": "",
+							"variants": [
+								{
+									"label": "Glass",
+									"price": "$24"
+								},
+								{
+									"label": "Bottle",
+									"price": "$96"
+								}
+							],
+							"diet": [
+								"vg"
+							],
+							"flag": "Sommelier’s pick",
+							"chef_pick": false
+						},
+						{
+							"name": "Rioja Gran Reserva, 2015",
+							"desc": "Spain · leather, dried plum",
+							"price": "",
+							"variants": [
+								{
+									"label": "Glass",
+									"price": "$19"
+								},
+								{
+									"label": "Bottle",
+									"price": "$76"
+								}
+							],
+							"diet": [
+								"vg"
+							],
+							"flag": "",
+							"chef_pick": false
+						},
+						{
+							"name": "Chablis 1er Cru, 2021",
+							"desc": "Burgundy · oyster shell, lemon",
+							"price": "",
+							"variants": [
+								{
+									"label": "Glass",
+									"price": "$21"
+								},
+								{
+									"label": "Bottle",
+									"price": "$84"
+								}
+							],
+							"diet": [
+								"vg"
+							],
+							"flag": "",
+							"chef_pick": false
+						},
+						{
+							"name": "English sparkling, Brut",
+							"desc": "Sussex · brioche, green apple",
+							"price": "",
+							"variants": [
+								{
+									"label": "Glass",
+									"price": "$17"
+								},
+								{
+									"label": "Bottle",
+									"price": "$72"
+								}
+							],
+							"diet": [
+								"vg"
+							],
+							"flag": "",
+							"chef_pick": false
+						}
+					]
+				},
+				{
+					"name": "Fortified & after dinner",
+					"items": [
+						{
+							"name": "Vintage port, 20-year tawny",
+							"desc": "Served with Stilton & oatcakes",
+							"price": "",
+							"variants": [
+								{
+									"label": "Glass",
+									"price": "$18"
+								},
+								{
+									"label": "Bottle",
+									"price": "$140"
+								}
+							],
+							"diet": [
+								"v"
+							],
+							"flag": "",
+							"chef_pick": false
+						},
+						{
+							"name": "Malmsey Madeira, 10-year",
+							"desc": "Burnt sugar, walnut",
+							"price": "",
+							"variants": [
+								{
+									"label": "Glass",
+									"price": "$16"
+								},
+								{
+									"label": "Bottle",
+									"price": "$110"
+								}
+							],
+							"diet": [
+								"vg"
+							],
+							"flag": "",
+							"chef_pick": false
+						},
+						{
+							"name": "Cobble & Candle Old Fashioned",
+							"desc": "Rye, burnt honey, orange",
+							"price": "$17",
+							"variants": [],
+							"diet": [
+								"vg"
+							],
+							"flag": "House cocktail",
+							"chef_pick": false
+						},
+						{
+							"name": "Calvados, Pays d’Auge",
+							"desc": "15-year · baked apple",
+							"price": "",
+							"variants": [
+								{
+									"label": "25ml",
+									"price": "$15"
+								},
+								{
+									"label": "50ml",
+									"price": "$28"
+								}
+							],
+							"diet": [
+								"vg"
+							],
+							"flag": "",
+							"chef_pick": false
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Sweets",
+			"intro": "Served until 10:30pm",
+			"sections": [
+				{
+					"name": "Puddings & cheese",
+					"items": [
+						{
+							"name": "Burnt honey custard",
+							"desc": "Bee pollen, shortbread",
+							"price": "$16",
+							"variants": [],
+							"diet": [
+								"v"
+							],
+							"flag": "Chef’s pick",
+							"chef_pick": true
+						},
+						{
+							"name": "Dark chocolate & stout",
+							"desc": "Malt ice cream, cocoa nib",
+							"price": "$15",
+							"variants": [],
+							"diet": [
+								"v"
+							],
+							"flag": "",
+							"chef_pick": false
+						},
+						{
+							"name": "Poached quince",
+							"desc": "Spiced syrup, oat crumble",
+							"price": "$14",
+							"variants": [],
+							"diet": [
+								"vg",
+								"gf"
+							],
+							"flag": "",
+							"chef_pick": false
+						},
+						{
+							"name": "British cheeses",
+							"desc": "Three, five or seven",
+							"price": "",
+							"variants": [
+								{
+									"label": "3",
+									"price": "$14"
+								},
+								{
+									"label": "5",
+									"price": "$20"
+								},
+								{
+									"label": "7",
+									"price": "$26"
+								}
+							],
+							"diet": [
+								"v"
+							],
+							"flag": "",
+							"chef_pick": false
+						}
+					]
+				}
+			]
+		}
+	],
+	"events": [
+		{
+			"title": "Candlelit Cellar Supper",
+			"type": "Tasting",
+			"start": "2026-10-15T19:00",
+			"location": 0,
+			"price": "$145 pp",
+			"availability": "12 seats left",
+			"excerpt": "Six courses in the vaulted cellar, paired with rare Burgundy from the ledger.",
+			"content": [
+				"Once a season we carry the candelabra down into the cellar and set a single table of twenty-two between the racks. Chef Margot cooks six courses around a handful of bottles our sommelier has been saving.",
+				"Expect hand-written place cards, a short talk from the cellar master and a nightcap of 20-year tawny by the old coal chute. Smart dress; the cellar stays at 14°C, so bring a layer."
+			],
+			"courses": [
+				{
+					"name": "Oyster, cucumber & dill",
+					"note": ""
+				},
+				{
+					"name": "Scallop, brown butter, hazelnut",
+					"note": ""
+				},
+				{
+					"name": "Turbot on the bone, champagne",
+					"note": ""
+				},
+				{
+					"name": "Venison loin, juniper, pear",
+					"note": ""
+				},
+				{
+					"name": "Burnt honey custard",
+					"note": ""
+				}
+			]
+		},
+		{
+			"title": "Harvest Moon Dinner",
+			"type": "Seasonal",
+			"start": "2026-10-24T18:30",
+			"location": 1,
+			"price": "$120 pp",
+			"availability": "Booking now",
+			"excerpt": "A long-table feast of game, orchard fruit and cider under the cathedral windows."
+		},
+		{
+			"title": "String quartet in the parlour",
+			"type": "Live music",
+			"start": "2026-10-31T20:00",
+			"location": 0,
+			"price": "No cover",
+			"availability": "Walk-ins welcome",
+			"excerpt": "Hallowe’en by lamplight with Schubert, Dvořák and a smoked-pumpkin menu."
+		},
+		{
+			"title": "Christmas Eve by Lamplight",
+			"type": "Holiday",
+			"start": "2026-12-24T17:00",
+			"location": 2,
+			"price": "$165 pp",
+			"availability": "Waitlist",
+			"excerpt": "Our most-requested night: goose, mulled claret and carols on the Mint steps."
+		}
+	],
+	"rooms": [
+		{
+			"title": "The Lamplighter",
+			"excerpt": "Our best room: a king bed under the old beams, a roll-top bath and a window over the cobbles.",
+			"content": [
+				"Up the creaking stair from the bar, the Lamplighter takes the whole front of the house. Wide boards, a deep armchair by the fire and a roll-top bath big enough for two.",
+				"Shutters close out the street when the last bell rings. Breakfast is cooked to order downstairs."
+			],
+			"price_night": 195,
+			"price_weekend": 235,
+			"min_nights": 1,
+			"max_guests": 2,
+			"units": 1,
+			"beds": "1 king",
+			"size": "32 m²",
+			"amenities": [
+				"ensuite",
+				"bath",
+				"fireplace",
+				"view",
+				"breakfast",
+				"wifi",
+				"tea",
+				"desk"
+			],
+			"location": 0
+		},
+		{
+			"title": "The Cellarman",
+			"excerpt": "A snug double at the back of the house, quiet as the cellar it sits above.",
+			"content": [
+				"Named for the keeper of our casks, the Cellarman is the quiet one: a plump double, a rain shower and thick stone walls."
+			],
+			"price_night": 145,
+			"price_weekend": 175,
+			"min_nights": 1,
+			"max_guests": 2,
+			"units": 2,
+			"beds": "1 double",
+			"size": "20 m²",
+			"amenities": [
+				"ensuite",
+				"breakfast",
+				"wifi",
+				"tea",
+				"tv"
+			],
+			"location": 0
+		},
+		{
+			"title": "The Hayloft",
+			"excerpt": "Our family room in the old loft: a king and two singles under the rafters.",
+			"content": [
+				"Room to spread out under the rafters, with a king bed, two singles and a little reading nook for whoever wakes first."
+			],
+			"price_night": 225,
+			"price_weekend": 265,
+			"min_nights": 2,
+			"max_guests": 4,
+			"units": 1,
+			"beds": "1 king, 2 singles",
+			"size": "40 m²",
+			"amenities": [
+				"ensuite",
+				"bath",
+				"breakfast",
+				"wifi",
+				"tea",
+				"tv",
+				"pets"
+			],
+			"location": 0
+		},
+		{
+			"title": "The Ostler's Room",
+			"excerpt": "Step-free on the ground floor by the old coach yard, with a walk-in shower.",
+			"content": [
+				"Once the ostler's quarters by the coach yard, now our step-free room: level from the door to the walk-in shower, with parking a few steps away."
+			],
+			"price_night": 160,
+			"price_weekend": 190,
+			"min_nights": 1,
+			"max_guests": 2,
+			"units": 1,
+			"beds": "1 king or 2 singles",
+			"size": "26 m²",
+			"amenities": [
+				"ensuite",
+				"accessible",
+				"parking",
+				"breakfast",
+				"wifi",
+				"tea",
+				"tv"
+			],
+			"location": 0
+		}
+	]
 }

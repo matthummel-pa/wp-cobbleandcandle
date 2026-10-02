@@ -71,6 +71,8 @@
 
 <!-- wp:cobbleandcandle/events-list {"align": "full"} /-->
 
+<!-- wp:cobbleandcandle/rooms-list {"align": "full"} /-->
+
 <!-- wp:cobbleandcandle/reviews {"align": "full"} -->
 <!-- wp:quote -->
 <blockquote class="wp-block-quote"><!-- wp:paragraph -->

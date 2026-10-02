@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/rooms-list",
+  "title": "Rooms",
+  "category": "cobbleandcandle",
+  "description": "Your rooms as cards with beds, guests, size and the nightly price. Use it on the home page as “Stay with us” or as the full rooms page.",
+  "keywords": ["rooms", "stay", "bed and breakfast", "inn", "hotel"],
+  "textdomain": "cobbleandcandle",
+  "attributes": {
+    "eyebrow": { "type": "string", "default": "Stay with us" },
+    "title": { "type": "string", "default": "Rooms upstairs" },
+    "intro": { "type": "string", "default": "Sleep above the tavern. Breakfast is on us." },
+    "count": { "type": "number", "default": 3 },
+    "linkUrl": { "type": "string", "default": "/rooms/" },
+    "linkLabel": { "type": "string", "default": "All rooms" },
+    "notes": { "type": "string", "default": "" },
+    "emptyText": { "type": "string", "default": "Rooms are being readied. Call us to book a stay." }
+  },
+  "supports": { "html": false, "align": ["full"] }
+}
