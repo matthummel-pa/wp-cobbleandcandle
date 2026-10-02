@@ -14,6 +14,7 @@
       'sent' => __('Thanks, your message is on its way.', 'cobbleandcandle'),
       'invalid' => __('Please fill in the required fields and try again.', 'cobbleandcandle'),
       'expired' => __('This form had expired. Please send it again.', 'cobbleandcandle'),
+      'busy' => __('Too many messages from this connection. Please wait a few minutes or call us.', 'cobbleandcandle'),
       'error' => __('We couldn’t send your message. Please call us instead.', 'cobbleandcandle'),
   ];
   $privacy = get_privacy_policy_url();

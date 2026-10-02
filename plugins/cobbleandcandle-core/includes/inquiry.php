@@ -51,6 +51,10 @@ function cc_handle_inquiry() {
 		wp_safe_redirect( add_query_arg( 'inquiry', 'sent', $back ) . '#private-dining' );
 		exit;
 	}
+	if ( cc_form_rate_limited( 'inquiry' ) ) {
+		wp_safe_redirect( add_query_arg( 'inquiry', 'busy', $back ) . '#private-dining' );
+		exit;
+	}
 
 	$choices  = cc_inquiry_choices();
 	$name     = isset( $_POST['cc_name'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_name'] ) ) : '';
@@ -62,10 +66,10 @@ function cc_handle_inquiry() {
 	$location = isset( $_POST['cc_location'] ) ? absint( $_POST['cc_location'] ) : 0;
 
 	$valid = '' !== $name && is_email( $email )
-		&& preg_match( '/^\d{4}-\d{2}-\d{2}$/', $date )
+		&& cc_is_valid_date( $date )
 		&& in_array( $guests, $choices['guests'], true )
 		&& in_array( $occasion, $choices['occasions'], true )
-		&& ( 0 === $location || 'cc_location' === get_post_type( $location ) );
+		&& ( 0 === $location || cc_is_public_location( $location ) );
 	if ( ! $valid ) {
 		wp_safe_redirect( add_query_arg( 'inquiry', 'invalid', $back ) . '#private-dining' );
 		exit;

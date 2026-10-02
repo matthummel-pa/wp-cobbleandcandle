@@ -44,13 +44,13 @@
         <div class="fchips gal-chips" role="group" aria-label="{{ __('Filter gallery', 'cobbleandcandle') }}">
           <button type="button" class="fchip-b" aria-pressed="true" :aria-pressed="(filter === 'all').toString()" @click="filter = 'all'">{{ __('All', 'cobbleandcandle') }}</button>
           @foreach ($cats as $slug => $name)
-            <button type="button" class="fchip-b" aria-pressed="false" :aria-pressed="(filter === '{{ $slug }}').toString()" @click="filter = '{{ $slug }}'">{{ $name }}</button>
+            <button type="button" class="fchip-b" aria-pressed="false" :aria-pressed="(filter === @js($slug)).toString()" @click="filter = @js($slug)">{{ $name }}</button>
           @endforeach
         </div>
       @endif
       <ul class="ggrid">
         @foreach ($items as $item)
-          <li class="gitem {{ $item['shape'] }}" :hidden="filter !== 'all' && filter !== '{{ $item['cat'] }}'">
+          <li class="gitem {{ $item['shape'] }}" :hidden="filter !== 'all' && filter !== @js($item['cat'])">
             <button type="button" class="gbtn" data-full="{{ $item['full'] }}" @click="open($el)"
                     aria-label="{{ $item['caption'] !== '' ? sprintf(__('Open image: %s', 'cobbleandcandle'), $item['caption']) : __('Open image', 'cobbleandcandle') }}">
               <x-media :image-id="$item['id']" :kind="$item['art'] ?: 'room'" ratio="r-fill" size="medium_large" />

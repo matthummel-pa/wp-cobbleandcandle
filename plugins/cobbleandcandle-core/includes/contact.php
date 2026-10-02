@@ -49,6 +49,9 @@ function cc_handle_contact() {
 	if ( ! empty( $_POST['cc_website'] ) ) {
 		$done( 'sent' );
 	}
+	if ( cc_form_rate_limited( 'contact' ) ) {
+		$done( 'busy' );
+	}
 
 	$topic    = isset( $_POST['cc_topic'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_topic'] ) ) : '';
 	$name     = isset( $_POST['cc_name'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_name'] ) ) : '';
@@ -60,7 +63,7 @@ function cc_handle_contact() {
 
 	$valid = $consent && '' !== $name && is_email( $email ) && '' !== $message
 		&& in_array( $topic, cc_contact_topics(), true )
-		&& ( 0 === $location || 'cc_location' === get_post_type( $location ) );
+		&& ( 0 === $location || cc_is_public_location( $location ) );
 	if ( ! $valid ) {
 		$done( 'invalid' );
 	}

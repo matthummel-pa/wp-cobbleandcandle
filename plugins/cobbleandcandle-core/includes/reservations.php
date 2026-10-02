@@ -121,6 +121,9 @@ function cc_handle_reservation() {
 	if ( ! empty( $_POST['cc_website'] ) ) {
 		$done( 'sent' );
 	}
+	if ( cc_form_rate_limited( 'reservation' ) ) {
+		$done( 'busy' );
+	}
 
 	$choices  = cc_reservation_choices();
 	$location = isset( $_POST['cc_location'] ) ? absint( $_POST['cc_location'] ) : 0;
@@ -140,8 +143,9 @@ function cc_handle_reservation() {
 	$slot_min = (int) cc_minutes( $time );
 	$future   = $date > $now->format( 'Y-m-d' ) || $slot_min < 360 || $slot_min > (int) $now->format( 'G' ) * 60 + (int) $now->format( 'i' );
 
-	$valid = $future && 'cc_location' === get_post_type( $location )
-		&& preg_match( '/^\d{4}-\d{2}-\d{2}$/', $date ) && $date >= wp_date( 'Y-m-d' )
+	$valid = $future && cc_is_public_location( $location )
+		&& cc_is_valid_date( $date ) && $date >= wp_date( 'Y-m-d' ) && $date <= wp_date( 'Y-m-d', strtotime( '+1 year' ) )
+		&& preg_match( '/^([01]\d|2[0-3]):[0-5]\d$/', $time )
 		&& cc_is_bookable( $location, $date, $time )
 		&& in_array( $party, $choices['party'], true )
 		&& in_array( $seating, $choices['seating'], true )

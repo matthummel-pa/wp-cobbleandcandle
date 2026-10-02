@@ -8,6 +8,7 @@
   $related = $event ? array_slice(array_values(array_filter(\App\upcoming_events((int) $attributes['related'] + 1), fn ($e) => $e['id'] !== $event['id'])), 0, (int) $attributes['related']) : [];
   $reserve = $place ? add_query_arg('loc', $place['slug'], home_url('/reservations/')) : '';
   $crumbs = \App\crumbs();
+  $locked = $event && post_password_required($post);
 @endphp
 @if ($event)
   <div {!! $wrapper !!}>
@@ -34,11 +35,14 @@
         <x-media :image-id="$event['image_id']" kind="table" ratio="r-16x9" class="ev-hero" size="full" eager />
         <div class="ev-layout">
           <div class="prose">
-            @if (trim($post->post_content) !== '')
+            @if ($locked)
+              {!! get_the_password_form($post) !!}
+            @elseif (trim($post->post_content) !== '' && ! has_block('cobbleandcandle/event-details', $post))
+              {{-- has_block(): this block inside its own event's content would render itself forever. --}}
               <h2 class="h3">{{ __('About the evening', 'cobbleandcandle') }}</h2>
               {!! apply_filters('the_content', $post->post_content) !!}
             @endif
-            @if ($event['courses'])
+            @if ($event['courses'] && ! $locked)
               <h2 class="h3">{{ __('The menu', 'cobbleandcandle') }}</h2>
               <ol class="courses">
                 @foreach ($event['courses'] as $course)

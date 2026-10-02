@@ -40,7 +40,8 @@ function cc_event_ics_url( $event_id ) {
  * @return string
  */
 function cc_ics_text( $text ) {
-	return str_replace( array( '\\', ';', ',', "\r\n", "\n" ), array( '\\\\', '\;', '\,', '\n', '\n' ), wp_strip_all_tags( $text ) );
+	$text = html_entity_decode( wp_strip_all_tags( $text ), ENT_QUOTES, 'UTF-8' );
+	return str_replace( array( '\\', ';', ',', "\r\n", "\r", "\n" ), array( '\\\\', '\;', '\,', '\n', '\n', '\n' ), $text );
 }
 
 /**
@@ -100,7 +101,7 @@ function cc_event_schema( $event_id ) {
 	$schema = array(
 		'@context'            => 'https://schema.org',
 		'@type'               => 'Event',
-		'name'                => get_the_title( $event_id ),
+		'name'                => html_entity_decode( get_the_title( $event_id ), ENT_QUOTES, 'UTF-8' ),
 		'description'         => wp_strip_all_tags( get_the_excerpt( $event_id ) ),
 		'url'                 => get_permalink( $event_id ),
 		'startDate'           => $times[0]->format( DATE_ATOM ),
@@ -121,7 +122,7 @@ function cc_event_schema( $event_id ) {
 	if ( $location ) {
 		$schema['location'] = array(
 			'@type'   => 'Place',
-			'name'    => get_the_title( $location ),
+			'name'    => html_entity_decode( get_the_title( $location ), ENT_QUOTES, 'UTF-8' ),
 			'address' => array_filter(
 				array(
 					'@type'           => 'PostalAddress',

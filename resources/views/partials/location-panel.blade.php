@@ -17,7 +17,7 @@
     @include('art.map', ['uid' => $uid, 'pin' => $pin ?? -1, 'names' => array_column(\App\locations(), 'name')])
   @endif
   @if ($l['map_url'] !== '')
-    <a class="btn btn--primary lmap-btn" href="{{ $l['map_url'] }}"><x-icon name="nav" /><span>{{ __('Get directions', 'cobbleandcandle') }}</span></a>
+    <a class="btn btn--primary lmap-btn" href="{{ esc_url($l['map_url']) }}"><x-icon name="nav" /><span>{{ __('Get directions', 'cobbleandcandle') }}</span></a>
   @endif
 </div>
 <div class="ldetail">
@@ -28,7 +28,7 @@
   @endif
   <p class="lcontact">
     @if ($l['phone'] !== '')
-      <a href="{{ $l['tel'] }}"><x-icon name="phone" />{{ $l['phone'] }}</a>
+      <a href="{{ esc_url($l['tel']) }}"><x-icon name="phone" />{{ $l['phone'] }}</a>
     @endif
     @if ($l['email'] !== '')
       <a href="mailto:{{ $l['email'] }}"><x-icon name="mail" />{{ $l['email'] }}</a>
