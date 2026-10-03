@@ -76,6 +76,8 @@ function cc_register_room_types() {
 			'labels'          => array(
 				'name'          => __( 'Bookings', 'cobbleandcandle-core' ),
 				'singular_name' => __( 'Booking', 'cobbleandcandle-core' ),
+				'add_new'       => __( 'Add booking', 'cobbleandcandle-core' ),
+				'add_new_item'  => __( 'Add booking', 'cobbleandcandle-core' ),
 				'edit_item'     => __( 'Booking', 'cobbleandcandle-core' ),
 				'all_items'     => __( 'Bookings', 'cobbleandcandle-core' ),
 			),
