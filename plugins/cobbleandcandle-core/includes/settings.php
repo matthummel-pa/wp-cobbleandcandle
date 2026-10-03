@@ -135,46 +135,78 @@ function cc_render_settings_page() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
+	$fields = cc_settings_fields();
+	$groups = array(
+		array( __( 'Brand', 'cobbleandcandle-core' ), __( 'How your name and mark appear across the site.', 'cobbleandcandle-core' ), array( 'logo_id', 'tagline', 'est' ) ),
+		array( __( 'Search & currency', 'cobbleandcandle-core' ), __( 'Shown to Google and other search engines.', 'cobbleandcandle-core' ), array( 'cuisine', 'price_range', 'currency' ) ),
+		array( __( 'Social profiles', 'cobbleandcandle-core' ), __( 'Linked in the footer and in your search listing.', 'cobbleandcandle-core' ), array( 'instagram', 'facebook', 'tiktok', 'x', 'youtube', 'tripadvisor', 'yelp', 'google' ) ),
+		array( __( 'Data & privacy', 'cobbleandcandle-core' ), '', array( 'message_months', 'remove_data' ) ),
+	);
 	?>
-	<div class="wrap">
-		<h1><?php esc_html_e( 'Restaurant settings', 'cobbleandcandle-core' ); ?></h1>
-		<p><?php esc_html_e( 'Your brand details and profiles. Locations, hours and menus are edited under their own menus.', 'cobbleandcandle-core' ); ?></p>
+	<div class="wrap cc-admin">
+		<?php
+		cc_admin_header(
+			__( 'Restaurant settings', 'cobbleandcandle-core' ),
+			__( 'Your brand details and profiles. Locations, hours, menus and rooms are edited under their own menus.', 'cobbleandcandle-core' ),
+			admin_url( 'options-general.php?page=cobbleandcandle' )
+		);
+		?>
 		<form method="post" action="options.php">
 			<?php settings_fields( 'cobbleandcandle' ); ?>
-			<table class="form-table" role="presentation">
-				<?php foreach ( cc_settings_fields() as $key => list( $label, $type, $help ) ) : ?>
-					<?php
-					$id    = 'cc-setting-' . $key;
-					$name  = 'cobbleandcandle_brand[' . $key . ']';
-					$value = cc_setting( $key );
-					?>
-					<tr>
-						<th scope="row"><label for="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $label ); ?></label></th>
-						<td>
-							<?php if ( 'image' === $type ) : ?>
-								<div class="cc-image-field">
-									<div class="cc-image-preview"><?php echo $value ? wp_get_attachment_image( (int) $value, 'medium', false, array( 'style' => 'max-height:80px;width:auto' ) ) : ''; ?></div>
-									<input type="hidden" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $value ); ?>">
-									<button type="button" class="button cc-image-choose"><?php esc_html_e( 'Choose logo', 'cobbleandcandle-core' ); ?></button>
-									<button type="button" class="button-link cc-image-remove"<?php echo $value ? '' : ' hidden'; ?>><?php esc_html_e( 'Remove', 'cobbleandcandle-core' ); ?></button>
-								</div>
-							<?php elseif ( 'checkbox' === $type ) : ?>
-								<input type="checkbox" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="1" <?php checked( $value, '1' ); ?>>
-							<?php elseif ( 'months' === $type ) : ?>
-								<input type="number" min="0" max="120" step="1" class="small-text" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( cc_setting( $key, '12' ) ); ?>">
-							<?php else : ?>
-								<input type="<?php echo 'url' === $type ? 'url' : 'text'; ?>" class="regular-text" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $value ); ?>">
-							<?php endif; ?>
-							<?php if ( '' !== $help ) : ?>
-								<p class="description"><?php echo esc_html( $help ); ?></p>
-							<?php endif; ?>
-						</td>
-					</tr>
-				<?php endforeach; ?>
-			</table>
+			<?php foreach ( $groups as list( $heading, $intro, $keys ) ) : ?>
+				<section class="cc-card">
+					<h2><?php echo esc_html( $heading ); ?></h2>
+					<?php if ( '' !== $intro ) : ?>
+						<p class="description"><?php echo esc_html( $intro ); ?></p>
+					<?php endif; ?>
+					<table class="form-table" role="presentation">
+						<?php foreach ( array_intersect_key( $fields, array_flip( $keys ) ) as $key => list( $label, $type, $help ) ) : ?>
+							<?php cc_render_setting_row( $key, $label, $type, $help ); ?>
+						<?php endforeach; ?>
+					</table>
+				</section>
+			<?php endforeach; ?>
 			<?php submit_button(); ?>
 		</form>
 	</div>
+	<?php
+}
+
+/**
+ * One settings row.
+ *
+ * @param string $key   Setting key.
+ * @param string $label Label.
+ * @param string $type  Field type.
+ * @param string $help  Help text.
+ */
+function cc_render_setting_row( $key, $label, $type, $help ) {
+	$id    = 'cc-setting-' . $key;
+	$name  = 'cobbleandcandle_brand[' . $key . ']';
+	$value = cc_setting( $key );
+	?>
+	<tr>
+		<th scope="row"><label for="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $label ); ?></label></th>
+		<td>
+			<?php if ( 'image' === $type ) : ?>
+				<div class="cc-image-field">
+					<div class="cc-image-preview"><?php echo $value ? wp_get_attachment_image( (int) $value, 'medium', false, array( 'style' => 'max-height:80px;width:auto' ) ) : ''; ?></div>
+					<input type="hidden" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $value ); ?>">
+					<button type="button" class="button cc-image-choose"><?php esc_html_e( 'Choose logo', 'cobbleandcandle-core' ); ?></button>
+					<button type="button" class="button-link cc-image-remove"<?php echo $value ? '' : ' hidden'; ?>><?php esc_html_e( 'Remove', 'cobbleandcandle-core' ); ?></button>
+				</div>
+			<?php elseif ( 'checkbox' === $type ) : ?>
+				<input type="checkbox" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="1" <?php checked( $value, '1' ); ?>>
+			<?php elseif ( 'months' === $type ) : ?>
+				<input type="number" min="0" max="120" step="1" class="small-text" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( cc_setting( $key, '12' ) ); ?>">
+			<?php else : ?>
+				<input type="<?php echo 'url' === $type ? 'url' : 'text'; ?>" class="regular-text" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $value ); ?>">
+			<?php endif; ?>
+			<?php if ( '' !== $help ) : ?>
+				<p class="description"><?php echo esc_html( $help ); ?></p>
+			<?php endif; ?>
+		</td>
+	</tr>
 	<?php
 }
 
