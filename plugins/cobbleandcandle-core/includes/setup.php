@@ -71,6 +71,11 @@ add_action( 'admin_menu', 'cc_setup_menu' );
  * Nudge administrators until setup is finished or skipped.
  */
 function cc_setup_notice() {
+	// Sites that were set up before the wizard existed (they already have locations) count as done.
+	if ( false === get_option( 'cc_setup', false ) && get_posts( array( 'post_type' => 'cc_location', 'posts_per_page' => 1, 'fields' => 'ids', 'post_status' => 'any' ) ) ) {
+		cc_setup_update( array( 'complete' => true ) );
+		return;
+	}
 	$screen = get_current_screen();
 	if ( ! current_user_can( 'manage_options' ) || cc_setup_state()['complete'] || ( $screen && ( 'settings_page_cc-setup' === $screen->id || $screen->is_block_editor() ) ) ) {
 		return;
