@@ -51,14 +51,16 @@
       <ul class="ggrid">
         @foreach ($items as $item)
           <li class="gitem {{ $item['shape'] }}" :hidden="filter !== 'all' && filter !== @js($item['cat'])">
-            <button type="button" class="gbtn" data-full="{{ $item['full'] }}" @click="open($el)"
+            {{-- Photos are real links to the full image (crawlable, and they work without JS); the lightbox takes over on click. --}}
+            @php($tag = $item['full'] !== '' ? 'a' : 'button')
+            <{{ $tag }} @if ($tag === 'a') href="{!! esc_url($item['full']) !!}" @else type="button" @endif class="gbtn" data-full="{{ $item['full'] }}" @click.prevent="open($el)"
                     aria-label="{{ $item['caption'] !== '' ? sprintf(__('Open image: %s', 'cobbleandcandle'), $item['caption']) : __('Open image', 'cobbleandcandle') }}">
               <x-media :image-id="$item['id']" :kind="$item['art'] ?: 'room'" ratio="r-fill" size="medium_large" />
               @if ($item['caption'] !== '')
                 <span class="gcap">{{ $item['caption'] }}</span>
               @endif
               <span class="gzoom"><x-icon name="expand" /></span>
-            </button>
+            </{{ $tag }}>
           </li>
         @endforeach
       </ul>
