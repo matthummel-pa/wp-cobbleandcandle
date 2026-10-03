@@ -38,6 +38,7 @@ require_once CC_CORE_DIR . 'includes/locations.php';
 require_once CC_CORE_DIR . 'includes/menus.php';
 require_once CC_CORE_DIR . 'includes/settings.php';
 require_once CC_CORE_DIR . 'includes/forms.php';
+require_once CC_CORE_DIR . 'includes/messages.php';
 require_once CC_CORE_DIR . 'includes/inquiry.php';
 require_once CC_CORE_DIR . 'includes/reservations.php';
 require_once CC_CORE_DIR . 'includes/contact.php';
@@ -62,11 +63,12 @@ register_deactivation_hook(
 	__FILE__,
 	static function () {
 		// Unregister first so the flush drops this plugin's rewrite rules.
-		foreach ( array( 'cc_location', 'cc_menu_item', 'cc_event', 'cc_room', 'cc_booking' ) as $post_type ) {
+		foreach ( array( 'cc_location', 'cc_menu_item', 'cc_event', 'cc_room', 'cc_booking', 'cc_message' ) as $post_type ) {
 			unregister_post_type( $post_type );
 		}
 		wp_clear_scheduled_hook( 'cc_ical_sync' );
 		wp_unschedule_hook( 'cc_ical_sync_room' );
+		wp_clear_scheduled_hook( 'cc_prune_messages' );
 		flush_rewrite_rules();
 	}
 );

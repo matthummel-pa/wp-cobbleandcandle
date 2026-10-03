@@ -15,8 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @return bool
  */
 function cc_form_rate_limited( $form ) {
-	$ip  = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
-	$key = 'cc_rl_' . md5( $form . '|' . $ip );
+	$key = 'cc_rl_' . md5( $form . '|' . cc_client_ip() );
 	$hit = (int) get_transient( $key );
 	/**
 	 * Submissions allowed per IP per form every 10 minutes.
@@ -29,6 +28,25 @@ function cc_form_rate_limited( $form ) {
 	}
 	set_transient( $key, $hit + 1, 10 * MINUTE_IN_SECONDS );
 	return false;
+}
+
+/**
+ * The visitor's IP for rate limiting. Behind Cloudflare or another proxy every visitor shares the
+ * proxy's address: filter `cc_client_ip` to read the real one from your proxy's header. Only do that
+ * when REMOTE_ADDR is your proxy (the origin firewall accepts nothing else, or you check REMOTE_ADDR
+ * against the proxy's published IP ranges); otherwise anyone can send a fake header and dodge the limit.
+ *
+ * @return string
+ */
+function cc_client_ip() {
+	$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+	/**
+	 * Client IP used for form rate limits.
+	 *
+	 * @param string $ip REMOTE_ADDR.
+	 */
+	$filtered = (string) apply_filters( 'cc_client_ip', $ip );
+	return false !== filter_var( $filtered, FILTER_VALIDATE_IP ) ? $filtered : $ip;
 }
 
 /**

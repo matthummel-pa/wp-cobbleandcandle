@@ -29,7 +29,8 @@ function cc_settings_fields() {
 		'tripadvisor' => array( 'Tripadvisor', 'url', '' ),
 		'yelp'        => array( 'Yelp', 'url', '' ),
 		'google'      => array( __( 'Google Business Profile', 'cobbleandcandle-core' ), 'url', '' ),
-		'remove_data' => array( __( 'Remove data on uninstall', 'cobbleandcandle-core' ), 'checkbox', __( 'Delete all locations, menus, menu items, events, rooms, bookings and gallery categories when this plugin is deleted. Leave unticked to keep your content.', 'cobbleandcandle-core' ) ),
+		'message_months' => array( __( 'Keep guest messages for (months)', 'cobbleandcandle-core' ), 'months', __( 'Messages older than this are deleted automatically, once a day. 0 keeps them forever. Bookings are never deleted.', 'cobbleandcandle-core' ) ),
+		'remove_data' => array( __( 'Remove data on uninstall', 'cobbleandcandle-core' ), 'checkbox', __( 'Delete all locations, menus, menu items, events, rooms, bookings, messages and gallery categories when this plugin is deleted. Leave unticked to keep your content.', 'cobbleandcandle-core' ) ),
 	);
 }
 
@@ -78,6 +79,8 @@ function cc_sanitize_settings( $input ) {
 			$out[ $key ] = $id && wp_attachment_is_image( $id ) ? $id : 0;
 		} elseif ( 'checkbox' === $type ) {
 			$out[ $key ] = '1' === $value ? '1' : '';
+		} elseif ( 'months' === $type ) {
+			$out[ $key ] = '' === $value ? '12' : (string) min( 120, absint( $value ) );
 		} elseif ( 'url' === $type ) {
 			$out[ $key ] = esc_url_raw( (string) $value );
 		} elseif ( 'currency' === $key ) {
@@ -157,6 +160,8 @@ function cc_render_settings_page() {
 								</div>
 							<?php elseif ( 'checkbox' === $type ) : ?>
 								<input type="checkbox" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="1" <?php checked( $value, '1' ); ?>>
+							<?php elseif ( 'months' === $type ) : ?>
+								<input type="number" min="0" max="120" step="1" class="small-text" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( cc_setting( $key, '12' ) ); ?>">
 							<?php else : ?>
 								<input type="<?php echo 'url' === $type ? 'url' : 'text'; ?>" class="regular-text" id="<?php echo esc_attr( $id ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $value ); ?>">
 							<?php endif; ?>
