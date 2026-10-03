@@ -80,6 +80,6 @@ add_action('admin_post_cobbleandcandle_install_core', function () {
     if (is_wp_error($activated)) {
         wp_die(esc_html($activated->get_error_message()), '', ['back_link' => true]);
     }
-    wp_safe_redirect(admin_url('options-general.php?page=cobbleandcandle'));
+    wp_safe_redirect(admin_url('options-general.php?page=cc-setup')); // Straight into the setup wizard.
     exit;
 });
