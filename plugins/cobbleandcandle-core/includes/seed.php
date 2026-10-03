@@ -47,6 +47,7 @@ function cc_seed_warn( $message = null ) {
 	static $warnings = array();
 	if ( null !== $message ) {
 		$warnings[] = $message;
+		cc_log( 'warning', 'import', $message );
 	}
 	return $warnings;
 }

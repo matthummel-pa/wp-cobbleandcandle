@@ -202,6 +202,16 @@ function cc_sync_room_ical( $room_id ) {
 		} else {
 			$cache[ $hash ] = isset( $previous[ $hash ] ) && is_array( $previous[ $hash ] ) ? $previous[ $hash ] : array();
 			++$result['failed'];
+			cc_log(
+				'warning',
+				'ical',
+				__( 'A calendar feed could not be read; its last known nights stay blocked.', 'cobbleandcandle-core' ),
+				array(
+					'room' => (int) $room_id,
+					'host' => (string) wp_parse_url( $url, PHP_URL_HOST ),
+					'http' => is_wp_error( $response ) ? $response->get_error_code() : (int) wp_remote_retrieve_response_code( $response ),
+				)
+			);
 		}
 	}
 	update_post_meta( $room_id, '_cc_ical_cache', $cache );

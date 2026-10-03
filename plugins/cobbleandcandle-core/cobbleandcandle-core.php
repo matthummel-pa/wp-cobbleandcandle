@@ -39,6 +39,7 @@ require_once CC_CORE_DIR . 'includes/menus.php';
 require_once CC_CORE_DIR . 'includes/menu-import.php';
 require_once CC_CORE_DIR . 'includes/settings.php';
 require_once CC_CORE_DIR . 'includes/admin-ui.php';
+require_once CC_CORE_DIR . 'includes/status.php';
 require_once CC_CORE_DIR . 'includes/forms.php';
 require_once CC_CORE_DIR . 'includes/messages.php';
 require_once CC_CORE_DIR . 'includes/inquiry.php';
