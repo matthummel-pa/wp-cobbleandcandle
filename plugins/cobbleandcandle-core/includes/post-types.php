@@ -61,7 +61,17 @@ function cc_register_content_types() {
 			'show_in_menu'  => true,
 			'menu_icon'     => 'dashicons-carrot',
 			'menu_position' => 22,
-			'supports'      => array( 'title', 'excerpt', 'thumbnail', 'custom-fields', 'page-attributes', 'revisions' ),
+			// 'editor' puts dishes in the block editor, where the price, sizes and diet panels live
+			// (WordPress falls back to the classic screen without it). The body stays empty and locked:
+			// a dish is its title, description (excerpt), photo and those fields.
+			'supports'      => array( 'title', 'editor', 'excerpt', 'thumbnail', 'custom-fields', 'page-attributes', 'revisions' ),
+			'template'      => array(
+				array(
+					'core/paragraph',
+					array( 'placeholder' => __( 'Dishes don’t use this space. Write the description under Excerpt and set prices, sizes and diet in “Price & details” (right).', 'cobbleandcandle-core' ) ),
+				),
+			),
+			'template_lock' => 'all',
 			'show_in_rest'  => true,
 		)
 	);
