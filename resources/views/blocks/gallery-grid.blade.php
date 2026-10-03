@@ -63,7 +63,7 @@
         @endforeach
       </ul>
     </div>
-    <dialog class="lb" x-ref="dialog" aria-label="{{ __('Image viewer', 'cobbleandcandle') }}" @close="closed()" @keydown.arrow-left="show(index - 1)" @keydown.arrow-right="show(index + 1)">
+    <dialog class="lb" x-ref="dialog" aria-label="{{ __('Image viewer', 'cobbleandcandle') }}" @close="closed()" @keydown.arrow-left="show(index + (document.dir === 'rtl' ? 1 : -1))" @keydown.arrow-right="show(index + (document.dir === 'rtl' ? -1 : 1))">
       <div class="lb-in">
         <figure class="lb-fig">
           <div class="lb-media" x-ref="media"></div>
