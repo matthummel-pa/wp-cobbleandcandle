@@ -39,18 +39,3 @@ add_filter('body_class', function (array $classes): array {
 
     return $classes;
 }, 11);
-
-/**
- * Images with no alt text fall back to their Media Library caption (never the file name), so
- * photos the owner captioned but forgot to describe still have a text alternative.
- */
-add_filter('wp_get_attachment_image_attributes', function (array $attr, \WP_Post $attachment): array {
-    if (($attr['alt'] ?? '') === '') {
-        $caption = trim(wp_strip_all_tags((string) wp_get_attachment_caption($attachment->ID)));
-        if ($caption !== '') {
-            $attr['alt'] = $caption;
-        }
-    }
-
-    return $attr;
-}, 10, 2);
