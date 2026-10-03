@@ -15,3 +15,5 @@
 ^\s*\\?App\\status_json\s*\(
 # Site Footer only: core Social Links rendered from block arrays (core escapes the URLs).
 ^\s*\$footerSocialLinks\s*$
+# Shared placeholder art: a <svg><use> whose attributes are esc_attr'd (app/art.php).
+^\s*\\?App\\art_ref\s*\(

@@ -113,7 +113,7 @@ function cc_get_menus() {
 		array(
 			'post_type'      => 'cc_menu_item',
 			'post_status'    => 'publish',
-			'posts_per_page' => 500,
+			'posts_per_page' => 500, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page -- every dish on every menu, in one query instead of dozens.
 			'orderby'        => array(
 				'menu_order' => 'ASC',
 				'title'      => 'ASC',

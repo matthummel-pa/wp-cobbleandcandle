@@ -56,12 +56,14 @@ function art_parts(string $kind): ?array
 /**
  * A reference to a shared drawing, or '' when this kind must be drawn inline.
  */
-function art_ref(string $kind): string
+function art_ref(string $kind, bool $use = true): string
 {
     if ($kind === 'map' || is_editor_preview() || did_action('wp_footer') || ! ($parts = art_parts($kind))) {
         return '';
     }
-    art_used($kind);
+    if ($use) {
+        art_used($kind);
+    }
 
     return sprintf(
         '<svg class="ill" viewBox="%1$s" preserveAspectRatio="%2$s" role="img" aria-label="%3$s"><use href="#art-%4$s" width="100%%" height="100%%"/></svg>',
