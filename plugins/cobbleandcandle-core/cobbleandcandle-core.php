@@ -33,6 +33,7 @@ add_action( 'init', 'cobble_load_textdomain', 0 );
 
 require_once COBBLE_CORE_DIR . 'includes/migrate.php';
 require_once COBBLE_CORE_DIR . 'includes/post-types.php';
+require_once COBBLE_CORE_DIR . 'includes/blocks.php';
 require_once COBBLE_CORE_DIR . 'includes/fields.php';
 require_once COBBLE_CORE_DIR . 'includes/hours.php';
 require_once COBBLE_CORE_DIR . 'includes/locations.php';

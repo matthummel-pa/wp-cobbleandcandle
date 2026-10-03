@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/houses",
+  "title": "Houses",
+  "category": "cobbleandcandle",
+  "description": "A card for every location: photo, address, open-now status and a link to its page.",
+  "keywords": ["locations", "houses", "branches", "cards"],
+  "textdomain": "cobbleandcandle-core",
+  "attributes": {
+    "eyebrow": { "type": "string", "default": "Our houses" },
+    "title": { "type": "string", "default": "Find your table" }
+  },
+  "supports": { "html": false, "align": ["full"] }
+}

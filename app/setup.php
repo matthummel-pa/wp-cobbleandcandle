@@ -24,34 +24,6 @@ add_filter('block_editor_settings_all', function ($settings) {
 });
 
 /**
- * Block editor script (block registration and settings), enqueued with its translations.
- *
- * @link https://developer.wordpress.org/block-editor/how-to-guides/internationalization/
- */
-add_action('enqueue_block_editor_assets', function () {
-    if (Vite::isRunningHot()) {
-        return; // Printed by the dev-server hook below.
-    }
-    wp_enqueue_script(
-        'cobbleandcandle-editor',
-        Vite::asset('resources/js/editor.js'),
-        ['wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-server-side-render', 'wp-i18n', 'wp-data'],
-        wp_get_theme(get_template())->get('Version'),
-        true
-    );
-    wp_set_script_translations('cobbleandcandle-editor', 'cobbleandcandle', get_theme_file_path('resources/lang'));
-});
-
-/**
- * Vite dev server: print the editor entry while developing.
- */
-add_action('admin_head', function () {
-    if (Vite::isRunningHot() && get_current_screen()?->is_block_editor()) {
-        echo Vite::withEntryPoints(['resources/js/editor.js'])->toHtml(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Vite dev-server tags (local only).
-    }
-});
-
-/**
  * Use the generated theme.json file.
  *
  * @return string

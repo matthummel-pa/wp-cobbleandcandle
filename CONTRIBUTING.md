@@ -20,7 +20,8 @@ npm run dev            # Vite with hot reload (or npm run build)
 | Area | Path |
 | --- | --- |
 | Theme PHP (Acorn) | `app/` |
-| Blocks (block.json + Blade view) | `resources/blocks/*`, `resources/views/blocks/*` |
+| Blocks: registration + editor UI (plugin) | `plugins/cobbleandcandle-core/blocks/*`, `plugins/cobbleandcandle-core/assets/blocks-editor.js` |
+| Blocks: markup (theme, Blade) | `resources/views/blocks/*` via the `cobble_render_block` filter |
 | Design tokens and styles | `resources/css/` (`tokens.css` = the four style directions) |
 | Front-end JS (Alpine) | `resources/js/app.js` |
 | Templates, parts, patterns | `templates/`, `parts/`, `patterns/` |
