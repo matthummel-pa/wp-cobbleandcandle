@@ -69,7 +69,7 @@ function cobble_has_legacy_data() {
 			'cc_hours',
 			'cc_street',
 			'cc_price',
-			'cc_nightly'
+			'cc_price_night'
 		)
 	);
 }
