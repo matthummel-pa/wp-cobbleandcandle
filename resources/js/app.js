@@ -473,17 +473,19 @@ Alpine.data('siteHeader', () => ({
   },
 }))
 
-/* Demo bar (theme demo only): the close button hides it for the rest of the session. */
-Alpine.data('demoBar', () => ({
-  hidden: false,
-  init() {
-    try { this.hidden = sessionStorage.getItem('rm-demobar') === 'hidden' } catch {}
-  },
-  hide() {
-    this.hidden = true
-    try { sessionStorage.setItem('rm-demobar', 'hidden') } catch {}
-  },
-}))
+/* Demo bar (theme demo only): the close button hides it for the rest of the session.
+   The partial sets hidden before paint; start from the same flag so Alpine does not show it again. */
+Alpine.data('demoBar', () => {
+  let hidden = false
+  try { hidden = sessionStorage.getItem('rm-demobar') === 'hidden' } catch {}
+  return {
+    hidden,
+    hide() {
+      this.hidden = true
+      try { sessionStorage.setItem('rm-demobar', 'hidden') } catch {}
+    },
+  }
+})
 
 window.Alpine = Alpine
 Alpine.start()

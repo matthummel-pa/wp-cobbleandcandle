@@ -1,5 +1,7 @@
 {{-- Demo bar: a slim strip above the header with the business-type and style switchers. Only when the Site Header block enables the demo switchers; never on a buyer's site. Hidden for the session with the close button. --}}
 <div class="demobar" x-data="demoBar" :hidden="hidden" data-demobar>
+  {{-- Before the rest of the bar is parsed, so a dismissed session does not paint and shift the header. Alpine reads the same flag. --}}
+  {!! wp_get_inline_script_tag("(function(s){try{if(sessionStorage.getItem('rm-demobar')==='hidden')s.parentElement.hidden=true}catch(e){}})(document.currentScript);") !!}
   <div class="container demobar-in">
     <span class="demobar-brand"><x-icon name="palette" /><strong>{{ __('Cobble & Candle', 'cobbleandcandle') }}</strong> <span class="demobar-tag">{{ __('Theme demo', 'cobbleandcandle') }}</span></span>
     <div class="demobar-sw">
