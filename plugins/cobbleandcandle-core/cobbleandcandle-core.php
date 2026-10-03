@@ -49,9 +49,8 @@ require_once CC_CORE_DIR . 'includes/rooms.php';
 require_once CC_CORE_DIR . 'includes/ical.php';
 require_once CC_CORE_DIR . 'includes/seo.php';
 
-if ( defined( 'WP_CLI' ) && WP_CLI ) {
-	require_once CC_CORE_DIR . 'includes/seed.php';
-}
+require_once CC_CORE_DIR . 'includes/seed.php';
+require_once CC_CORE_DIR . 'includes/setup.php';
 
 register_activation_hook(
 	__FILE__,

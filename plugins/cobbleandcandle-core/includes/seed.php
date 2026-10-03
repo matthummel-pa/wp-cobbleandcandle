@@ -1,6 +1,6 @@
 <?php
 /**
- * WP-CLI: `wp cobbleandcandle seed` loads the demo locations, menus and events from data/demo.json.
+ * Demo content importer (setup wizard and `wp cobbleandcandle seed`): loads the demo locations, menus and events from data/demo.json.
  *
  * Safe to re-run: existing posts (matched by title) are skipped unless --update is passed.
  * Never deletes anything.
@@ -27,10 +27,41 @@ defined( 'ABSPATH' ) || exit;
  * @param array<string, string> $assoc_args Flags.
  */
 function cc_cli_seed( $args, $assoc_args ) {
-	$update = ! empty( $assoc_args['update'] );
+	$result = cc_import_demo( ! empty( $assoc_args['update'] ) );
+	if ( is_wp_error( $result ) ) {
+		WP_CLI::error( $result->get_error_message() );
+	}
+	foreach ( cc_seed_warn() as $warning ) {
+		WP_CLI::warning( $warning );
+	}
+	WP_CLI::success( sprintf( 'Demo content: %d created, %d updated, %d skipped.', $result['created'], $result['updated'], $result['skipped'] ) );
+}
+
+/**
+ * Collect (or read back) importer warnings.
+ *
+ * @param string|null $message Warning to add.
+ * @return array<int, string>
+ */
+function cc_seed_warn( $message = null ) {
+	static $warnings = array();
+	if ( null !== $message ) {
+		$warnings[] = $message;
+	}
+	return $warnings;
+}
+
+/**
+ * Import the demo locations, menus, events and rooms from data/demo.json. Used by
+ * `wp cobbleandcandle seed` and the setup wizard. Never deletes anything.
+ *
+ * @param bool $update Update posts that already exist instead of skipping them.
+ * @return array{created: int, updated: int, skipped: int}|WP_Error
+ */
+function cc_import_demo( $update = false ) {
 	$data   = json_decode( (string) file_get_contents( CC_CORE_DIR . 'data/demo.json' ), true ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- local plugin file.
 	if ( ! is_array( $data ) ) {
-		WP_CLI::error( 'data/demo.json is missing or invalid.' );
+		return new WP_Error( 'cc_demo_missing', __( 'The demo data file (data/demo.json) is missing or invalid.', 'cobbleandcandle-core' ) );
 	}
 
 	$counts       = array(
@@ -163,7 +194,7 @@ function cc_cli_seed( $args, $assoc_args ) {
 		);
 	}
 
-	WP_CLI::success( sprintf( 'Demo content: %d created, %d updated, %d skipped.', $counts['created'], $counts['updated'], $counts['skipped'] ) );
+	return $counts;
 }
 
 /**
@@ -223,7 +254,7 @@ function cc_seed_post( $post_type, $title, array $postarr, array $meta, $update,
 		true
 	);
 	if ( is_wp_error( $id ) ) {
-		WP_CLI::warning( $title . ': ' . $id->get_error_message() );
+		cc_seed_warn( $title . ': ' . $id->get_error_message() );
 		return 0;
 	}
 	foreach ( $meta as $key => $value ) {
@@ -250,7 +281,7 @@ function cc_seed_term( $taxonomy, $name, $slug, $order, $intro = '' ) {
 	} else {
 		$created = wp_insert_term( $name, $taxonomy, array( 'slug' => $slug ) );
 		if ( is_wp_error( $created ) ) {
-			WP_CLI::warning( $name . ': ' . $created->get_error_message() );
+			cc_seed_warn( $name . ': ' . $created->get_error_message() );
 			return 0;
 		}
 		$id = (int) $created['term_id'];
@@ -264,4 +295,6 @@ function cc_seed_term( $taxonomy, $name, $slug, $order, $intro = '' ) {
 	return $id;
 }
 
-WP_CLI::add_command( 'cobbleandcandle seed', 'cc_cli_seed' );
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	WP_CLI::add_command( 'cobbleandcandle seed', 'cc_cli_seed' );
+}

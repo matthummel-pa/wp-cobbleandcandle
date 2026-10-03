@@ -67,7 +67,7 @@ add_filter( 'admin_body_class', 'cc_admin_body_class' );
  */
 function cc_admin_nav() {
 	$nav = array(
-		__( 'Setup', 'cobbleandcandle-core' )            => array( admin_url( 'admin.php?page=cc-setup' ), 'manage_options' ),
+		__( 'Setup', 'cobbleandcandle-core' )            => array( admin_url( 'options-general.php?page=cc-setup' ), 'manage_options' ),
 		__( 'Restaurant settings', 'cobbleandcandle-core' ) => array( admin_url( 'options-general.php?page=cobbleandcandle' ), 'manage_options' ),
 		__( 'Menus', 'cobbleandcandle-core' )            => array( admin_url( 'edit.php?post_type=cc_menu_item' ), 'edit_posts' ),
 		__( 'Import / export', 'cobbleandcandle-core' )  => array( admin_url( 'edit.php?post_type=cc_menu_item&page=cc-menu-import' ), 'edit_others_posts' ),

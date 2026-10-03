@@ -11,7 +11,10 @@
 ?>
 <!-- wp:cobbleandcandle/hero {"align": "full"} -->
 <!-- wp:paragraph {"className": "eyebrow eyebrow\u002d\u002dhero"} -->
-<p class="eyebrow eyebrow--hero"><?php echo esc_html__('Supper by candlelight · Since 1888', 'cobbleandcandle'); ?></p>
+<p class="eyebrow eyebrow--hero"><?php echo esc_html(\App\brand('est') !== ''
+    /* translators: %s: year established (Settings → Restaurant) */
+    ? sprintf(__('Supper by candlelight · Since %s', 'cobbleandcandle'), \App\brand('est'))
+    : __('Supper by candlelight', 'cobbleandcandle')); ?></p>
 <!-- /wp:paragraph -->
 
 <!-- wp:heading {"level": 1, "className": "h1 hero-h"} -->
