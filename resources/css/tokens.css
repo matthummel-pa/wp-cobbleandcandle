@@ -119,7 +119,7 @@
   --nav-transform: uppercase;
   --nav-track: .16em;
   --nav-size: .8125rem;
-  --hero-h1-max: 11ch;
+  --hero-h1-max: 14ch;
 }
 
 [data-theme="ember-arch"] {
@@ -192,7 +192,7 @@
   --nav-track: .01em;
   --nav-size: 1rem;
   --color-board-title: #FFAA5C;
-  --hero-h1-max: 10ch;
+  --hero-h1-max: 13ch;
 }
 
 [data-theme="ashlar-iron"] {
@@ -265,7 +265,7 @@
   --nav-track: .12em;
   --nav-size: .875rem;
   --color-board-title: #7A2A2E;
-  --hero-h1-max: 10.5ch;
+  --hero-h1-max: 13.5ch;
   --shadow-card: 0 18px 40px -26px rgb(35 28 23 / .35);
   --shadow-pop: 0 24px 60px -24px rgb(35 28 23 / .45);
 }
@@ -341,7 +341,7 @@
   --nav-track: .12em;
   --nav-size: .875rem;
   --color-board-title: #F0C27A;
-  --hero-h1-max: 11ch;
+  --hero-h1-max: 14ch;
   --shadow-card: 0 16px 40px -28px rgb(43 38 34 / .28);
   --shadow-pop: 0 24px 60px -26px rgb(43 38 34 / .35);
   --display-weight: 600;

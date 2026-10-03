@@ -193,12 +193,12 @@ em{font-style:var(--em-style);color:var(--color-accent)}
 .hero,.phero,.ftr{--color-line:color-mix(in srgb,var(--color-text) 16%,transparent)}
 .hero,.phero{--color-text:var(--color-hero-text);--color-eyebrow:var(--color-hero-accent);--color-muted:color-mix(in srgb,var(--color-hero-text) 82%,var(--color-hero));--color-focus:var(--color-hero-text);position:relative;color:var(--color-hero-text);background:var(--color-hero);overflow:hidden;isolation:isolate}
 .hero em,.phero em{color:var(--color-hero-accent)}
-.hero{min-height:clamp(560px,80vh,780px);display:flex;align-items:center}
+.hero{min-height:clamp(520px,calc(100svh - 220px),720px);display:flex;align-items:center}
 .hero-m,.phero-m{position:absolute;inset:0;border-radius:0;z-index:-1}
 .hero-m::before,.phero-m::before{content:"";position:absolute;inset:0;z-index:1;background:var(--hero-scrim)}
-.hero-c{padding-block:96px 112px}
-.hero-h{max-width:var(--hero-h1-max);margin:6px 0 24px}
-.hero .lede{color:var(--color-muted);max-width:46ch}
+.hero-c{padding-block:64px 84px}
+.hero-h{max-width:var(--hero-h1-max);margin:6px 0 20px;text-wrap:balance}
+.hero .lede{color:var(--color-muted);max-width:58ch}
 .eyebrow--hero .orn--kick{width:64px;color:var(--color-hero-accent)}
 .hero-cap{position:absolute;inset-inline-end:var(--gutter);bottom:20px;margin:0;font-size:var(--text-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--color-muted);background:color-mix(in srgb,var(--color-hero) 70%,transparent);padding:6px 10px;border-radius:var(--radius-btn)}
 .phero{min-height:clamp(300px,36vw,420px);display:flex;align-items:flex-end}
@@ -717,7 +717,7 @@ input::placeholder,textarea::placeholder{color:var(--color-muted);opacity:1}
   .mbar-a--primary:hover{color:var(--color-accent-contrast)}
   .hero{min-height:680px;align-items:flex-end}
   .hero-m::before{background:var(--hero-scrim-m)}
-  .hero-c{padding-block:240px 64px}
+  .hero-c{padding-block:176px 48px}
   .tabs{-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}
   [dir="rtl"] .tabs{-webkit-mask-image:linear-gradient(270deg,#000 85%,transparent);mask-image:linear-gradient(270deg,#000 85%,transparent)}
   .hero-cap{top:16px;bottom:auto;inset-inline-end:var(--gutter)}
