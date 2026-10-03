@@ -13,9 +13,12 @@
   $current = \App\current_location();
   $phone = $current['phone'] ?? \App\brand('phone');
   $orderUrl = $orderUrl ?: ($current['order_url'] ?? '');
-  $showUtility = $attributes['showUtilityBar'] && ($locations || $phone !== '' || $attributes['showStyleSwitcher']);
+  $showUtility = $attributes['showUtilityBar'] && ($locations || $phone !== '');
 @endphp
 <div {!! $wrapper !!} x-data="siteHeader">
+  @if ($attributes['showStyleSwitcher'])
+    @include('partials.demo-bar')
+  @endif
   @if ($locations)
     <script type="application/json" id="cobble-locations">{!! \App\locations_json() !!}</script>
     <script type="application/json" id="cobble-status">{!! \App\status_json() !!}</script>
@@ -26,7 +29,7 @@
     {!! wp_get_inline_script_tag("(function(d){try{var k=d.documentElement.dataset.kind?'rm-theme:'+d.documentElement.dataset.kind:'rm-theme';var t=new URLSearchParams(location.search).get('theme')||localStorage.getItem(k);if(/^(".$directionsPattern.")$/.test(t)){d.documentElement.dataset.theme=t;localStorage.setItem(k,t)}}catch(e){}})(document);") !!}
   @endif
   @if ($showUtility)
-    <div class="util" role="region" aria-label="{{ __('Contact and style', 'cobbleandcandle') }}">
+    <div class="util" role="region" aria-label="{{ __('Contact', 'cobbleandcandle') }}">
       <div class="container util-in">
         <div class="util-l">
           @if (count($locations) > 1)
@@ -37,12 +40,6 @@
           @endif
           @if ($phone !== '')
             <a class="util-phone" href="{!! esc_url('tel:'.preg_replace('/[^0-9+]/', '', $phone)) !!}" @if ($current) :href="$store.site.loc.tel" @endif><x-icon name="phone" /><span @if ($current) x-text="$store.site.loc.phone" @endif>{{ $phone }}</span></a>
-          @endif
-        </div>
-        <div class="util-r">
-          @if ($attributes['showStyleSwitcher'])
-            @include('partials.kind-switcher')
-            @include('partials.theme-switcher')
           @endif
         </div>
       </div>
