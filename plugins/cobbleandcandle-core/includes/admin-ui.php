@@ -30,7 +30,7 @@ function cc_admin_screen_kind() {
 	}
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- reading which admin page is open.
 	$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
-	if ( in_array( $page, array( 'cobbleandcandle', 'cc-menu-import', 'cc-setup' ), true ) ) {
+	if ( in_array( $page, array( 'cobbleandcandle', 'cc-menu-import', 'cc-setup', 'cc-status' ), true ) ) {
 		return 'page';
 	}
 	return in_array( (string) $screen->post_type, cc_admin_post_types(), true ) && ! $screen->is_block_editor() ? 'content' : '';
@@ -73,6 +73,7 @@ function cc_admin_nav() {
 		__( 'Import / export', 'cobbleandcandle-core' )  => array( admin_url( 'edit.php?post_type=cc_menu_item&page=cc-menu-import' ), 'edit_others_posts' ),
 		__( 'Bookings', 'cobbleandcandle-core' )         => array( admin_url( 'edit.php?post_type=cc_booking' ), 'edit_others_posts' ),
 		__( 'Messages', 'cobbleandcandle-core' )         => array( admin_url( 'edit.php?post_type=cc_message' ), 'edit_others_posts' ),
+		__( 'Status', 'cobbleandcandle-core' )           => array( admin_url( 'tools.php?page=cc-status' ), 'manage_options' ),
 	);
 	if ( ! function_exists( 'cc_render_setup_page' ) ) {
 		unset( $nav[ __( 'Setup', 'cobbleandcandle-core' ) ] );
