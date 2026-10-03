@@ -1,0 +1,148 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "title": "Daylight",
+  "settings": {
+    "custom": {
+      "direction": "daylight"
+    },
+    "color": {
+      "palette": [
+        {
+          "slug": "bg",
+          "name": "Bg",
+          "color": "#FBF7F0"
+        },
+        {
+          "slug": "surface",
+          "name": "Surface",
+          "color": "#FFFFFF"
+        },
+        {
+          "slug": "surface-2",
+          "name": "Surface (2)",
+          "color": "#F2EADD"
+        },
+        {
+          "slug": "text",
+          "name": "Text",
+          "color": "#2B2622"
+        },
+        {
+          "slug": "muted",
+          "name": "Muted",
+          "color": "#5E554D"
+        },
+        {
+          "slug": "accent",
+          "name": "Accent",
+          "color": "#B14E25"
+        },
+        {
+          "slug": "accent-contrast",
+          "name": "Accent (Contrast)",
+          "color": "#FFFFFF"
+        },
+        {
+          "slug": "brand-alt",
+          "name": "Brand (Alt)",
+          "color": "#4E6644"
+        },
+        {
+          "slug": "hero",
+          "name": "Hero",
+          "color": "#F6EFE3"
+        },
+        {
+          "slug": "hero-text",
+          "name": "Hero (Text)",
+          "color": "#2B2622"
+        },
+        {
+          "slug": "hero-accent",
+          "name": "Hero (Accent)",
+          "color": "#B14E25"
+        },
+        {
+          "slug": "focus",
+          "name": "Focus",
+          "color": "#B14E25"
+        },
+        {
+          "slug": "success",
+          "name": "Success",
+          "color": "#3F7A4A"
+        },
+        {
+          "slug": "warn",
+          "name": "Warn",
+          "color": "#A8701A"
+        },
+        {
+          "slug": "line",
+          "name": "Line",
+          "color": "color-mix(in srgb, var(--color-text) 16%, transparent)"
+        },
+        {
+          "slug": "board",
+          "name": "Board",
+          "color": "#2F3A2E"
+        },
+        {
+          "slug": "board-ink",
+          "name": "Board (Ink)",
+          "color": "#F4EEDF"
+        },
+        {
+          "slug": "board-frame",
+          "name": "Board (Frame)",
+          "color": "#B8925A"
+        },
+        {
+          "slug": "glow",
+          "name": "Glow",
+          "color": "#FFD79A"
+        },
+        {
+          "slug": "eyebrow",
+          "name": "Eyebrow",
+          "color": "#4E6644"
+        },
+        {
+          "slug": "status-open",
+          "name": "Status (Open)",
+          "color": "#3F7A4A"
+        },
+        {
+          "slug": "status-warn",
+          "name": "Status (Warn)",
+          "color": "#A8701A"
+        },
+        {
+          "slug": "status-off",
+          "name": "Status (Off)",
+          "color": "#857A6F"
+        },
+        {
+          "slug": "board-title",
+          "name": "Board (Title)",
+          "color": "#F0C27A"
+        }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "display",
+          "name": "Display",
+          "fontFamily": "\"Outfit\", system-ui, sans-serif"
+        },
+        {
+          "slug": "sans",
+          "name": "Sans",
+          "fontFamily": "\"Mulish\", system-ui, sans-serif"
+        }
+      ]
+    }
+  }
+}
