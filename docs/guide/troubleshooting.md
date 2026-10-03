@@ -32,19 +32,19 @@
 
 ## Send errors to Sentry or Slack
 
-Every problem the plugin records fires the `cc_log` action. Put one of these in a small must-use plugin (`wp-content/mu-plugins/cc-alerts.php`):
+Every problem the plugin records fires the `cobble_log` action. Put one of these in a small must-use plugin (`wp-content/mu-plugins/cobble-alerts.php`):
 
 ```php
 <?php
 // Sentry (with the Sentry PHP SDK or the WP Sentry plugin installed).
-add_action( 'cc_log', function ( array $entry ) {
+add_action( 'cobble_log', function ( array $entry ) {
 	if ( 'error' === $entry['level'] && function_exists( '\Sentry\captureMessage' ) ) {
 		\Sentry\captureMessage( "[{$entry['source']}] {$entry['message']}" );
 	}
 } );
 
 // Slack incoming webhook: alert on errors only.
-add_action( 'cc_log', function ( array $entry ) {
+add_action( 'cobble_log', function ( array $entry ) {
 	if ( 'error' !== $entry['level'] ) {
 		return;
 	}

@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array<int, string>
  */
-function cc_menu_csv_columns() {
+function cobble_menu_csv_columns() {
 	return array( 'menu', 'section', 'name', 'description', 'price', 'sizes', 'diet', 'flag', 'chef_pick', 'menu_intro' );
 }
 
@@ -29,7 +29,7 @@ function cc_menu_csv_columns() {
  *
  * @return array<string, string>
  */
-function cc_menu_csv_diets() {
+function cobble_menu_csv_diets() {
 	return array(
 		'v'            => 'v',
 		'veg'          => 'v',
@@ -47,25 +47,25 @@ function cc_menu_csv_diets() {
 /**
  * Add the Import / export screen under Food & drink.
  */
-function cc_menu_import_page() {
+function cobble_menu_import_page() {
 	add_submenu_page(
-		'edit.php?post_type=cc_menu_item',
+		'edit.php?post_type=cobble_menu_item',
 		__( 'Import / export menus', 'cobbleandcandle-core' ),
 		__( 'Import / export', 'cobbleandcandle-core' ),
 		'edit_others_posts',
-		'cc-menu-import',
-		'cc_render_menu_import_page'
+		'cobble-menu-import',
+		'cobble_render_menu_import_page'
 	);
 }
-add_action( 'admin_menu', 'cc_menu_import_page' );
+add_action( 'admin_menu', 'cobble_menu_import_page' );
 
 /**
  * Transient key for the current user's pending import.
  *
  * @return string
  */
-function cc_menu_import_key() {
-	return 'cc_menu_import_' . get_current_user_id();
+function cobble_menu_import_key() {
+	return 'cobble_menu_import_' . get_current_user_id();
 }
 
 /**
@@ -74,7 +74,7 @@ function cc_menu_import_key() {
  * @param string $path File path.
  * @return array{rows: array<int, array<string, mixed>>, errors: array<int, string>}
  */
-function cc_parse_menu_csv( $path ) {
+function cobble_parse_menu_csv( $path ) {
 	$rows   = array();
 	$errors = array();
 	$handle = fopen( $path, 'r' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- reading the uploaded temp file.
@@ -105,9 +105,9 @@ function cc_parse_menu_csv( $path ) {
 			'errors' => array( sprintf( __( 'Missing columns: %s. The first row must name the columns.', 'cobbleandcandle-core' ), implode( ', ', $missing ) ) ),
 		);
 	}
-	$diets   = cc_menu_csv_diets();
+	$diets   = cobble_menu_csv_diets();
 	$line    = 1;
-	$present = array_values( array_intersect( cc_menu_csv_columns(), $header ) );
+	$present = array_values( array_intersect( cobble_menu_csv_columns(), $header ) );
 	$note    = static function ( $message ) use ( &$errors ) {
 		if ( count( $errors ) < 100 ) { // A broken file must not build a huge error list.
 			$errors[] = $message;
@@ -182,15 +182,15 @@ function cc_parse_menu_csv( $path ) {
  * @param array<string, mixed> $row Row.
  * @return int Post ID or 0.
  */
-function cc_menu_csv_match( array $row ) {
-	$menu    = cc_menu_csv_find_term( 'cc_menu', $row['menu'], sanitize_title( $row['menu'] ) );
-	$section = $menu ? cc_menu_csv_find_term( 'cc_menu_section', $row['section'], sanitize_title( $row['menu'] . '-' . $row['section'] ) ) : null;
+function cobble_menu_csv_match( array $row ) {
+	$menu    = cobble_menu_csv_find_term( 'cobble_menu', $row['menu'], sanitize_title( $row['menu'] ) );
+	$section = $menu ? cobble_menu_csv_find_term( 'cobble_menu_section', $row['section'], sanitize_title( $row['menu'] . '-' . $row['section'] ) ) : null;
 	if ( ! $menu || ! $section ) {
 		return 0;
 	}
 	// Titles may be stored with & as &amp; (users without unfiltered_html): try both spellings.
 	foreach ( array_unique( array( $row['name'], esc_html( $row['name'] ) ) ) as $title ) {
-		$found = cc_menu_csv_find_dish( $title, (int) $menu->term_id, (int) $section->term_id );
+		$found = cobble_menu_csv_find_dish( $title, (int) $menu->term_id, (int) $section->term_id );
 		if ( $found ) {
 			return $found;
 		}
@@ -207,7 +207,7 @@ function cc_menu_csv_match( array $row ) {
  * @param string $slug     Importer slug.
  * @return WP_Term|null
  */
-function cc_menu_csv_find_term( $taxonomy, $name, $slug ) {
+function cobble_menu_csv_find_term( $taxonomy, $name, $slug ) {
 	$term = get_term_by( 'slug', $slug, $taxonomy );
 	if ( ! $term ) {
 		$term = get_term_by( 'name', $name, $taxonomy );
@@ -226,10 +226,10 @@ function cc_menu_csv_find_term( $taxonomy, $name, $slug ) {
  * @param int    $section_id Section term.
  * @return int Post ID or 0.
  */
-function cc_menu_csv_find_dish( $title, $menu_id, $section_id ) {
+function cobble_menu_csv_find_dish( $title, $menu_id, $section_id ) {
 	$found = get_posts(
 		array(
-			'post_type'      => 'cc_menu_item',
+			'post_type'      => 'cobble_menu_item',
 			'post_status'    => array( 'publish', 'draft', 'pending', 'private' ),
 			'title'          => $title,
 			'posts_per_page' => 1,
@@ -238,11 +238,11 @@ function cc_menu_csv_find_dish( $title, $menu_id, $section_id ) {
 			'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- one lookup per imported row.
 				'relation' => 'AND',
 				array(
-					'taxonomy' => 'cc_menu',
+					'taxonomy' => 'cobble_menu',
 					'terms'    => $menu_id,
 				),
 				array(
-					'taxonomy' => 'cc_menu_section',
+					'taxonomy' => 'cobble_menu_section',
 					'terms'    => $section_id,
 				),
 			),
@@ -259,8 +259,8 @@ function cc_menu_csv_find_dish( $title, $menu_id, $section_id ) {
  * @param string $slug     Slug.
  * @return int Term ID or 0.
  */
-function cc_menu_csv_term( $taxonomy, $name, $slug ) {
-	$term = cc_menu_csv_find_term( $taxonomy, $name, $slug );
+function cobble_menu_csv_term( $taxonomy, $name, $slug ) {
+	$term = cobble_menu_csv_find_term( $taxonomy, $name, $slug );
 	if ( $term ) {
 		return (int) $term->term_id;
 	}
@@ -274,21 +274,21 @@ function cc_menu_csv_term( $taxonomy, $name, $slug ) {
 			'hide_empty' => false,
 		)
 	);
-	update_term_meta( (int) $created['term_id'], 'cc_order', $count );
+	update_term_meta( (int) $created['term_id'], 'cobble_order', $count );
 	return (int) $created['term_id'];
 }
 
 /**
  * Upload step: parse and keep a preview for this user.
  */
-function cc_handle_menu_import_upload() {
+function cobble_handle_menu_import_upload() {
 	if ( ! current_user_can( 'edit_others_posts' ) ) {
 		wp_die( esc_html__( 'You are not allowed to import menus.', 'cobbleandcandle-core' ), 403 );
 	}
-	check_admin_referer( 'cc_menu_import_upload' );
-	$back = admin_url( 'edit.php?post_type=cc_menu_item&page=cc-menu-import' );
+	check_admin_referer( 'cobble_menu_import_upload' );
+	$back = admin_url( 'edit.php?post_type=cobble_menu_item&page=cobble-menu-import' );
 	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- checked below; only tmp_name, size, error and name are used.
-	$file = isset( $_FILES['cc_menu_csv'] ) && is_array( $_FILES['cc_menu_csv'] ) ? $_FILES['cc_menu_csv'] : array();
+	$file = isset( $_FILES['cobble_menu_csv'] ) && is_array( $_FILES['cobble_menu_csv'] ) ? $_FILES['cobble_menu_csv'] : array();
 	$size = (int) ( $file['size'] ?? 0 );
 	$name = sanitize_file_name( (string) ( $file['name'] ?? '' ) );
 	$tmp  = (string) ( $file['tmp_name'] ?? '' );
@@ -297,33 +297,33 @@ function cc_handle_menu_import_upload() {
 		wp_safe_redirect( add_query_arg( 'import', 'badfile', $back ) );
 		exit;
 	}
-	$parsed = cc_parse_menu_csv( $tmp );
+	$parsed = cobble_parse_menu_csv( $tmp );
 	foreach ( $parsed['rows'] as &$row ) {
-		$row['match'] = cc_menu_csv_match( $row );
+		$row['match'] = cobble_menu_csv_match( $row );
 	}
 	unset( $row );
-	set_transient( cc_menu_import_key(), $parsed + array( 'file' => $name ), 30 * MINUTE_IN_SECONDS );
+	set_transient( cobble_menu_import_key(), $parsed + array( 'file' => $name ), 30 * MINUTE_IN_SECONDS );
 	wp_safe_redirect( add_query_arg( 'import', 'preview', $back ) );
 	exit;
 }
-add_action( 'admin_post_cc_menu_import_upload', 'cc_handle_menu_import_upload' );
+add_action( 'admin_post_cobble_menu_import_upload', 'cobble_handle_menu_import_upload' );
 
 /**
  * Confirm step: create or update the dishes from the preview.
  */
-function cc_handle_menu_import_run() {
+function cobble_handle_menu_import_run() {
 	if ( ! current_user_can( 'edit_others_posts' ) ) {
 		wp_die( esc_html__( 'You are not allowed to import menus.', 'cobbleandcandle-core' ), 403 );
 	}
-	check_admin_referer( 'cc_menu_import_run' );
-	$back    = admin_url( 'edit.php?post_type=cc_menu_item&page=cc-menu-import' );
-	$pending = get_transient( cc_menu_import_key() );
-	delete_transient( cc_menu_import_key() );
+	check_admin_referer( 'cobble_menu_import_run' );
+	$back    = admin_url( 'edit.php?post_type=cobble_menu_item&page=cobble-menu-import' );
+	$pending = get_transient( cobble_menu_import_key() );
+	delete_transient( cobble_menu_import_key() );
 	if ( ! is_array( $pending ) || empty( $pending['rows'] ) ) {
 		wp_safe_redirect( add_query_arg( 'import', 'expired', $back ) );
 		exit;
 	}
-	$skip    = ! empty( $_POST['cc_skip_existing'] );
+	$skip    = ! empty( $_POST['cobble_skip_existing'] );
 	$counts  = array(
 		'created' => 0,
 		'updated' => 0,
@@ -336,32 +336,32 @@ function cc_handle_menu_import_run() {
 		set_time_limit( 300 ); // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged -- large menus: up to 2,000 dishes.
 	}
 	foreach ( $pending['rows'] as $row ) {
-		$menu_id    = cc_menu_csv_term( 'cc_menu', $row['menu'], sanitize_title( $row['menu'] ) );
-		$section_id = cc_menu_csv_term( 'cc_menu_section', $row['section'], sanitize_title( $row['menu'] . '-' . $row['section'] ) );
+		$menu_id    = cobble_menu_csv_term( 'cobble_menu', $row['menu'], sanitize_title( $row['menu'] ) );
+		$section_id = cobble_menu_csv_term( 'cobble_menu_section', $row['section'], sanitize_title( $row['menu'] . '-' . $row['section'] ) );
 		if ( ! $menu_id || ! $section_id ) {
 			++$counts['skipped'];
 			continue;
 		}
 		if ( '' !== $row['menu_intro'] && ! isset( $intros[ $menu_id ] ) ) {
 			$intros[ $menu_id ] = true;
-			update_term_meta( $menu_id, 'cc_intro', $row['menu_intro'] );
+			update_term_meta( $menu_id, 'cobble_intro', $row['menu_intro'] );
 		}
 		$key      = $menu_id . '-' . $section_id;
-		$existing = cc_menu_csv_match( $row ); // Re-check: the preview may be 30 minutes old.
+		$existing = cobble_menu_csv_match( $row ); // Re-check: the preview may be 30 minutes old.
 		if ( $existing && $skip ) {
 			++$counts['skipped'];
 			continue;
 		}
 		$meta    = array(
-			'price'     => array( 'cc_price', $row['price'] ),
-			'sizes'     => array( 'cc_variants', $row['variants'] ),
-			'diet'      => array( 'cc_diet', $row['diet'] ),
-			'flag'      => array( 'cc_flag', $row['flag'] ),
-			'chef_pick' => array( 'cc_chef_pick', $row['chef_pick'] ),
+			'price'     => array( 'cobble_price', $row['price'] ),
+			'sizes'     => array( 'cobble_variants', $row['variants'] ),
+			'diet'      => array( 'cobble_diet', $row['diet'] ),
+			'flag'      => array( 'cobble_flag', $row['flag'] ),
+			'chef_pick' => array( 'cobble_chef_pick', $row['chef_pick'] ),
 		);
-		$present = (array) ( $row['present'] ?? cc_menu_csv_columns() );
+		$present = (array) ( $row['present'] ?? cobble_menu_csv_columns() );
 		$postarr = array(
-			'post_type'  => 'cc_menu_item',
+			'post_type'  => 'cobble_menu_item',
 			'post_title' => $row['name'],
 			'meta_input' => array(),
 		);
@@ -370,7 +370,7 @@ function cc_handle_menu_import_run() {
 			if ( ! isset( $order[ $key ] ) ) {
 				$last          = get_posts(
 					array(
-						'post_type'      => 'cc_menu_item',
+						'post_type'      => 'cobble_menu_item',
 						'post_status'    => 'any',
 						'posts_per_page' => 1,
 						'orderby'        => 'menu_order',
@@ -379,11 +379,11 @@ function cc_handle_menu_import_run() {
 						'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- once per section per import.
 							'relation' => 'AND',
 							array(
-								'taxonomy' => 'cc_menu',
+								'taxonomy' => 'cobble_menu',
 								'terms'    => $menu_id,
 							),
 							array(
-								'taxonomy' => 'cc_menu_section',
+								'taxonomy' => 'cobble_menu_section',
 								'terms'    => $section_id,
 							),
 						),
@@ -414,15 +414,15 @@ function cc_handle_menu_import_run() {
 			++$counts['skipped'];
 			continue;
 		}
-		wp_set_object_terms( $id, $menu_id, 'cc_menu', true );
-		wp_set_object_terms( $id, $section_id, 'cc_menu_section', true );
+		wp_set_object_terms( $id, $menu_id, 'cobble_menu', true );
+		wp_set_object_terms( $id, $section_id, 'cobble_menu_section', true );
 		++$counts[ $existing ? 'updated' : 'created' ];
 	}
 	wp_defer_term_counting( false );
 	wp_safe_redirect( add_query_arg( array_merge( array( 'import' => 'done' ), $counts ), $back ) );
 	exit;
 }
-add_action( 'admin_post_cc_menu_import_run', 'cc_handle_menu_import_run' );
+add_action( 'admin_post_cobble_menu_import_run', 'cobble_handle_menu_import_run' );
 
 /**
  * A spreadsheet-safe CSV cell: values starting with = + - @ are prefixed so Excel and Sheets
@@ -431,7 +431,7 @@ add_action( 'admin_post_cc_menu_import_run', 'cc_handle_menu_import_run' );
  * @param string $value Cell.
  * @return string
  */
-function cc_csv_cell( $value ) {
+function cobble_csv_cell( $value ) {
 	$value = (string) $value;
 	return '' !== $value && in_array( $value[0], array( '=', '+', '-', '@', "\t", "\r" ), true ) ? "'" . $value : $value;
 }
@@ -439,11 +439,11 @@ function cc_csv_cell( $value ) {
 /**
  * Export every menu (or a sample when there are none) as CSV.
  */
-function cc_handle_menu_export() {
+function cobble_handle_menu_export() {
 	if ( ! current_user_can( 'edit_others_posts' ) ) {
 		wp_die( esc_html__( 'You are not allowed to export menus.', 'cobbleandcandle-core' ), 403 );
 	}
-	check_admin_referer( 'cc_menu_export' );
+	check_admin_referer( 'cobble_menu_export' );
 	$sample = ! empty( $_GET['sample'] );
 	$lines  = array();
 	if ( $sample ) {
@@ -452,19 +452,19 @@ function cc_handle_menu_export() {
 		$lines[] = array( 'Wine', 'By the glass', 'House red', 'Ask for today’s pour', '', 'Glass: $12 | Bottle: $48', 'vg', '', 'no', '' );
 	} else {
 		$diet_words = array_flip( array( 'v', 'vg', 'gf', 'spicy' ) );
-		foreach ( cc_get_menus() as $menu ) {
-			$intro = (string) get_term_meta( $menu['term']->term_id, 'cc_intro', true );
+		foreach ( cobble_get_menus() as $menu ) {
+			$intro = (string) get_term_meta( $menu['term']->term_id, 'cobble_intro', true );
 			foreach ( $menu['sections'] as $section ) {
 				$section_name = $section['term']->name;
 				foreach ( $section['items'] as $item ) {
 					$post     = get_post( $item['id'] );
-					$variants = (array) get_post_meta( $item['id'], 'cc_variants', true );
+					$variants = (array) get_post_meta( $item['id'], 'cobble_variants', true );
 					$lines[]  = array(
 						html_entity_decode( $menu['term']->name, ENT_QUOTES, 'UTF-8' ),
 						html_entity_decode( $section_name, ENT_QUOTES, 'UTF-8' ),
 						$post ? html_entity_decode( $post->post_title, ENT_QUOTES, 'UTF-8' ) : '', // Raw title (not texturized) so re-import matches.
 						$post ? $post->post_excerpt : '',
-						(string) get_post_meta( $item['id'], 'cc_price', true ),
+						(string) get_post_meta( $item['id'], 'cobble_price', true ),
 						implode(
 							' | ',
 							array_map(
@@ -472,9 +472,9 @@ function cc_handle_menu_export() {
 								array_filter( $variants, 'is_array' )
 							)
 						),
-						implode( ', ', array_intersect( (array) get_post_meta( $item['id'], 'cc_diet', true ), array_keys( $diet_words ) ) ),
-						(string) get_post_meta( $item['id'], 'cc_flag', true ),
-						get_post_meta( $item['id'], 'cc_chef_pick', true ) ? 'yes' : 'no',
+						implode( ', ', array_intersect( (array) get_post_meta( $item['id'], 'cobble_diet', true ), array_keys( $diet_words ) ) ),
+						(string) get_post_meta( $item['id'], 'cobble_flag', true ),
+						get_post_meta( $item['id'], 'cobble_chef_pick', true ) ? 'yes' : 'no',
 						$intro,
 					);
 					$intro    = ''; // Once per menu is enough.
@@ -487,19 +487,19 @@ function cc_handle_menu_export() {
 	header( 'Content-Disposition: attachment; filename="' . ( $sample ? 'menu-sample' : 'menus-' . wp_date( 'Y-m-d' ) ) . '.csv"' );
 	$out = fopen( 'php://output', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- streaming the download.
 	fwrite( $out, "\xEF\xBB\xBF" ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- UTF-8 BOM so Excel reads accents and £/€.
-	fputcsv( $out, cc_menu_csv_columns(), ',', '"', '' );
+	fputcsv( $out, cobble_menu_csv_columns(), ',', '"', '' );
 	foreach ( $lines as $line ) {
-		fputcsv( $out, array_map( 'cc_csv_cell', $line ), ',', '"', '' );
+		fputcsv( $out, array_map( 'cobble_csv_cell', $line ), ',', '"', '' );
 	}
 	fclose( $out ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 	exit;
 }
-add_action( 'admin_post_cc_menu_export', 'cc_handle_menu_export' );
+add_action( 'admin_post_cobble_menu_export', 'cobble_handle_menu_export' );
 
 /**
  * The Import / export screen.
  */
-function cc_render_menu_import_page() {
+function cobble_render_menu_import_page() {
 	if ( ! current_user_can( 'edit_others_posts' ) ) {
 		return;
 	}
@@ -514,15 +514,15 @@ function cc_render_menu_import_page() {
 		)
 	);
 	// phpcs:enable
-	$pending = 'preview' === $status ? get_transient( cc_menu_import_key() ) : false;
-	$export  = wp_nonce_url( admin_url( 'admin-post.php?action=cc_menu_export' ), 'cc_menu_export' );
+	$pending = 'preview' === $status ? get_transient( cobble_menu_import_key() ) : false;
+	$export  = wp_nonce_url( admin_url( 'admin-post.php?action=cobble_menu_export' ), 'cobble_menu_export' );
 	?>
-	<div class="wrap cc-admin">
+	<div class="wrap cobble-admin">
 		<?php
-		cc_admin_header(
+		cobble_admin_header(
 			__( 'Import / export menus', 'cobbleandcandle-core' ),
 			__( 'Add or update a whole menu from a spreadsheet. Dishes are matched by name within the same menu and section; nothing is deleted.', 'cobbleandcandle-core' ),
-			admin_url( 'edit.php?post_type=cc_menu_item&page=cc-menu-import' )
+			admin_url( 'edit.php?post_type=cobble_menu_item&page=cobble-menu-import' )
 		);
 		?>
 
@@ -532,7 +532,7 @@ function cc_render_menu_import_page() {
 				/* translators: 1: created, 2: updated, 3: skipped */
 				echo esc_html( sprintf( __( 'Import finished: %1$d dishes added, %2$d updated, %3$d skipped.', 'cobbleandcandle-core' ), $counts['created'], $counts['updated'], $counts['skipped'] ) );
 				?>
-				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=cc_menu_item' ) ); ?>"><?php esc_html_e( 'View dishes', 'cobbleandcandle-core' ); ?></a>
+				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=cobble_menu_item' ) ); ?>"><?php esc_html_e( 'View dishes', 'cobbleandcandle-core' ); ?></a>
 			</p></div>
 		<?php elseif ( 'badfile' === $status ) : ?>
 			<div class="notice notice-error"><p><?php esc_html_e( 'Please choose a .csv file under 2 MB.', 'cobbleandcandle-core' ); ?></p></div>
@@ -545,12 +545,12 @@ function cc_render_menu_import_page() {
 			$rows    = (array) $pending['rows'];
 			$updates = count( array_filter( array_column( $rows, 'match' ) ) );
 			?>
-			<ol class="cc-steps" aria-label="<?php esc_attr_e( 'Import steps', 'cobbleandcandle-core' ); ?>">
+			<ol class="cobble-steps" aria-label="<?php esc_attr_e( 'Import steps', 'cobbleandcandle-core' ); ?>">
 				<li class="is-done"><?php esc_html_e( '1 · Upload', 'cobbleandcandle-core' ); ?></li>
 				<li aria-current="step"><?php esc_html_e( '2 · Check', 'cobbleandcandle-core' ); ?></li>
 				<li><?php esc_html_e( '3 · Import', 'cobbleandcandle-core' ); ?></li>
 			</ol>
-			<section class="cc-card">
+			<section class="cobble-card">
 			<h2><?php esc_html_e( 'Check before importing', 'cobbleandcandle-core' ); ?></h2>
 			<p>
 				<?php
@@ -595,23 +595,23 @@ function cc_render_menu_import_page() {
 			<?php endif; ?>
 			<?php if ( $rows ) : ?>
 				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="margin-top:16px">
-					<input type="hidden" name="action" value="cc_menu_import_run">
-					<?php wp_nonce_field( 'cc_menu_import_run' ); ?>
-					<p><label><input type="checkbox" name="cc_skip_existing" value="1"> <?php esc_html_e( 'Leave existing dishes as they are (only add new ones)', 'cobbleandcandle-core' ); ?></label></p>
+					<input type="hidden" name="action" value="cobble_menu_import_run">
+					<?php wp_nonce_field( 'cobble_menu_import_run' ); ?>
+					<p><label><input type="checkbox" name="cobble_skip_existing" value="1"> <?php esc_html_e( 'Leave existing dishes as they are (only add new ones)', 'cobbleandcandle-core' ); ?></label></p>
 					<?php submit_button( __( 'Import these dishes', 'cobbleandcandle-core' ), 'primary', 'submit', false ); ?>
-					<a class="button" href="<?php echo esc_url( admin_url( 'edit.php?post_type=cc_menu_item&page=cc-menu-import' ) ); ?>"><?php esc_html_e( 'Cancel', 'cobbleandcandle-core' ); ?></a>
+					<a class="button" href="<?php echo esc_url( admin_url( 'edit.php?post_type=cobble_menu_item&page=cobble-menu-import' ) ); ?>"><?php esc_html_e( 'Cancel', 'cobbleandcandle-core' ); ?></a>
 				</form>
 			<?php endif; ?>
 			</section>
 		<?php else : ?>
-			<div class="cc-grid">
-			<section class="cc-card">
+			<div class="cobble-grid">
+			<section class="cobble-card">
 			<h2><?php esc_html_e( 'Import', 'cobbleandcandle-core' ); ?></h2>
 			<form method="post" enctype="multipart/form-data" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-				<input type="hidden" name="action" value="cc_menu_import_upload">
-				<?php wp_nonce_field( 'cc_menu_import_upload' ); ?>
-				<p><label for="cc-menu-csv"><?php esc_html_e( 'CSV file', 'cobbleandcandle-core' ); ?></label><br>
-				<input type="file" id="cc-menu-csv" name="cc_menu_csv" accept=".csv,text/csv" required></p>
+				<input type="hidden" name="action" value="cobble_menu_import_upload">
+				<?php wp_nonce_field( 'cobble_menu_import_upload' ); ?>
+				<p><label for="cobble-menu-csv"><?php esc_html_e( 'CSV file', 'cobbleandcandle-core' ); ?></label><br>
+				<input type="file" id="cobble-menu-csv" name="cobble_menu_csv" accept=".csv,text/csv" required></p>
 				<?php submit_button( __( 'Upload and preview', 'cobbleandcandle-core' ), 'primary', 'submit', false ); ?>
 			</form>
 			<p class="description">
@@ -619,7 +619,7 @@ function cc_render_menu_import_page() {
 				<a href="<?php echo esc_url( add_query_arg( 'sample', '1', $export ) ); ?>"><?php esc_html_e( 'Download a sample file', 'cobbleandcandle-core' ); ?></a>
 			</p>
 			</section>
-			<section class="cc-card">
+			<section class="cobble-card">
 			<h2><?php esc_html_e( 'Export', 'cobbleandcandle-core' ); ?></h2>
 			<p><?php esc_html_e( 'Download every menu in the same format, edit it in Excel, Numbers or Google Sheets, and import it back.', 'cobbleandcandle-core' ); ?></p>
 			<p><a class="button button-primary" href="<?php echo esc_url( $export ); ?>"><?php esc_html_e( 'Export menus (CSV)', 'cobbleandcandle-core' ); ?></a></p>

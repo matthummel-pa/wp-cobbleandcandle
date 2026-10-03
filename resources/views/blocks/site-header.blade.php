@@ -10,8 +10,8 @@
 @endphp
 <div {!! $wrapper !!} x-data="siteHeader">
   @if ($locations)
-    <script type="application/json" id="cc-locations">{!! \App\locations_json() !!}</script>
-    <script type="application/json" id="cc-status">{!! \App\status_json() !!}</script>
+    <script type="application/json" id="cobble-locations">{!! \App\locations_json() !!}</script>
+    <script type="application/json" id="cobble-status">{!! \App\status_json() !!}</script>
   @endif
   @if ($attributes['showStyleSwitcher'])
     {{-- Demo only: re-apply a visitor's chosen direction (or ?theme=) before the page paints. --}}

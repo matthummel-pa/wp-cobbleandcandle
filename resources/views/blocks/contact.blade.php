@@ -1,6 +1,6 @@
 {{-- Contact Form (HANDOFF §3 Locations): intro + direct contacts, and a form posting to the Core plugin. --}}
 @php
-  $topics = function_exists('cc_contact_topics') ? cc_contact_topics() : [];
+  $topics = function_exists('cobble_contact_topics') ? cobble_contact_topics() : [];
   $locations = \App\locations();
   $current = \App\current_location();
   $contacts = [];
@@ -43,27 +43,27 @@
           @if (isset($messages[$status]))
             <p class="{{ $status === 'sent' ? 'form-ok' : 'form-error' }}" role="status"><x-icon :name="$status === 'sent' ? 'check' : 'info'" /> {{ $messages[$status] }}</p>
           @endif
-          <input type="hidden" name="action" value="cc_contact">
-          {!! wp_nonce_field('cc_contact', 'cc_contact_nonce', true, false) !!}
-          <div class="sr" aria-hidden="true"><label for="{{ $fid }}-web">{{ __('Leave this empty', 'cobbleandcandle') }}</label><input id="{{ $fid }}-web" type="text" name="cc_website" tabindex="-1" autocomplete="off"></div>
+          <input type="hidden" name="action" value="cobble_contact">
+          {!! wp_nonce_field('cobble_contact', 'cobble_contact_nonce', true, false) !!}
+          <div class="sr" aria-hidden="true"><label for="{{ $fid }}-web">{{ __('Leave this empty', 'cobbleandcandle') }}</label><input id="{{ $fid }}-web" type="text" name="cobble_website" tabindex="-1" autocomplete="off"></div>
           <fieldset class="topics">
             <legend>{{ __('Topic', 'cobbleandcandle') }}</legend>
             <div class="fchips">
               @foreach ($topics as $key => $topic)
-                <label class="fchip"><input type="radio" name="cc_topic" value="{{ $key }}" @checked($loop->first)><span>{{ $topic }}</span></label>
+                <label class="fchip"><input type="radio" name="cobble_topic" value="{{ $key }}" @checked($loop->first)><span>{{ $topic }}</span></label>
               @endforeach
             </div>
           </fieldset>
           <div class="form-grid">
-            <div class="field"><label for="{{ $fid }}-name">{{ __('Full name', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $fid }}-name" name="cc_name" type="text" autocomplete="name" required></div>
-            <div class="field"><label for="{{ $fid }}-email">{{ __('Email', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $fid }}-email" name="cc_email" type="email" autocomplete="email" required></div>
-            <div class="field"><label for="{{ $fid }}-tel">{{ __('Phone', 'cobbleandcandle') }} <span class="opt">{{ __('(optional)', 'cobbleandcandle') }}</span></label><input id="{{ $fid }}-tel" name="cc_phone" type="tel" autocomplete="tel"></div>
+            <div class="field"><label for="{{ $fid }}-name">{{ __('Full name', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $fid }}-name" name="cobble_name" type="text" autocomplete="name" required></div>
+            <div class="field"><label for="{{ $fid }}-email">{{ __('Email', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $fid }}-email" name="cobble_email" type="email" autocomplete="email" required></div>
+            <div class="field"><label for="{{ $fid }}-tel">{{ __('Phone', 'cobbleandcandle') }} <span class="opt">{{ __('(optional)', 'cobbleandcandle') }}</span></label><input id="{{ $fid }}-tel" name="cobble_phone" type="tel" autocomplete="tel"></div>
             @if ($locations)
-              <div class="field"><label for="{{ $fid }}-loc">{{ __('Location', 'cobbleandcandle') }}</label><div class="select"><select id="{{ $fid }}-loc" name="cc_location">@foreach ($locations as $l)<option value="{{ $l['id'] }}" @selected($l['id'] === ($current['id'] ?? 0))>{{ $l['name'] }}</option>@endforeach</select><x-icon name="chev-down" /></div></div>
+              <div class="field"><label for="{{ $fid }}-loc">{{ __('Location', 'cobbleandcandle') }}</label><div class="select"><select id="{{ $fid }}-loc" name="cobble_location">@foreach ($locations as $l)<option value="{{ $l['id'] }}" @selected($l['id'] === ($current['id'] ?? 0))>{{ $l['name'] }}</option>@endforeach</select><x-icon name="chev-down" /></div></div>
             @endif
-            <div class="field field--full"><label for="{{ $fid }}-msg">{{ __('Message', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><textarea id="{{ $fid }}-msg" name="cc_message" rows="4" required></textarea></div>
+            <div class="field field--full"><label for="{{ $fid }}-msg">{{ __('Message', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><textarea id="{{ $fid }}-msg" name="cobble_message" rows="4" required></textarea></div>
           </div>
-          <label class="check"><input type="checkbox" name="cc_consent" value="1" required><span>
+          <label class="check"><input type="checkbox" name="cobble_consent" value="1" required><span>
             @if ($privacy !== '')
               {!! wp_kses(sprintf(__('I agree to the <a href="%s">privacy policy</a>.', 'cobbleandcandle'), esc_url($privacy)), ['a' => ['href' => []]]) !!}
             @else

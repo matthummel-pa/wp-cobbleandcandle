@@ -31,7 +31,7 @@
 	function useLocations() {
 		return useSelect(
 			( select ) =>
-				select( coreStore ).getEntityRecords( 'postType', 'cc_location', {
+				select( coreStore ).getEntityRecords( 'postType', 'cobble_location', {
 					per_page: 100,
 					orderby: 'menu_order',
 					order: 'asc',
@@ -47,7 +47,7 @@
 
 		return el(
 			'div',
-			{ className: 'cc-hours' },
+			{ className: 'cobble-hours' },
 			days.map( ( day, i ) =>
 				el(
 					'fieldset',
@@ -182,7 +182,7 @@
 			config.panels.map( ( panel, i ) =>
 				el(
 					PluginDocumentSettingPanel,
-					{ key: i, name: 'cc-panel-' + i, title: panel.title, className: 'cc-fields-panel' },
+					{ key: i, name: 'cobble-panel-' + i, title: panel.title, className: 'cobble-fields-panel' },
 					Object.entries( panel.fields ).map( ( [ key, field ] ) =>
 						el( 'div', { key, style: { marginBottom: 16 } }, el( Control, { field, value: meta[ key ], onChange: ( v ) => setMeta( { ...meta, [ key ]: v } ) } ) )
 					)

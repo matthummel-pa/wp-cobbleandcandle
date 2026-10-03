@@ -1,48 +1,48 @@
 <wpml-config>
 	<custom-types>
-		<custom-type translate="1">cc_location</custom-type>
-		<custom-type translate="1">cc_menu_item</custom-type>
-		<custom-type translate="1">cc_event</custom-type>
+		<custom-type translate="1">cobble_location</custom-type>
+		<custom-type translate="1">cobble_menu_item</custom-type>
+		<custom-type translate="1">cobble_event</custom-type>
 	</custom-types>
 	<taxonomies>
-		<taxonomy translate="1">cc_menu</taxonomy>
-		<taxonomy translate="1">cc_menu_section</taxonomy>
-		<taxonomy translate="1">cc_gallery</taxonomy>
+		<taxonomy translate="1">cobble_menu</taxonomy>
+		<taxonomy translate="1">cobble_menu_section</taxonomy>
+		<taxonomy translate="1">cobble_gallery</taxonomy>
 	</taxonomies>
 	<custom-fields>
-		<custom-field action="copy">cc_hours</custom-field>
-		<custom-field action="copy">cc_holiday_hours</custom-field>
-		<custom-field action="copy">cc_lat</custom-field>
-		<custom-field action="copy">cc_lng</custom-field>
-		<custom-field action="copy">cc_phone</custom-field>
-		<custom-field action="copy">cc_email</custom-field>
-		<custom-field action="copy">cc_street</custom-field>
-		<custom-field action="copy">cc_postcode</custom-field>
-		<custom-field action="copy">cc_country</custom-field>
-		<custom-field action="copy">cc_map_url</custom-field>
-		<custom-field action="copy">cc_booking_mode</custom-field>
-		<custom-field action="copy">cc_booking_id</custom-field>
-		<custom-field action="copy">cc_booking_url</custom-field>
-		<custom-field action="copy">cc_order_url</custom-field>
-		<custom-field action="copy">cc_price_range</custom-field>
-		<custom-field action="copy">cc_price</custom-field>
-		<custom-field action="copy">cc_variants</custom-field>
-		<custom-field action="copy">cc_diet</custom-field>
-		<custom-field action="copy">cc_chef_pick</custom-field>
-		<custom-field action="copy">cc_available_at</custom-field>
-		<custom-field action="copy">cc_start</custom-field>
-		<custom-field action="copy">cc_end</custom-field>
-		<custom-field action="copy">cc_location</custom-field>
-		<custom-field action="copy">cc_capacity</custom-field>
-		<custom-field action="translate">cc_locality</custom-field>
-		<custom-field action="translate">cc_region</custom-field>
-		<custom-field action="translate">cc_parking</custom-field>
-		<custom-field action="translate">cc_transit</custom-field>
-		<custom-field action="translate">cc_accessibility</custom-field>
-		<custom-field action="translate">cc_flag</custom-field>
-		<custom-field action="translate">cc_type</custom-field>
-		<custom-field action="translate">cc_availability</custom-field>
-		<custom-field action="translate">cc_courses</custom-field>
+		<custom-field action="copy">cobble_hours</custom-field>
+		<custom-field action="copy">cobble_holiday_hours</custom-field>
+		<custom-field action="copy">cobble_lat</custom-field>
+		<custom-field action="copy">cobble_lng</custom-field>
+		<custom-field action="copy">cobble_phone</custom-field>
+		<custom-field action="copy">cobble_email</custom-field>
+		<custom-field action="copy">cobble_street</custom-field>
+		<custom-field action="copy">cobble_postcode</custom-field>
+		<custom-field action="copy">cobble_country</custom-field>
+		<custom-field action="copy">cobble_map_url</custom-field>
+		<custom-field action="copy">cobble_booking_mode</custom-field>
+		<custom-field action="copy">cobble_booking_id</custom-field>
+		<custom-field action="copy">cobble_booking_url</custom-field>
+		<custom-field action="copy">cobble_order_url</custom-field>
+		<custom-field action="copy">cobble_price_range</custom-field>
+		<custom-field action="copy">cobble_price</custom-field>
+		<custom-field action="copy">cobble_variants</custom-field>
+		<custom-field action="copy">cobble_diet</custom-field>
+		<custom-field action="copy">cobble_chef_pick</custom-field>
+		<custom-field action="copy">cobble_available_at</custom-field>
+		<custom-field action="copy">cobble_start</custom-field>
+		<custom-field action="copy">cobble_end</custom-field>
+		<custom-field action="copy">cobble_location</custom-field>
+		<custom-field action="copy">cobble_capacity</custom-field>
+		<custom-field action="translate">cobble_locality</custom-field>
+		<custom-field action="translate">cobble_region</custom-field>
+		<custom-field action="translate">cobble_parking</custom-field>
+		<custom-field action="translate">cobble_transit</custom-field>
+		<custom-field action="translate">cobble_accessibility</custom-field>
+		<custom-field action="translate">cobble_flag</custom-field>
+		<custom-field action="translate">cobble_type</custom-field>
+		<custom-field action="translate">cobble_availability</custom-field>
+		<custom-field action="translate">cobble_courses</custom-field>
 	</custom-fields>
 	<admin-texts>
 		<key name="cobbleandcandle_brand">

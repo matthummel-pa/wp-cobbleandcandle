@@ -66,10 +66,10 @@ function crumbs(): array
 function hero_eyebrow(): string
 {
     return match (true) {
-        is_post_type_archive('cc_location') => __('Locations & contact', 'cobbleandcandle'),
-        is_post_type_archive('cc_event') => __('Events & specials', 'cobbleandcandle'),
-        is_post_type_archive('cc_room') => __('Rooms & stays', 'cobbleandcandle'),
-        is_singular('cc_location') => __('Our houses', 'cobbleandcandle'),
+        is_post_type_archive('cobble_location') => __('Locations & contact', 'cobbleandcandle'),
+        is_post_type_archive('cobble_event') => __('Events & specials', 'cobbleandcandle'),
+        is_post_type_archive('cobble_room') => __('Rooms & stays', 'cobbleandcandle'),
+        is_singular('cobble_location') => __('Our houses', 'cobbleandcandle'),
         default => '',
     };
 }
@@ -92,13 +92,13 @@ function page_hero(array $attributes): array
         $title = $title !== '' ? $title : plain_title($post);
         $lede = $lede !== '' ? $lede : (has_excerpt($post) ? get_the_excerpt($post) : '');
         $image = $image ?: (int) get_post_thumbnail_id($post);
-    } elseif (is_post_type_archive('cc_location')) {
+    } elseif (is_post_type_archive('cobble_location')) {
         $title = $title !== '' ? $title : __('Find us', 'cobbleandcandle');
         $lede = $lede !== '' ? $lede : __('Each house has its own hours, menu and booking.', 'cobbleandcandle');
-    } elseif (is_post_type_archive('cc_event')) {
+    } elseif (is_post_type_archive('cobble_event')) {
         $title = $title !== '' ? $title : __('What’s on', 'cobbleandcandle');
         $lede = $lede !== '' ? $lede : __('Seasonal suppers, live music and holiday nights across our houses.', 'cobbleandcandle');
-    } elseif (is_post_type_archive('cc_room')) {
+    } elseif (is_post_type_archive('cobble_room')) {
         $title = $title !== '' ? $title : __('Stay the night', 'cobbleandcandle');
         $lede = $lede !== '' ? $lede : __('Rooms upstairs from the bar: supper, a proper bed and breakfast in the morning.', 'cobbleandcandle');
     } elseif (is_archive()) {
@@ -112,4 +112,4 @@ function page_hero(array $attributes): array
 /**
  * Share the visible breadcrumb trail with the Core plugin's BreadcrumbList structured data.
  */
-add_filter('cc_breadcrumb_trail', fn (): array => crumbs());
+add_filter('cobble_breadcrumb_trail', fn (): array => crumbs());

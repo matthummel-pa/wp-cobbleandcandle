@@ -16,14 +16,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array<string, string>
  */
-function cc_room_amenities() {
+function cobble_room_amenities() {
 	/**
 	 * Amenities offered on the room edit screen.
 	 *
 	 * @param array<string, string> $amenities Key => label.
 	 */
 	return (array) apply_filters(
-		'cc_room_amenities',
+		'cobble_room_amenities',
 		array(
 			'ensuite'    => __( 'Ensuite bathroom', 'cobbleandcandle-core' ),
 			'bath'       => __( 'Bathtub', 'cobbleandcandle-core' ),
@@ -45,9 +45,9 @@ function cc_room_amenities() {
 /**
  * Register rooms (public) and bookings (dashboard only).
  */
-function cc_register_room_types() {
+function cobble_register_room_types() {
 	register_post_type(
-		'cc_room',
+		'cobble_room',
 		array(
 			'labels'        => array(
 				'name'          => __( 'Rooms', 'cobbleandcandle-core' ),
@@ -71,7 +71,7 @@ function cc_register_room_types() {
 	);
 
 	register_post_type(
-		'cc_booking',
+		'cobble_booking',
 		array(
 			'labels'          => array(
 				'name'          => __( 'Bookings', 'cobbleandcandle-core' ),
@@ -83,7 +83,7 @@ function cc_register_room_types() {
 			),
 			'public'          => false,
 			'show_ui'         => true,
-			'show_in_menu'    => 'edit.php?post_type=cc_room',
+			'show_in_menu'    => 'edit.php?post_type=cobble_room',
 			'show_in_rest'    => false,
 			'supports'        => array( 'title' ),
 			'capability_type' => 'post',
@@ -96,14 +96,14 @@ function cc_register_room_types() {
 		)
 	);
 }
-add_action( 'init', 'cc_register_room_types' );
+add_action( 'init', 'cobble_register_room_types' );
 
 /**
  * Booking statuses that hold nights.
  *
  * @return array<int, string>
  */
-function cc_booking_holding_statuses() {
+function cobble_booking_holding_statuses() {
 	return array( 'pending', 'confirmed' );
 }
 
@@ -112,7 +112,7 @@ function cc_booking_holding_statuses() {
  *
  * @return array<string, string>
  */
-function cc_booking_status_labels() {
+function cobble_booking_status_labels() {
 	return array(
 		'pending'   => __( 'Pending', 'cobbleandcandle-core' ),
 		'confirmed' => __( 'Confirmed', 'cobbleandcandle-core' ),
@@ -126,31 +126,31 @@ function cc_booking_status_labels() {
  * @param int|\WP_Post $room Room post or ID.
  * @return array<string, mixed>
  */
-function cc_room( $room ) {
+function cobble_room( $room ) {
 	$post = get_post( $room );
-	if ( ! $post || 'cc_room' !== $post->post_type ) {
+	if ( ! $post || 'cobble_room' !== $post->post_type ) {
 		return array();
 	}
 	$meta = static function ( $key ) use ( $post ) {
 		return get_post_meta( $post->ID, $key, true );
 	};
-	$all  = cc_room_amenities();
+	$all  = cobble_room_amenities();
 	return array(
 		'id'            => $post->ID,
 		'slug'          => $post->post_name,
-		'name'          => cc_plain_title( $post ),
+		'name'          => cobble_plain_title( $post ),
 		'url'           => get_permalink( $post ),
 		'excerpt'       => $post->post_excerpt,
 		'image_id'      => (int) get_post_thumbnail_id( $post ),
-		'price_night'   => (float) $meta( 'cc_price_night' ),
-		'price_weekend' => (float) $meta( 'cc_price_weekend' ),
-		'min_nights'    => max( 1, (int) $meta( 'cc_min_nights' ) ),
-		'max_guests'    => max( 1, (int) $meta( 'cc_max_guests' ) ),
-		'units'         => max( 1, (int) $meta( 'cc_units' ) ),
-		'beds'          => (string) $meta( 'cc_beds' ),
-		'size'          => (string) $meta( 'cc_size' ),
-		'location_id'   => (int) $meta( 'cc_location' ),
-		'amenities'     => array_values( array_intersect_key( $all, array_flip( (array) $meta( 'cc_amenities' ) ) ) ),
+		'price_night'   => (float) $meta( 'cobble_price_night' ),
+		'price_weekend' => (float) $meta( 'cobble_price_weekend' ),
+		'min_nights'    => max( 1, (int) $meta( 'cobble_min_nights' ) ),
+		'max_guests'    => max( 1, (int) $meta( 'cobble_max_guests' ) ),
+		'units'         => max( 1, (int) $meta( 'cobble_units' ) ),
+		'beds'          => (string) $meta( 'cobble_beds' ),
+		'size'          => (string) $meta( 'cobble_size' ),
+		'location_id'   => (int) $meta( 'cobble_location' ),
+		'amenities'     => array_values( array_intersect_key( $all, array_flip( (array) $meta( 'cobble_amenities' ) ) ) ),
 	);
 }
 
@@ -159,10 +159,10 @@ function cc_room( $room ) {
  *
  * @return array<int, array<string, mixed>>
  */
-function cc_get_rooms() {
+function cobble_get_rooms() {
 	$posts = get_posts(
 		array(
-			'post_type'      => 'cc_room',
+			'post_type'      => 'cobble_room',
 			'post_status'    => 'publish',
 			'has_password'   => false, // Password-protected rooms are for invited guests: never listed.
 			'posts_per_page' => 50,
@@ -173,7 +173,7 @@ function cc_get_rooms() {
 			'no_found_rows'  => true,
 		)
 	);
-	return array_values( array_filter( array_map( 'cc_room', $posts ) ) );
+	return array_values( array_filter( array_map( 'cobble_room', $posts ) ) );
 }
 
 /**
@@ -183,7 +183,7 @@ function cc_get_rooms() {
  * @param string               $date Night (Y-m-d).
  * @return float
  */
-function cc_room_night_price( array $room, $date ) {
+function cobble_room_night_price( array $room, $date ) {
 	$weekday = (int) gmdate( 'N', strtotime( $date . ' 12:00:00 UTC' ) );
 	return ( 5 === $weekday || 6 === $weekday ) && $room['price_weekend'] > 0 ? $room['price_weekend'] : $room['price_night'];
 }
@@ -195,7 +195,7 @@ function cc_room_night_price( array $room, $date ) {
  * @param string $check_out Y-m-d.
  * @return array<int, string>
  */
-function cc_stay_nights( $check_in, $check_out ) {
+function cobble_stay_nights( $check_in, $check_out ) {
 	$nights = array();
 	$day    = strtotime( $check_in . ' 12:00:00 UTC' );
 	$end    = strtotime( $check_out . ' 12:00:00 UTC' );
@@ -216,11 +216,11 @@ function cc_stay_nights( $check_in, $check_out ) {
  * @param int    $exclude Booking ID to ignore (when re-checking an existing booking).
  * @return array<string, int> Night => units taken.
  */
-function cc_room_taken( $room_id, $from, $to, $exclude = 0 ) {
+function cobble_room_taken( $room_id, $from, $to, $exclude = 0 ) {
 	$taken    = array();
 	$bookings = get_posts(
 		array(
-			'post_type'      => 'cc_booking',
+			'post_type'      => 'cobble_booking',
 			'post_status'    => 'publish',
 			'posts_per_page' => 500, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page -- one room's bookings in a date window; small and bounded.
 			'fields'         => 'ids',
@@ -228,21 +228,21 @@ function cc_room_taken( $room_id, $from, $to, $exclude = 0 ) {
 			'post__not_in'   => $exclude ? array( $exclude ) : array(),
 			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- small, indexed by room.
 				array(
-					'key'   => 'cc_room',
+					'key'   => 'cobble_room',
 					'value' => (int) $room_id,
 				),
 				array(
-					'key'     => 'cc_status',
-					'value'   => cc_booking_holding_statuses(),
+					'key'     => 'cobble_status',
+					'value'   => cobble_booking_holding_statuses(),
 					'compare' => 'IN',
 				),
 				array(
-					'key'     => 'cc_check_in',
+					'key'     => 'cobble_check_in',
 					'value'   => $to,
 					'compare' => '<',
 				),
 				array(
-					'key'     => 'cc_check_out',
+					'key'     => 'cobble_check_out',
 					'value'   => $from,
 					'compare' => '>',
 				),
@@ -251,21 +251,21 @@ function cc_room_taken( $room_id, $from, $to, $exclude = 0 ) {
 	);
 	foreach ( $bookings as $booking_id ) {
 		// Walk only the overlap with the window: a long stay never truncates or slows the check.
-		$start = max( (string) get_post_meta( $booking_id, 'cc_check_in', true ), $from );
-		$end   = min( (string) get_post_meta( $booking_id, 'cc_check_out', true ), $to );
-		foreach ( cc_stay_nights( $start, $end ) as $night ) {
+		$start = max( (string) get_post_meta( $booking_id, 'cobble_check_in', true ), $from );
+		$end   = min( (string) get_post_meta( $booking_id, 'cobble_check_out', true ), $to );
+		foreach ( cobble_stay_nights( $start, $end ) as $night ) {
 			$taken[ $night ] = ( $taken[ $night ] ?? 0 ) + 1;
 		}
 	}
 	// Imported calendars block the whole room type on those nights.
-	$room = cc_room( $room_id );
-	foreach ( (array) get_post_meta( $room_id, '_cc_ical_blocks', true ) as $block ) {
+	$room = cobble_room( $room_id );
+	foreach ( (array) get_post_meta( $room_id, '_cobble_ical_blocks', true ) as $block ) {
 		if ( ! is_array( $block ) ) {
 			continue;
 		}
 		$start = max( (string) ( $block['start'] ?? '' ), $from );
 		$end   = min( (string) ( $block['end'] ?? '' ), $to );
-		foreach ( cc_stay_nights( $start, $end ) as $night ) {
+		foreach ( cobble_stay_nights( $start, $end ) as $night ) {
 			$taken[ $night ] = max( $taken[ $night ] ?? 0, $room ? $room['units'] : 1 );
 		}
 	}
@@ -280,13 +280,13 @@ function cc_room_taken( $room_id, $from, $to, $exclude = 0 ) {
  * @param string $to      Day after the last night (Y-m-d).
  * @return array<int, string>
  */
-function cc_room_full_nights( $room_id, $from, $to ) {
-	$room = cc_room( $room_id );
+function cobble_room_full_nights( $room_id, $from, $to ) {
+	$room = cobble_room( $room_id );
 	if ( ! $room ) {
 		return array();
 	}
 	$full = array();
-	foreach ( cc_room_taken( $room_id, $from, $to ) as $night => $count ) {
+	foreach ( cobble_room_taken( $room_id, $from, $to ) as $night => $count ) {
 		if ( $count >= $room['units'] ) {
 			$full[] = $night;
 		}
@@ -304,15 +304,15 @@ function cc_room_full_nights( $room_id, $from, $to ) {
  * @param int                  $guests    Guests.
  * @return string '' | invalid | unavailable
  */
-function cc_stay_problem( array $room, $check_in, $check_out, $guests ) {
+function cobble_stay_problem( array $room, $check_in, $check_out, $guests ) {
 	$today  = wp_date( 'Y-m-d' );
-	$nights = cc_stay_nights( $check_in, $check_out );
-	if ( ! cc_is_valid_date( $check_in ) || ! cc_is_valid_date( $check_out ) || $check_in < $today
+	$nights = cobble_stay_nights( $check_in, $check_out );
+	if ( ! cobble_is_valid_date( $check_in ) || ! cobble_is_valid_date( $check_out ) || $check_in < $today
 		|| $check_in > wp_date( 'Y-m-d', strtotime( '+18 months' ) ) || count( $nights ) < $room['min_nights'] || count( $nights ) > 30
 		|| $guests < 1 || $guests > $room['max_guests'] ) {
 		return 'invalid';
 	}
-	return array_intersect( $nights, cc_room_full_nights( $room['id'], $check_in, $check_out ) ) ? 'unavailable' : '';
+	return array_intersect( $nights, cobble_room_full_nights( $room['id'], $check_in, $check_out ) ) ? 'unavailable' : '';
 }
 
 /**
@@ -323,10 +323,10 @@ function cc_stay_problem( array $room, $check_in, $check_out, $guests ) {
  * @param string               $check_out Y-m-d.
  * @return float
  */
-function cc_stay_total( array $room, $check_in, $check_out ) {
+function cobble_stay_total( array $room, $check_in, $check_out ) {
 	$total = 0.0;
-	foreach ( cc_stay_nights( $check_in, $check_out ) as $night ) {
-		$total += cc_room_night_price( $room, $night );
+	foreach ( cobble_stay_nights( $check_in, $check_out ) as $night ) {
+		$total += cobble_room_night_price( $room, $night );
 	}
 	return $total;
 }
@@ -337,8 +337,8 @@ function cc_stay_total( array $room, $check_in, $check_out ) {
  * @param float $amount Amount.
  * @return string
  */
-function cc_money( $amount ) {
-	$code    = (string) apply_filters( 'cc_currency', 'USD' );
+function cobble_money( $amount ) {
+	$code    = (string) apply_filters( 'cobble_currency', 'USD' );
 	$symbols = array(
 		'USD' => '$',
 		'CAD' => '$',
@@ -361,13 +361,13 @@ function cc_money( $amount ) {
 	 * @param float  $amount    Amount.
 	 * @param string $code      ISO currency code.
 	 */
-	return (string) apply_filters( 'cc_money', $symbol . number_format_i18n( $amount, $decimals ), $amount, $code );
+	return (string) apply_filters( 'cobble_money', $symbol . number_format_i18n( $amount, $decimals ), $amount, $code );
 }
 
 /**
  * Public, read-only availability for the booking calendar.
  */
-function cc_register_room_routes() {
+function cobble_register_room_routes() {
 	register_rest_route(
 		'cobbleandcandle/v1',
 		'/rooms/(?P<id>\d+)/availability',
@@ -378,18 +378,18 @@ function cc_register_room_routes() {
 				'id'   => array( 'sanitize_callback' => 'absint' ),
 				'from' => array(
 					'required'          => true,
-					'validate_callback' => static fn( $v ) => cc_is_valid_date( (string) $v ),
+					'validate_callback' => static fn( $v ) => cobble_is_valid_date( (string) $v ),
 				),
 				'to'   => array(
 					'required'          => true,
-					'validate_callback' => static fn( $v ) => cc_is_valid_date( (string) $v ),
+					'validate_callback' => static fn( $v ) => cobble_is_valid_date( (string) $v ),
 				),
 			),
-			'callback'            => 'cc_rest_room_availability',
+			'callback'            => 'cobble_rest_room_availability',
 		)
 	);
 }
-add_action( 'rest_api_init', 'cc_register_room_routes' );
+add_action( 'rest_api_init', 'cobble_register_room_routes' );
 
 /**
  * REST callback: full nights and nightly prices for a range (max 13 months).
@@ -397,19 +397,19 @@ add_action( 'rest_api_init', 'cc_register_room_routes' );
  * @param WP_REST_Request $request Request.
  * @return WP_REST_Response|WP_Error
  */
-function cc_rest_room_availability( WP_REST_Request $request ) {
-	$room = cc_room( (int) $request['id'] );
+function cobble_rest_room_availability( WP_REST_Request $request ) {
+	$room = cobble_room( (int) $request['id'] );
 	if ( ! $room || 'publish' !== get_post_status( $room['id'] ) || post_password_required( $room['id'] ) ) {
-		return new WP_Error( 'cc_no_room', __( 'Room not found.', 'cobbleandcandle-core' ), array( 'status' => 404 ) );
+		return new WP_Error( 'cobble_no_room', __( 'Room not found.', 'cobbleandcandle-core' ), array( 'status' => 404 ) );
 	}
 	$from = max( (string) $request['from'], wp_date( 'Y-m-d' ) ); // Never reveal past occupancy.
 	$to   = (string) $request['to'];
-	if ( $to <= $from || count( cc_stay_nights( $from, $to ) ) > 400 ) {
-		return new WP_Error( 'cc_bad_range', __( 'Choose a shorter date range.', 'cobbleandcandle-core' ), array( 'status' => 400 ) );
+	if ( $to <= $from || count( cobble_stay_nights( $from, $to ) ) > 400 ) {
+		return new WP_Error( 'cobble_bad_range', __( 'Choose a shorter date range.', 'cobbleandcandle-core' ), array( 'status' => 400 ) );
 	}
 	return rest_ensure_response(
 		array(
-			'full'         => cc_room_full_nights( $room['id'], $from, $to ),
+			'full'         => cobble_room_full_nights( $room['id'], $from, $to ),
 			'priceNight'   => $room['price_night'],
 			'priceWeekend' => $room['price_weekend'],
 			'minNights'    => $room['min_nights'],
@@ -422,7 +422,7 @@ function cc_rest_room_availability( WP_REST_Request $request ) {
 /**
  * Handle a booking request (logged in or not).
  */
-function cc_handle_room_booking() {
+function cobble_handle_room_booking() {
 	$back = wp_get_referer() ? wp_get_referer() : home_url( '/' );
 	$back = remove_query_arg( 'booking', $back );
 	$done = static function ( $status ) use ( $back ) {
@@ -430,66 +430,66 @@ function cc_handle_room_booking() {
 		exit;
 	};
 
-	if ( ! isset( $_POST['cc_room_booking_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['cc_room_booking_nonce'] ) ), 'cc_room_booking' ) ) {
+	if ( ! isset( $_POST['cobble_room_booking_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['cobble_room_booking_nonce'] ) ), 'cobble_room_booking' ) ) {
 		$done( 'expired' );
 	}
-	if ( ! empty( $_POST['cc_website'] ) ) {
+	if ( ! empty( $_POST['cobble_website'] ) ) {
 		$done( 'sent' ); // Honeypot.
 	}
-	if ( cc_form_rate_limited( 'room' ) ) {
+	if ( cobble_form_rate_limited( 'room' ) ) {
 		$done( 'busy' );
 	}
 
-	$room      = cc_room( isset( $_POST['cc_room'] ) ? absint( $_POST['cc_room'] ) : 0 );
-	$check_in  = isset( $_POST['cc_check_in'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_check_in'] ) ) : '';
-	$check_out = isset( $_POST['cc_check_out'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_check_out'] ) ) : '';
-	$guests    = isset( $_POST['cc_guests'] ) ? absint( $_POST['cc_guests'] ) : 0;
-	$name      = isset( $_POST['cc_name'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_name'] ) ) : '';
-	$email     = isset( $_POST['cc_email'] ) ? sanitize_email( wp_unslash( $_POST['cc_email'] ) ) : '';
-	$phone     = isset( $_POST['cc_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_phone'] ) ) : '';
-	$message   = isset( $_POST['cc_message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['cc_message'] ) ) : '';
-	$dinner    = ! empty( $_POST['cc_dinner'] ) && isset( $_POST['cc_dinner_time'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_dinner_time'] ) ) : '';
-	if ( ! empty( $_POST['cc_dinner'] ) && '' === $dinner ) {
+	$room      = cobble_room( isset( $_POST['cobble_room'] ) ? absint( $_POST['cobble_room'] ) : 0 );
+	$check_in  = isset( $_POST['cobble_check_in'] ) ? sanitize_text_field( wp_unslash( $_POST['cobble_check_in'] ) ) : '';
+	$check_out = isset( $_POST['cobble_check_out'] ) ? sanitize_text_field( wp_unslash( $_POST['cobble_check_out'] ) ) : '';
+	$guests    = isset( $_POST['cobble_guests'] ) ? absint( $_POST['cobble_guests'] ) : 0;
+	$name      = isset( $_POST['cobble_name'] ) ? sanitize_text_field( wp_unslash( $_POST['cobble_name'] ) ) : '';
+	$email     = isset( $_POST['cobble_email'] ) ? sanitize_email( wp_unslash( $_POST['cobble_email'] ) ) : '';
+	$phone     = isset( $_POST['cobble_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['cobble_phone'] ) ) : '';
+	$message   = isset( $_POST['cobble_message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['cobble_message'] ) ) : '';
+	$dinner    = ! empty( $_POST['cobble_dinner'] ) && isset( $_POST['cobble_dinner_time'] ) ? sanitize_text_field( wp_unslash( $_POST['cobble_dinner_time'] ) ) : '';
+	if ( ! empty( $_POST['cobble_dinner'] ) && '' === $dinner ) {
 		$done( 'dinner' ); // Ticked but no time: say so rather than silently booking the room without the table.
 	}
 
 	if ( ! $room || 'publish' !== get_post_status( $room['id'] ) || post_password_required( $room['id'] ) || '' === $name || ! is_email( $email ) || '' === $phone ) {
 		$done( 'invalid' );
 	}
-	$problem = cc_stay_problem( $room, $check_in, $check_out, $guests );
+	$problem = cobble_stay_problem( $room, $check_in, $check_out, $guests );
 	if ( '' !== $problem ) {
 		$done( $problem );
 	}
 	// Dinner on arrival: a real seating at the room's house on the check-in night.
-	if ( '' !== $dinner && ( ! preg_match( '/^([01]\d|2[0-3]):[0-5]\d$/', $dinner ) || ! cc_slot_is_future( $check_in, $dinner )
-		|| ! $room['location_id'] || ! cc_is_bookable( $room['location_id'], $check_in, $dinner ) ) ) {
+	if ( '' !== $dinner && ( ! preg_match( '/^([01]\d|2[0-3]):[0-5]\d$/', $dinner ) || ! cobble_slot_is_future( $check_in, $dinner )
+		|| ! $room['location_id'] || ! cobble_is_bookable( $room['location_id'], $check_in, $dinner ) ) ) {
 		$done( 'invalid' );
 	}
-	if ( cc_open_requests_for( $email ) >= 2 ) {
+	if ( cobble_open_requests_for( $email ) >= 2 ) {
 		$done( 'busy' ); // Stops one address holding many rooms with requests it never means to keep.
 	}
 
-	$total      = cc_stay_total( $room, $check_in, $check_out );
-	$nights     = count( cc_stay_nights( $check_in, $check_out ) );
+	$total      = cobble_stay_total( $room, $check_in, $check_out );
+	$nights     = count( cobble_stay_nights( $check_in, $check_out ) );
 	$booking_id = wp_insert_post(
 		array(
-			'post_type'   => 'cc_booking',
+			'post_type'   => 'cobble_booking',
 			'post_status' => 'publish',
 			/* translators: 1: guest name, 2: room, 3: check-in date */
 			'post_title'  => sprintf( __( '%1$s · %2$s · %3$s', 'cobbleandcandle-core' ), $name, $room['name'], $check_in ),
 			'meta_input'  => array(
-				'cc_room'      => $room['id'],
-				'cc_check_in'  => $check_in,
-				'cc_check_out' => $check_out,
-				'cc_guests'    => $guests,
-				'cc_name'      => $name,
-				'cc_email'     => $email,
-				'cc_phone'     => $phone,
-				'cc_message'   => $message,
-				'cc_dinner'    => $dinner,
-				'cc_total'     => $total,
-				'cc_status'    => 'pending',
-				'cc_source'    => 'site',
+				'cobble_room'      => $room['id'],
+				'cobble_check_in'  => $check_in,
+				'cobble_check_out' => $check_out,
+				'cobble_guests'    => $guests,
+				'cobble_name'      => $name,
+				'cobble_email'     => $email,
+				'cobble_phone'     => $phone,
+				'cobble_message'   => $message,
+				'cobble_dinner'    => $dinner,
+				'cobble_total'     => $total,
+				'cobble_status'    => 'pending',
+				'cobble_source'    => 'site',
 			),
 		),
 		true
@@ -498,7 +498,7 @@ function cc_handle_room_booking() {
 		$done( 'error' );
 	}
 
-	$owner = $room['location_id'] ? sanitize_email( (string) get_post_meta( $room['location_id'], 'cc_email', true ) ) : '';
+	$owner = $room['location_id'] ? sanitize_email( (string) get_post_meta( $room['location_id'], 'cobble_email', true ) ) : '';
 	$owner = $owner ? $owner : get_option( 'admin_email' );
 	$lines = array(
 		__( 'Room', 'cobbleandcandle-core' ) . ': ' . $room['name'],
@@ -507,17 +507,17 @@ function cc_handle_room_booking() {
 		/* translators: %d: number of nights */
 		sprintf( _n( '%d night', '%d nights', $nights, 'cobbleandcandle-core' ), $nights ),
 		__( 'Guests', 'cobbleandcandle-core' ) . ': ' . $guests,
-		__( 'Total', 'cobbleandcandle-core' ) . ': ' . cc_money( $total ),
+		__( 'Total', 'cobbleandcandle-core' ) . ': ' . cobble_money( $total ),
 	);
 	if ( '' !== $dinner ) {
-		$lines[] = cc_dinner_line( $dinner, $guests, $room['location_id'] );
+		$lines[] = cobble_dinner_line( $dinner, $guests, $room['location_id'] );
 	}
 	wp_mail(
 		$owner,
 		/* translators: 1: guest name, 2: room */
 		sprintf( __( 'Booking request: %1$s, %2$s', 'cobbleandcandle-core' ), $name, $room['name'] ),
-		implode( "\n", array_merge( $lines, array( __( 'Name', 'cobbleandcandle-core' ) . ': ' . $name, __( 'Email', 'cobbleandcandle-core' ) . ': ' . $email, __( 'Phone', 'cobbleandcandle-core' ) . ': ' . $phone, '', $message, '', __( 'Confirm or cancel:', 'cobbleandcandle-core' ) . ' ' . admin_url( 'edit.php?post_type=cc_booking' ) ) ) ),
-		array( 'Reply-To: ' . cc_mail_name( $name ) . ' <' . $email . '>' )
+		implode( "\n", array_merge( $lines, array( __( 'Name', 'cobbleandcandle-core' ) . ': ' . $name, __( 'Email', 'cobbleandcandle-core' ) . ': ' . $email, __( 'Phone', 'cobbleandcandle-core' ) . ': ' . $phone, '', $message, '', __( 'Confirm or cancel:', 'cobbleandcandle-core' ) . ' ' . admin_url( 'edit.php?post_type=cobble_booking' ) ) ) ),
+		array( 'Reply-To: ' . cobble_mail_name( $name ) . ' <' . $email . '>' )
 	);
 	$sent = wp_mail(
 		$email,
@@ -532,11 +532,11 @@ function cc_handle_room_booking() {
 	 * @param int  $booking_id Booking post ID.
 	 * @param bool $sent       Whether the guest email was sent.
 	 */
-	do_action( 'cc_room_booking_requested', $booking_id, $sent );
+	do_action( 'cobble_room_booking_requested', $booking_id, $sent );
 	$done( 'sent' );
 }
-add_action( 'admin_post_cc_room_booking', 'cc_handle_room_booking' );
-add_action( 'admin_post_nopriv_cc_room_booking', 'cc_handle_room_booking' );
+add_action( 'admin_post_cobble_room_booking', 'cobble_handle_room_booking' );
+add_action( 'admin_post_nopriv_cobble_room_booking', 'cobble_handle_room_booking' );
 
 /**
  * A display name safe for an email header (no quotes, angle brackets or line breaks).
@@ -544,7 +544,7 @@ add_action( 'admin_post_nopriv_cc_room_booking', 'cc_handle_room_booking' );
  * @param string $name Name.
  * @return string
  */
-function cc_mail_name( $name ) {
+function cobble_mail_name( $name ) {
 	return '"' . str_replace( array( '"', '<', '>', ',', '\\', "\r", "\n" ), '', $name ) . '"';
 }
 
@@ -554,18 +554,18 @@ function cc_mail_name( $name ) {
  * @param array<string, string> $columns Columns.
  * @return array<string, string>
  */
-function cc_booking_columns( $columns ) {
+function cobble_booking_columns( $columns ) {
 	return array(
 		'cb'        => $columns['cb'] ?? '',
 		'title'     => __( 'Booking', 'cobbleandcandle-core' ),
-		'cc_dates'  => __( 'Dates', 'cobbleandcandle-core' ),
-		'cc_guests' => __( 'Guests', 'cobbleandcandle-core' ),
-		'cc_total'  => __( 'Total', 'cobbleandcandle-core' ),
-		'cc_status' => __( 'Status', 'cobbleandcandle-core' ),
+		'cobble_dates'  => __( 'Dates', 'cobbleandcandle-core' ),
+		'cobble_guests' => __( 'Guests', 'cobbleandcandle-core' ),
+		'cobble_total'  => __( 'Total', 'cobbleandcandle-core' ),
+		'cobble_status' => __( 'Status', 'cobbleandcandle-core' ),
 		'date'      => __( 'Requested', 'cobbleandcandle-core' ),
 	);
 }
-add_filter( 'manage_cc_booking_posts_columns', 'cc_booking_columns' );
+add_filter( 'manage_cobble_booking_posts_columns', 'cobble_booking_columns' );
 
 /**
  * Bookings list: column values.
@@ -573,24 +573,24 @@ add_filter( 'manage_cc_booking_posts_columns', 'cc_booking_columns' );
  * @param string $column  Column.
  * @param int    $post_id Booking ID.
  */
-function cc_booking_column( $column, $post_id ) {
+function cobble_booking_column( $column, $post_id ) {
 	$meta = static fn( $key ) => (string) get_post_meta( $post_id, $key, true );
-	if ( 'cc_dates' === $column ) {
-		echo esc_html( $meta( 'cc_check_in' ) . ' → ' . $meta( 'cc_check_out' ) );
-		if ( '' !== cc_time_label( $meta( 'cc_dinner' ) ) ) {
+	if ( 'cobble_dates' === $column ) {
+		echo esc_html( $meta( 'cobble_check_in' ) . ' → ' . $meta( 'cobble_check_out' ) );
+		if ( '' !== cobble_time_label( $meta( 'cobble_dinner' ) ) ) {
 			/* translators: %s: dinner time */
-			echo '<br><small>' . esc_html( sprintf( __( 'Dinner %s', 'cobbleandcandle-core' ), cc_time_label( $meta( 'cc_dinner' ) ) ) ) . '</small>';
+			echo '<br><small>' . esc_html( sprintf( __( 'Dinner %s', 'cobbleandcandle-core' ), cobble_time_label( $meta( 'cobble_dinner' ) ) ) ) . '</small>';
 		}
-	} elseif ( 'cc_guests' === $column ) {
-		echo esc_html( $meta( 'cc_guests' ) );
-	} elseif ( 'cc_total' === $column ) {
-		echo esc_html( cc_money( (float) $meta( 'cc_total' ) ) );
-	} elseif ( 'cc_status' === $column ) {
-		$labels = cc_booking_status_labels();
-		echo esc_html( $labels[ $meta( 'cc_status' ) ] ?? $meta( 'cc_status' ) );
+	} elseif ( 'cobble_guests' === $column ) {
+		echo esc_html( $meta( 'cobble_guests' ) );
+	} elseif ( 'cobble_total' === $column ) {
+		echo esc_html( cobble_money( (float) $meta( 'cobble_total' ) ) );
+	} elseif ( 'cobble_status' === $column ) {
+		$labels = cobble_booking_status_labels();
+		echo esc_html( $labels[ $meta( 'cobble_status' ) ] ?? $meta( 'cobble_status' ) );
 	}
 }
-add_action( 'manage_cc_booking_posts_custom_column', 'cc_booking_column', 10, 2 );
+add_action( 'manage_cobble_booking_posts_custom_column', 'cobble_booking_column', 10, 2 );
 
 /**
  * Bookings list: Confirm / Cancel row actions.
@@ -599,53 +599,53 @@ add_action( 'manage_cc_booking_posts_custom_column', 'cc_booking_column', 10, 2 
  * @param \WP_Post              $post    Booking.
  * @return array<string, string>
  */
-function cc_booking_row_actions( $actions, $post ) {
-	if ( 'cc_booking' !== $post->post_type || ! current_user_can( 'edit_post', $post->ID ) ) {
+function cobble_booking_row_actions( $actions, $post ) {
+	if ( 'cobble_booking' !== $post->post_type || ! current_user_can( 'edit_post', $post->ID ) ) {
 		return $actions;
 	}
-	$status = (string) get_post_meta( $post->ID, 'cc_status', true );
+	$status = (string) get_post_meta( $post->ID, 'cobble_status', true );
 	$link   = static function ( $to ) use ( $post ) {
-		return wp_nonce_url( admin_url( 'admin-post.php?action=cc_booking_status&booking=' . $post->ID . '&to=' . $to ), 'cc_booking_status_' . $post->ID . '_' . $to );
+		return wp_nonce_url( admin_url( 'admin-post.php?action=cobble_booking_status&booking=' . $post->ID . '&to=' . $to ), 'cobble_booking_status_' . $post->ID . '_' . $to );
 	};
 	if ( 'confirmed' !== $status ) {
-		$actions['cc_confirm'] = '<a href="' . esc_url( $link( 'confirmed' ) ) . '">' . esc_html__( 'Confirm', 'cobbleandcandle-core' ) . '</a>';
+		$actions['cobble_confirm'] = '<a href="' . esc_url( $link( 'confirmed' ) ) . '">' . esc_html__( 'Confirm', 'cobbleandcandle-core' ) . '</a>';
 	}
 	if ( 'cancelled' !== $status ) {
-		$actions['cc_cancel'] = '<a href="' . esc_url( $link( 'cancelled' ) ) . '">' . esc_html__( 'Cancel', 'cobbleandcandle-core' ) . '</a>';
+		$actions['cobble_cancel'] = '<a href="' . esc_url( $link( 'cancelled' ) ) . '">' . esc_html__( 'Cancel', 'cobbleandcandle-core' ) . '</a>';
 	}
 	unset( $actions['inline hide-if-no-js'] );
 	return $actions;
 }
-add_filter( 'post_row_actions', 'cc_booking_row_actions', 10, 2 );
+add_filter( 'post_row_actions', 'cobble_booking_row_actions', 10, 2 );
 
 /**
  * Change a booking's status and email the guest.
  */
-function cc_handle_booking_status() {
+function cobble_handle_booking_status() {
 	$booking_id = isset( $_GET['booking'] ) ? absint( $_GET['booking'] ) : 0;
 	$to         = isset( $_GET['to'] ) ? sanitize_key( wp_unslash( $_GET['to'] ) ) : '';
-	check_admin_referer( 'cc_booking_status_' . $booking_id . '_' . $to );
-	if ( ! $booking_id || 'cc_booking' !== get_post_type( $booking_id ) || ! current_user_can( 'edit_post', $booking_id ) || ! in_array( $to, array( 'confirmed', 'cancelled' ), true ) ) {
+	check_admin_referer( 'cobble_booking_status_' . $booking_id . '_' . $to );
+	if ( ! $booking_id || 'cobble_booking' !== get_post_type( $booking_id ) || ! current_user_can( 'edit_post', $booking_id ) || ! in_array( $to, array( 'confirmed', 'cancelled' ), true ) ) {
 		wp_die( esc_html__( 'You cannot change this booking.', 'cobbleandcandle-core' ), 403 );
 	}
 	$meta = static fn( $key ) => (string) get_post_meta( $booking_id, $key, true );
 	if ( 'confirmed' === $to ) {
 		// Re-check: the nights may have been taken since (another booking or an imported calendar).
-		if ( '' !== cc_booking_conflict( (int) $meta( 'cc_room' ), $meta( 'cc_check_in' ), $meta( 'cc_check_out' ), $booking_id ) ) {
+		if ( '' !== cobble_booking_conflict( (int) $meta( 'cobble_room' ), $meta( 'cobble_check_in' ), $meta( 'cobble_check_out' ), $booking_id ) ) {
 			wp_die( esc_html__( 'This booking cannot be confirmed: its room is missing, its dates are wrong, or those nights are no longer free. Edit it or cancel it.', 'cobbleandcandle-core' ), '', array( 'back_link' => true ) );
 		}
 	}
-	update_post_meta( $booking_id, 'cc_status', $to );
+	update_post_meta( $booking_id, 'cobble_status', $to );
 
-	$room_name = cc_plain_title( (int) $meta( 'cc_room' ) );
+	$room_name = cobble_plain_title( (int) $meta( 'cobble_room' ) );
 	$site      = wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
-	$dates     = $meta( 'cc_check_in' ) . ' → ' . $meta( 'cc_check_out' );
-	if ( 'confirmed' === $to && '' !== $meta( 'cc_dinner' ) ) {
-		$dates .= '. ' . cc_dinner_line( $meta( 'cc_dinner' ), (int) $meta( 'cc_guests' ), (int) get_post_meta( (int) $meta( 'cc_room' ), 'cc_location', true ) );
+	$dates     = $meta( 'cobble_check_in' ) . ' → ' . $meta( 'cobble_check_out' );
+	if ( 'confirmed' === $to && '' !== $meta( 'cobble_dinner' ) ) {
+		$dates .= '. ' . cobble_dinner_line( $meta( 'cobble_dinner' ), (int) $meta( 'cobble_guests' ), (int) get_post_meta( (int) $meta( 'cobble_room' ), 'cobble_location', true ) );
 	}
-	if ( is_email( $meta( 'cc_email' ) ) ) {
+	if ( is_email( $meta( 'cobble_email' ) ) ) {
 		wp_mail(
-			$meta( 'cc_email' ),
+			$meta( 'cobble_email' ),
 			'confirmed' === $to
 				/* translators: %s: site name */
 				? sprintf( __( 'Your stay is confirmed · %s', 'cobbleandcandle-core' ), $site )
@@ -658,36 +658,36 @@ function cc_handle_booking_status() {
 				: sprintf( __( "We're sorry, we can't offer %1\$s for %2\$s. Reply to this email and we'll help you find other dates.", 'cobbleandcandle-core' ), $room_name, $dates )
 		);
 	}
-	wp_safe_redirect( admin_url( 'edit.php?post_type=cc_booking' ) );
+	wp_safe_redirect( admin_url( 'edit.php?post_type=cobble_booking' ) );
 	exit;
 }
-add_action( 'admin_post_cc_booking_status', 'cc_handle_booking_status' );
+add_action( 'admin_post_cobble_booking_status', 'cobble_handle_booking_status' );
 
 /**
  * Booking edit screen: guest, room and dates. Owners also use it to add phone or walk-in bookings.
  */
-function cc_booking_meta_box() {
-	add_meta_box( 'cc-booking', __( 'Booking details', 'cobbleandcandle-core' ), 'cc_render_booking_meta_box', 'cc_booking', 'normal', 'high' );
+function cobble_booking_meta_box() {
+	add_meta_box( 'cobble-booking', __( 'Booking details', 'cobbleandcandle-core' ), 'cobble_render_booking_meta_box', 'cobble_booking', 'normal', 'high' );
 }
-add_action( 'add_meta_boxes_cc_booking', 'cc_booking_meta_box' );
+add_action( 'add_meta_boxes_cobble_booking', 'cobble_booking_meta_box' );
 
 /**
  * Editable booking fields: key => [label, input type].
  *
  * @return array<string, array{0: string, 1: string}>
  */
-function cc_booking_fields() {
+function cobble_booking_fields() {
 	return array(
-		'cc_room'      => array( __( 'Room', 'cobbleandcandle-core' ), 'room' ),
-		'cc_check_in'  => array( __( 'Check-in', 'cobbleandcandle-core' ), 'date' ),
-		'cc_check_out' => array( __( 'Check-out', 'cobbleandcandle-core' ), 'date' ),
-		'cc_guests'    => array( __( 'Guests', 'cobbleandcandle-core' ), 'number' ),
-		'cc_name'      => array( __( 'Name', 'cobbleandcandle-core' ), 'text' ),
-		'cc_email'     => array( __( 'Email', 'cobbleandcandle-core' ), 'email' ),
-		'cc_phone'     => array( __( 'Phone', 'cobbleandcandle-core' ), 'tel' ),
-		'cc_message'   => array( __( 'Notes', 'cobbleandcandle-core' ), 'textarea' ),
-		'cc_dinner'    => array( __( 'Dinner on arrival (time)', 'cobbleandcandle-core' ), 'time' ),
-		'cc_status'    => array( __( 'Status', 'cobbleandcandle-core' ), 'status' ),
+		'cobble_room'      => array( __( 'Room', 'cobbleandcandle-core' ), 'room' ),
+		'cobble_check_in'  => array( __( 'Check-in', 'cobbleandcandle-core' ), 'date' ),
+		'cobble_check_out' => array( __( 'Check-out', 'cobbleandcandle-core' ), 'date' ),
+		'cobble_guests'    => array( __( 'Guests', 'cobbleandcandle-core' ), 'number' ),
+		'cobble_name'      => array( __( 'Name', 'cobbleandcandle-core' ), 'text' ),
+		'cobble_email'     => array( __( 'Email', 'cobbleandcandle-core' ), 'email' ),
+		'cobble_phone'     => array( __( 'Phone', 'cobbleandcandle-core' ), 'tel' ),
+		'cobble_message'   => array( __( 'Notes', 'cobbleandcandle-core' ), 'textarea' ),
+		'cobble_dinner'    => array( __( 'Dinner on arrival (time)', 'cobbleandcandle-core' ), 'time' ),
+		'cobble_status'    => array( __( 'Status', 'cobbleandcandle-core' ), 'status' ),
 	);
 }
 
@@ -696,23 +696,23 @@ function cc_booking_fields() {
  *
  * @param \WP_Post $post Booking.
  */
-function cc_render_booking_meta_box( $post ) {
-	wp_nonce_field( 'cc_booking_save_' . $post->ID, 'cc_booking_save_nonce' );
-	$total = (float) get_post_meta( $post->ID, 'cc_total', true );
+function cobble_render_booking_meta_box( $post ) {
+	wp_nonce_field( 'cobble_booking_save_' . $post->ID, 'cobble_booking_save_nonce' );
+	$total = (float) get_post_meta( $post->ID, 'cobble_total', true );
 	echo '<table class="form-table" role="presentation">';
-	foreach ( cc_booking_fields() as $key => list( $label, $type ) ) {
+	foreach ( cobble_booking_fields() as $key => list( $label, $type ) ) {
 		$value = (string) get_post_meta( $post->ID, $key, true );
-		$id    = 'cc-booking-' . $key;
+		$id    = 'cobble-booking-' . $key;
 		echo '<tr><th scope="row"><label for="' . esc_attr( $id ) . '">' . esc_html( $label ) . '</label></th><td>';
 		if ( 'room' === $type ) {
 			echo '<select id="' . esc_attr( $id ) . '" name="' . esc_attr( $key ) . '">';
-			foreach ( cc_get_rooms() as $room ) {
+			foreach ( cobble_get_rooms() as $room ) {
 				echo '<option value="' . esc_attr( $room['id'] ) . '"' . selected( (int) $value, $room['id'], false ) . '>' . esc_html( $room['name'] ) . '</option>';
 			}
 			echo '</select>';
 		} elseif ( 'status' === $type ) {
 			echo '<select id="' . esc_attr( $id ) . '" name="' . esc_attr( $key ) . '">';
-			foreach ( cc_booking_status_labels() as $status => $status_label ) {
+			foreach ( cobble_booking_status_labels() as $status => $status_label ) {
 				echo '<option value="' . esc_attr( $status ) . '"' . selected( '' === $value ? 'confirmed' : $value, $status, false ) . '>' . esc_html( $status_label ) . '</option>';
 			}
 			echo '</select>';
@@ -726,7 +726,7 @@ function cc_render_booking_meta_box( $post ) {
 	echo '</table>';
 	if ( $total ) {
 		/* translators: %s: price */
-		echo '<p><strong>' . esc_html( sprintf( __( 'Total quoted: %s', 'cobbleandcandle-core' ), cc_money( $total ) ) ) . '</strong></p>';
+		echo '<p><strong>' . esc_html( sprintf( __( 'Total quoted: %s', 'cobbleandcandle-core' ), cobble_money( $total ) ) ) . '</strong></p>';
 	}
 	echo '<p class="description">' . esc_html__( 'Changing the status here does not email the guest. Use Confirm or Cancel in the Bookings list to send the email.', 'cobbleandcandle-core' ) . '</p>';
 }
@@ -736,18 +736,18 @@ function cc_render_booking_meta_box( $post ) {
  *
  * @param int $post_id Booking ID.
  */
-function cc_save_booking_meta_box( $post_id ) {
-	if ( ! isset( $_POST['cc_booking_save_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['cc_booking_save_nonce'] ) ), 'cc_booking_save_' . $post_id )
+function cobble_save_booking_meta_box( $post_id ) {
+	if ( ! isset( $_POST['cobble_booking_save_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['cobble_booking_save_nonce'] ) ), 'cobble_booking_save_' . $post_id )
 		|| wp_is_post_autosave( $post_id ) || ! current_user_can( 'edit_post', $post_id ) ) {
 		return;
 	}
 	$clean = array();
-	foreach ( cc_booking_fields() as $key => list( , $type ) ) {
+	foreach ( cobble_booking_fields() as $key => list( , $type ) ) {
 		$raw = isset( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized per type below.
 		if ( 'room' === $type ) {
-			$clean[ $key ] = 'cc_room' === get_post_type( absint( $raw ) ) ? absint( $raw ) : 0;
+			$clean[ $key ] = 'cobble_room' === get_post_type( absint( $raw ) ) ? absint( $raw ) : 0;
 		} elseif ( 'date' === $type ) {
-			$clean[ $key ] = cc_is_valid_date( sanitize_text_field( (string) $raw ) ) ? sanitize_text_field( (string) $raw ) : '';
+			$clean[ $key ] = cobble_is_valid_date( sanitize_text_field( (string) $raw ) ) ? sanitize_text_field( (string) $raw ) : '';
 		} elseif ( 'number' === $type ) {
 			$clean[ $key ] = max( 1, absint( $raw ) );
 		} elseif ( 'email' === $type ) {
@@ -757,28 +757,28 @@ function cc_save_booking_meta_box( $post_id ) {
 		} elseif ( 'time' === $type ) {
 			$clean[ $key ] = preg_match( '/^([01]\d|2[0-3]):[0-5]\d$/', (string) $raw ) ? (string) $raw : '';
 		} elseif ( 'status' === $type ) {
-			$clean[ $key ] = array_key_exists( (string) $raw, cc_booking_status_labels() ) ? (string) $raw : 'confirmed';
+			$clean[ $key ] = array_key_exists( (string) $raw, cobble_booking_status_labels() ) ? (string) $raw : 'confirmed';
 		} else {
 			$clean[ $key ] = sanitize_text_field( (string) $raw );
 		}
 	}
-	if ( in_array( $clean['cc_status'], cc_booking_holding_statuses(), true )
-		&& '' !== cc_booking_conflict( $clean['cc_room'], $clean['cc_check_in'], $clean['cc_check_out'], $post_id ) ) {
-		$clean['cc_status'] = 'confirmed' === $clean['cc_status'] ? 'pending' : $clean['cc_status'];
-		set_transient( 'cc_booking_conflict_' . get_current_user_id(), $post_id, MINUTE_IN_SECONDS );
+	if ( in_array( $clean['cobble_status'], cobble_booking_holding_statuses(), true )
+		&& '' !== cobble_booking_conflict( $clean['cobble_room'], $clean['cobble_check_in'], $clean['cobble_check_out'], $post_id ) ) {
+		$clean['cobble_status'] = 'confirmed' === $clean['cobble_status'] ? 'pending' : $clean['cobble_status'];
+		set_transient( 'cobble_booking_conflict_' . get_current_user_id(), $post_id, MINUTE_IN_SECONDS );
 	}
 	foreach ( $clean as $key => $value ) {
 		update_post_meta( $post_id, $key, $value );
 	}
-	$room = cc_room( $clean['cc_room'] );
-	if ( $room && $clean['cc_check_in'] && $clean['cc_check_out'] > $clean['cc_check_in'] ) {
-		update_post_meta( $post_id, 'cc_total', cc_stay_total( $room, $clean['cc_check_in'], $clean['cc_check_out'] ) );
+	$room = cobble_room( $clean['cobble_room'] );
+	if ( $room && $clean['cobble_check_in'] && $clean['cobble_check_out'] > $clean['cobble_check_in'] ) {
+		update_post_meta( $post_id, 'cobble_total', cobble_stay_total( $room, $clean['cobble_check_in'], $clean['cobble_check_out'] ) );
 	}
-	if ( ! get_post_meta( $post_id, 'cc_source', true ) ) {
-		update_post_meta( $post_id, 'cc_source', 'manual' );
+	if ( ! get_post_meta( $post_id, 'cobble_source', true ) ) {
+		update_post_meta( $post_id, 'cobble_source', 'manual' );
 	}
 }
-add_action( 'save_post_cc_booking', 'cc_save_booking_meta_box' );
+add_action( 'save_post_cobble_booking', 'cobble_save_booking_meta_box' );
 
 /**
  * Default title for bookings added by hand.
@@ -787,14 +787,14 @@ add_action( 'save_post_cc_booking', 'cc_save_booking_meta_box' );
  * @param array<string, mixed> $postarr Submitted data.
  * @return array<string, mixed>
  */
-function cc_booking_default_title( $data, $postarr ) {
-	if ( 'cc_booking' === $data['post_type'] && '' === trim( (string) $data['post_title'] ) && ! empty( $postarr['ID'] ) ) {
+function cobble_booking_default_title( $data, $postarr ) {
+	if ( 'cobble_booking' === $data['post_type'] && '' === trim( (string) $data['post_title'] ) && ! empty( $postarr['ID'] ) ) {
 		/* translators: %d: booking ID */
 		$data['post_title'] = sprintf( __( 'Booking #%d', 'cobbleandcandle-core' ), (int) $postarr['ID'] );
 	}
 	return $data;
 }
-add_filter( 'wp_insert_post_data', 'cc_booking_default_title', 10, 2 );
+add_filter( 'wp_insert_post_data', 'cobble_booking_default_title', 10, 2 );
 
 /**
  * Why a booking can't hold its nights: '' when it can, else 'invalid' or 'unavailable'.
@@ -805,12 +805,12 @@ add_filter( 'wp_insert_post_data', 'cc_booking_default_title', 10, 2 );
  * @param int    $booking_id Booking to leave out of the count.
  * @return string
  */
-function cc_booking_conflict( $room_id, $check_in, $check_out, $booking_id = 0 ) {
-	$room = cc_room( $room_id );
-	if ( ! $room || ! cc_is_valid_date( $check_in ) || ! cc_is_valid_date( $check_out ) || $check_out <= $check_in ) {
+function cobble_booking_conflict( $room_id, $check_in, $check_out, $booking_id = 0 ) {
+	$room = cobble_room( $room_id );
+	if ( ! $room || ! cobble_is_valid_date( $check_in ) || ! cobble_is_valid_date( $check_out ) || $check_out <= $check_in ) {
 		return 'invalid';
 	}
-	foreach ( cc_room_taken( $room['id'], $check_in, $check_out, $booking_id ) as $count ) {
+	foreach ( cobble_room_taken( $room['id'], $check_in, $check_out, $booking_id ) as $count ) {
 		if ( $count >= $room['units'] ) {
 			return 'unavailable';
 		}
@@ -821,15 +821,15 @@ function cc_booking_conflict( $room_id, $check_in, $check_out, $booking_id = 0 )
 /**
  * Warn after a manual booking was saved over taken nights.
  */
-function cc_booking_conflict_notice() {
-	$key = 'cc_booking_conflict_' . get_current_user_id();
+function cobble_booking_conflict_notice() {
+	$key = 'cobble_booking_conflict_' . get_current_user_id();
 	if ( ! get_transient( $key ) ) {
 		return;
 	}
 	delete_transient( $key );
 	echo '<div class="notice notice-warning"><p>' . esc_html__( 'Saved as Pending: the room is missing, the dates are wrong, or those nights are already taken. Fix the dates before confirming.', 'cobbleandcandle-core' ) . '</p></div>';
 }
-add_action( 'admin_notices', 'cc_booking_conflict_notice' );
+add_action( 'admin_notices', 'cobble_booking_conflict_notice' );
 
 /**
  * Open (pending) requests from one email address.
@@ -837,22 +837,22 @@ add_action( 'admin_notices', 'cc_booking_conflict_notice' );
  * @param string $email Guest email.
  * @return int
  */
-function cc_open_requests_for( $email ) {
+function cobble_open_requests_for( $email ) {
 	return count(
 		get_posts(
 			array(
-				'post_type'      => 'cc_booking',
+				'post_type'      => 'cobble_booking',
 				'post_status'    => 'publish',
 				'posts_per_page' => 5,
 				'fields'         => 'ids',
 				'no_found_rows'  => true,
 				'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- one lookup per booking request.
 					array(
-						'key'   => 'cc_email',
+						'key'   => 'cobble_email',
 						'value' => $email,
 					),
 					array(
-						'key'   => 'cc_status',
+						'key'   => 'cobble_status',
 						'value' => 'pending',
 					),
 				),
@@ -865,16 +865,16 @@ function cc_open_requests_for( $email ) {
  * Release requests the owner hasn't answered, so unanswered (or fake) requests can't hold nights forever.
  * Runs with the hourly calendar sync.
  */
-function cc_expire_pending_bookings() {
+function cobble_expire_pending_bookings() {
 	/**
 	 * Hours a booking request holds its nights before it lapses.
 	 *
 	 * @param int $hours Default 48.
 	 */
-	$hours = max( 1, (int) apply_filters( 'cc_pending_hold_hours', 48 ) );
+	$hours = max( 1, (int) apply_filters( 'cobble_pending_hold_hours', 48 ) );
 	$ids   = get_posts(
 		array(
-			'post_type'      => 'cc_booking',
+			'post_type'      => 'cobble_booking',
 			'post_status'    => 'publish',
 			'posts_per_page' => 100,
 			'fields'         => 'ids',
@@ -882,22 +882,22 @@ function cc_expire_pending_bookings() {
 			'date_query'     => array( array( 'before' => $hours . ' hours ago' ) ),
 			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- hourly cron.
 				array(
-					'key'   => 'cc_status',
+					'key'   => 'cobble_status',
 					'value' => 'pending',
 				),
 				array(
-					'key'   => 'cc_source',
+					'key'   => 'cobble_source',
 					'value' => 'site',
 				),
 			),
 		)
 	);
 	foreach ( $ids as $id ) {
-		update_post_meta( $id, 'cc_status', 'cancelled' );
-		update_post_meta( $id, 'cc_expired', 1 );
+		update_post_meta( $id, 'cobble_status', 'cancelled' );
+		update_post_meta( $id, 'cobble_expired', 1 );
 	}
 }
-add_action( 'cc_ical_sync', 'cc_expire_pending_bookings' );
+add_action( 'cobble_ical_sync', 'cobble_expire_pending_bookings' );
 
 /**
  * Room booking requests: three per IP every 10 minutes.
@@ -906,10 +906,10 @@ add_action( 'cc_ical_sync', 'cc_expire_pending_bookings' );
  * @param string $form  Form name.
  * @return int
  */
-function cc_room_rate_limit( $limit, $form ) {
+function cobble_room_rate_limit( $limit, $form ) {
 	return 'room' === $form ? min( $limit, 3 ) : $limit;
 }
-add_filter( 'cc_form_rate_limit', 'cc_room_rate_limit', 5, 2 );
+add_filter( 'cobble_form_rate_limit', 'cobble_room_rate_limit', 5, 2 );
 
 /**
  * Privacy: export a guest's bookings (Tools → Export Personal Data).
@@ -917,21 +917,21 @@ add_filter( 'cc_form_rate_limit', 'cc_room_rate_limit', 5, 2 );
  * @param string $email Email address.
  * @return array{data: array<int, array<string, mixed>>, done: bool}
  */
-function cc_privacy_export_bookings( $email ) {
+function cobble_privacy_export_bookings( $email ) {
 	$data = array();
-	foreach ( cc_bookings_for_email( $email ) as $id ) {
+	foreach ( cobble_bookings_for_email( $email ) as $id ) {
 		$items = array();
-		foreach ( cc_booking_fields() as $key => list( $label ) ) {
-			$value   = 'cc_room' === $key ? cc_plain_title( (int) get_post_meta( $id, $key, true ) ) : (string) get_post_meta( $id, $key, true );
+		foreach ( cobble_booking_fields() as $key => list( $label ) ) {
+			$value   = 'cobble_room' === $key ? cobble_plain_title( (int) get_post_meta( $id, $key, true ) ) : (string) get_post_meta( $id, $key, true );
 			$items[] = array(
 				'name'  => $label,
 				'value' => $value,
 			);
 		}
 		$data[] = array(
-			'group_id'    => 'cc-bookings',
+			'group_id'    => 'cobble-bookings',
 			'group_label' => __( 'Room bookings', 'cobbleandcandle-core' ),
-			'item_id'     => 'cc-booking-' . $id,
+			'item_id'     => 'cobble-booking-' . $id,
 			'data'        => $items,
 		);
 	}
@@ -947,10 +947,10 @@ function cc_privacy_export_bookings( $email ) {
  * @param string $email Email address.
  * @return array{items_removed: bool, items_retained: bool, messages: array<int, string>, done: bool}
  */
-function cc_privacy_erase_bookings( $email ) {
-	$ids = cc_bookings_for_email( $email );
+function cobble_privacy_erase_bookings( $email ) {
+	$ids = cobble_bookings_for_email( $email );
 	foreach ( $ids as $id ) {
-		foreach ( array( 'cc_name', 'cc_email', 'cc_phone', 'cc_message' ) as $key ) {
+		foreach ( array( 'cobble_name', 'cobble_email', 'cobble_phone', 'cobble_message' ) as $key ) {
 			delete_post_meta( $id, $key );
 		}
 		wp_update_post(
@@ -975,17 +975,17 @@ function cc_privacy_erase_bookings( $email ) {
  * @param string $email Email address.
  * @return array<int, int>
  */
-function cc_bookings_for_email( $email ) {
+function cobble_bookings_for_email( $email ) {
 	return get_posts(
 		array(
-			'post_type'      => 'cc_booking',
+			'post_type'      => 'cobble_booking',
 			'post_status'    => 'any',
 			'posts_per_page' => 100,
 			'fields'         => 'ids',
 			'no_found_rows'  => true,
 			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- privacy requests are rare.
 				array(
-					'key'   => 'cc_email',
+					'key'   => 'cobble_email',
 					'value' => sanitize_email( $email ),
 				),
 			),
@@ -998,7 +998,7 @@ add_filter(
 	static function ( $exporters ) {
 		$exporters['cobbleandcandle-bookings'] = array(
 			'exporter_friendly_name' => __( 'Room bookings', 'cobbleandcandle-core' ),
-			'callback'               => 'cc_privacy_export_bookings',
+			'callback'               => 'cobble_privacy_export_bookings',
 		);
 		return $exporters;
 	}
@@ -1008,7 +1008,7 @@ add_filter(
 	static function ( $erasers ) {
 		$erasers['cobbleandcandle-bookings'] = array(
 			'eraser_friendly_name' => __( 'Room bookings', 'cobbleandcandle-core' ),
-			'callback'             => 'cc_privacy_erase_bookings',
+			'callback'             => 'cobble_privacy_erase_bookings',
 		);
 		return $erasers;
 	}
@@ -1020,8 +1020,8 @@ add_filter(
  * @param int $room_id Room post ID.
  * @return array<string, mixed>
  */
-function cc_schema_room( $room_id ) {
-	$room = cc_room( $room_id );
+function cobble_schema_room( $room_id ) {
+	$room = cobble_room( $room_id );
 	if ( ! $room ) {
 		return array();
 	}
@@ -1045,13 +1045,13 @@ function cc_schema_room( $room_id ) {
 			),
 			$room['amenities']
 		),
-		'containedInPlace' => $room['location_id'] && function_exists( 'cc_schema_id' ) ? array( '@id' => cc_schema_id( 'restaurant', $room['location_id'] ) ) : null,
+		'containedInPlace' => $room['location_id'] && function_exists( 'cobble_schema_id' ) ? array( '@id' => cobble_schema_id( 'restaurant', $room['location_id'] ) ) : null,
 	);
 	if ( $room['price_night'] > 0 ) {
 		$node['offers'] = array(
 			'@type'              => 'Offer',
 			'price'              => $room['price_night'],
-			'priceCurrency'      => (string) apply_filters( 'cc_currency', 'USD' ),
+			'priceCurrency'      => (string) apply_filters( 'cobble_currency', 'USD' ),
 			'unitCode'           => 'DAY',
 			'url'                => $room['url'] . '#book',
 			'availability'       => 'https://schema.org/InStock',
@@ -1069,11 +1069,11 @@ function cc_schema_room( $room_id ) {
  * @param int    $location_id House.
  * @return string
  */
-function cc_dinner_line( $time, $guests, $location_id ) {
-	$house = $location_id ? cc_plain_title( $location_id ) : '';
+function cobble_dinner_line( $time, $guests, $location_id ) {
+	$house = $location_id ? cobble_plain_title( $location_id ) : '';
 	return '' !== $house
 		/* translators: 1: time, 2: party size, 3: house name */
-		? sprintf( _n( 'Dinner on arrival: %1$s for %2$d guest at %3$s', 'Dinner on arrival: %1$s for %2$d guests at %3$s', $guests, 'cobbleandcandle-core' ), cc_time_label( $time ), $guests, $house )
+		? sprintf( _n( 'Dinner on arrival: %1$s for %2$d guest at %3$s', 'Dinner on arrival: %1$s for %2$d guests at %3$s', $guests, 'cobbleandcandle-core' ), cobble_time_label( $time ), $guests, $house )
 		/* translators: 1: time, 2: party size */
-		: sprintf( _n( 'Dinner on arrival: %1$s for %2$d guest', 'Dinner on arrival: %1$s for %2$d guests', $guests, 'cobbleandcandle-core' ), cc_time_label( $time ), $guests );
+		: sprintf( _n( 'Dinner on arrival: %1$s for %2$d guest', 'Dinner on arrival: %1$s for %2$d guests', $guests, 'cobbleandcandle-core' ), cobble_time_label( $time ), $guests );
 }

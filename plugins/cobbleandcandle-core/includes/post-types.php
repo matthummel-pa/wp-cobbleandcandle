@@ -14,16 +14,16 @@ defined( 'ABSPATH' ) || exit;
  * @param int|\WP_Post $post Post or ID.
  * @return string
  */
-function cc_plain_title( $post ) {
+function cobble_plain_title( $post ) {
 	return html_entity_decode( get_the_title( $post ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
 }
 
 /**
  * Register post types and taxonomies.
  */
-function cc_register_content_types() {
+function cobble_register_content_types() {
 	register_post_type(
-		'cc_location',
+		'cobble_location',
 		array(
 			'labels'        => array(
 				'name'          => __( 'Locations', 'cobbleandcandle-core' ),
@@ -46,7 +46,7 @@ function cc_register_content_types() {
 	);
 
 	register_post_type(
-		'cc_menu_item',
+		'cobble_menu_item',
 		array(
 			'labels'        => array(
 				'name'          => __( 'Menu items', 'cobbleandcandle-core' ),
@@ -77,7 +77,7 @@ function cc_register_content_types() {
 	);
 
 	register_post_type(
-		'cc_event',
+		'cobble_event',
 		array(
 			'labels'        => array(
 				'name'          => __( 'Events', 'cobbleandcandle-core' ),
@@ -100,8 +100,8 @@ function cc_register_content_types() {
 	);
 
 	register_taxonomy(
-		'cc_menu',
-		'cc_menu_item',
+		'cobble_menu',
+		'cobble_menu_item',
 		array(
 			'labels'            => array(
 				'name'          => __( 'Menus', 'cobbleandcandle-core' ),
@@ -117,8 +117,8 @@ function cc_register_content_types() {
 	);
 
 	register_taxonomy(
-		'cc_menu_section',
-		'cc_menu_item',
+		'cobble_menu_section',
+		'cobble_menu_item',
 		array(
 			'labels'            => array(
 				'name'          => __( 'Menu sections', 'cobbleandcandle-core' ),
@@ -135,7 +135,7 @@ function cc_register_content_types() {
 
 	// Gallery filter chips (Rooms, Plates, …) come from this taxonomy on media items.
 	register_taxonomy(
-		'cc_gallery',
+		'cobble_gallery',
 		'attachment',
 		array(
 			'labels'                => array(
@@ -153,10 +153,10 @@ function cc_register_content_types() {
 	);
 
 	// Sections and menus are ordered by an integer term meta.
-	foreach ( array( 'cc_menu', 'cc_menu_section' ) as $taxonomy ) {
+	foreach ( array( 'cobble_menu', 'cobble_menu_section' ) as $taxonomy ) {
 		register_term_meta(
 			$taxonomy,
-			'cc_order',
+			'cobble_order',
 			array(
 				'type'              => 'integer',
 				'single'            => true,
@@ -167,8 +167,8 @@ function cc_register_content_types() {
 		);
 	}
 	register_term_meta(
-		'cc_menu',
-		'cc_intro',
+		'cobble_menu',
+		'cobble_intro',
 		array(
 			'type'              => 'string',
 			'single'            => true,
@@ -177,4 +177,4 @@ function cc_register_content_types() {
 		)
 	);
 }
-add_action( 'init', 'cc_register_content_types' );
+add_action( 'init', 'cobble_register_content_types' );

@@ -9,7 +9,7 @@
   }
   $locs = fn (array $item): string => implode(' ', array_filter(array_map(fn ($id) => $slugs[(int) $id] ?? '', $item['locations'] ?? [])));
   $picks = (int) $attributes['picks'] > 0 ? \App\chef_picks((int) $attributes['picks']) : [];
-  $pdf = $attributes['pdfUrl'] !== '' ? $attributes['pdfUrl'] : (isset($current['id']) ? (string) get_post_meta($current['id'], 'cc_menu_pdf', true) : '');
+  $pdf = $attributes['pdfUrl'] !== '' ? $attributes['pdfUrl'] : (isset($current['id']) ? (string) get_post_meta($current['id'], 'cobble_menu_pdf', true) : '');
   $diets = [
       'v' => [__('Vegetarian', 'cobbleandcandle'), 'leaf'],
       'vg' => [__('Vegan', 'cobbleandcandle'), 'leaf'],
@@ -30,7 +30,7 @@
             <div class="menu-where">
               <p class="eyebrow">{{ __('Showing the menu at', 'cobbleandcandle') }}</p>
               <p class="h4"><span x-text="$store.site.loc.name">{{ $current['name'] }}</span> <x-status :status="$current['status']" size="sm" bind="$store.site.loc.status" /></p>
-              <button type="button" class="btn--link" @click="$dispatch('cc-open-locations')">{{ __('Change location', 'cobbleandcandle') }}</button>
+              <button type="button" class="btn--link" @click="$dispatch('cobble-open-locations')">{{ __('Change location', 'cobbleandcandle') }}</button>
             </div>
           @endif
           <fieldset class="filters">

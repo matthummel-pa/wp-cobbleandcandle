@@ -1,4 +1,5 @@
-import Alpine from 'alpinejs'
+const cookie = (name) => document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`))?.[1] || ''
+  try { saved = decodeURIComponent(cookie('cobble_loc') || cookie('cc_loc')) } catch {}import Alpine from 'alpinejs'
 
 const root = document.documentElement
 const DIRECTIONS = ['lampwright', 'ember-arch', 'ashlar-iron']
@@ -8,20 +9,22 @@ const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select,t
 function readJson(id, fallback) {
   try { return JSON.parse(document.getElementById(id)?.textContent || '') } catch { return fallback }
 }
-const LOCATIONS = readJson('cc-locations', [])
-const STATUS = readJson('cc-status', {})
+const LOCATIONS = readJson('cobble-locations', [])
+const STATUS = readJson('cobble-status', {})
 
 /* The visitor's location: ?loc= (what the server rendered), then their saved choice, then the first.
    The saved cookie is applied here rather than on the server so cached pages stay shareable. */
 function initialLocation() {
   let saved = ''
-  try { saved = decodeURIComponent(document.cookie.match(/(?:^|; )cc_loc=([^;]*)/)?.[1] || '') } catch {}
+  // cc_loc: the cookie's name before the 1.0 prefix change, so returning guests keep their house. The new name wins.
+  const cookie = (name) => document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`))?.[1] || ''
+  try { saved = decodeURIComponent(cookie('cobble_loc') || cookie('cc_loc')) } catch {}
   const wanted = new URLSearchParams(location.search).get('loc') || saved || root.dataset.loc || ''
   return Math.max(0, LOCATIONS.findIndex((l) => l.slug === wanted))
 }
 const initial = initialLocation()
 
-/* Open-now status, recomputed in the browser in the restaurant's timezone (mirrors cc_location_status). */
+/* Open-now status, recomputed in the browser in the restaurant's timezone (mirrors cobble_location_status). */
 const pad = (n) => String(n).padStart(2, '0')
 function siteNow() {
   const tz = STATUS.tz || ''
@@ -85,7 +88,8 @@ Alpine.store('site', {
     if (!this.locations[index]) return
     this.current = index
     root.dataset.loc = this.locations[index].slug
-    document.cookie = `cc_loc=${encodeURIComponent(this.locations[index].slug)};path=/;max-age=31536000;samesite=lax`
+    document.cookie = `cobble_loc=${encodeURIComponent(this.locations[index].slug)};path=/;max-age=31536000;samesite=lax`
+    document.cookie = 'cc_loc=;path=/;max-age=0;samesite=lax' // The pre-1.0 cookie, so it can no longer win.
   },
   setTheme(theme) {
     if (!DIRECTIONS.includes(theme)) return
@@ -131,7 +135,7 @@ Alpine.data('locationSwitcher', () => ({
   toggle() {
     this.open ? this.close() : this.show()
   },
-  /* "Change location" buttons elsewhere dispatch cc-open-locations; only a visible switcher answers. */
+  /* "Change location" buttons elsewhere dispatch cobble-open-locations; only a visible switcher answers. */
   openFromPage() {
     if (!this.$el.offsetParent) return
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -222,7 +226,7 @@ Alpine.data('catbar', () => ({
 }))
 
 /* Native table request: time slots for the chosen date from the location's hours (Core plugin's
-   cc_booking_windows: Monday-first [first, last seating] minutes plus holiday overrides). */
+   cobble_booking_windows: Monday-first [first, last seating] minutes plus holiday overrides). */
 const isoDate = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
 const timeFormat = new Intl.DateTimeFormat(root.lang || undefined, { hour: 'numeric', minute: '2-digit' })
 const dayFormat = new Intl.DateTimeFormat(root.lang || undefined, { weekday: 'short', day: 'numeric', month: 'short' })

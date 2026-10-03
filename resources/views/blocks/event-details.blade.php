@@ -2,8 +2,8 @@
      more events. The Core plugin prints the Event JSON-LD and serves the .ics download. --}}
 @php
   $post = \App\context_post();
-  $event = $post && $post->post_type === 'cc_event' && function_exists('cc_event') ? cc_event($post) : [];
-  $place = ($event['location_id'] ?? 0) && function_exists('cc_location') ? cc_location($event['location_id']) : [];
+  $event = $post && $post->post_type === 'cobble_event' && function_exists('cobble_event') ? cobble_event($post) : [];
+  $place = ($event['location_id'] ?? 0) && function_exists('cobble_location') ? cobble_location($event['location_id']) : [];
   $notes = array_filter(array_map('trim', explode("\n", $attributes['notes'])));
   $related = $event ? array_slice(array_values(array_filter(\App\upcoming_events((int) $attributes['related'] + 1), fn ($e) => $e['id'] !== $event['id'])), 0, (int) $attributes['related']) : [];
   $reserve = $place ? add_query_arg('loc', $place['slug'], home_url('/reservations/')) : '';
@@ -78,8 +78,8 @@
             @elseif ($reserve !== '')
               <x-button :href="$reserve" icon="calendar" size="block">{{ __('Reserve a table', 'cobbleandcandle') }}</x-button>
             @endif
-            @if (function_exists('cc_event_ics_url') && $event['iso'] !== '')
-              <x-button :href="cc_event_ics_url($event['id'])" variant="text" icon="calendar" rel="nofollow" download>{{ __('Add to calendar (.ics)', 'cobbleandcandle') }}</x-button>
+            @if (function_exists('cobble_event_ics_url') && $event['iso'] !== '')
+              <x-button :href="cobble_event_ics_url($event['id'])" variant="text" icon="calendar" rel="nofollow" download>{{ __('Add to calendar (.ics)', 'cobbleandcandle') }}</x-button>
             @endif
           </aside>
         </div>
@@ -88,7 +88,7 @@
     @if ($related)
       <section class="section section--alt">
         <div class="container">
-          <x-section-head :eyebrow="__('More events', 'cobbleandcandle')" :title="__('You might also like', 'cobbleandcandle')" :link="get_post_type_archive_link('cc_event')" :link-label="__('All events', 'cobbleandcandle')" />
+          <x-section-head :eyebrow="__('More events', 'cobbleandcandle')" :title="__('You might also like', 'cobbleandcandle')" :link="get_post_type_archive_link('cobble_event')" :link-label="__('All events', 'cobbleandcandle')" />
           <div class="grid-3">
             @foreach ($related as $item)
               <x-event-card :event="$item" />

@@ -1,10 +1,10 @@
 {{-- One location's details (.lpanel): map or photo with directions, address, contact, weekly and
-     holiday hours, getting there, and actions. $l is a cc_location() array; $pin its map index. --}}
+     holiday hours, getting there, and actions. $l is a cobble_location() array; $pin its map index. --}}
 @php
   $notes = array_filter([
-      ['car', __('Parking', 'cobbleandcandle'), (string) get_post_meta($l['id'], 'cc_parking', true)],
-      ['train', __('Transit', 'cobbleandcandle'), (string) get_post_meta($l['id'], 'cc_transit', true)],
-      ['access', __('Access', 'cobbleandcandle'), (string) get_post_meta($l['id'], 'cc_accessibility', true)],
+      ['car', __('Parking', 'cobbleandcandle'), (string) get_post_meta($l['id'], 'cobble_parking', true)],
+      ['train', __('Transit', 'cobbleandcandle'), (string) get_post_meta($l['id'], 'cobble_transit', true)],
+      ['access', __('Access', 'cobbleandcandle'), (string) get_post_meta($l['id'], 'cobble_accessibility', true)],
   ], fn ($n) => $n[2] !== '');
   $holidays = \App\holiday_rows($l['id']);
   $photo = (int) get_post_thumbnail_id($l['id']);

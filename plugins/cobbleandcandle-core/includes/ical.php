@@ -16,11 +16,11 @@ defined( 'ABSPATH' ) || exit;
  * @param int $room_id Room post ID.
  * @return string
  */
-function cc_room_ical_key( $room_id ) {
-	$key = (string) get_post_meta( $room_id, '_cc_ical_key', true );
+function cobble_room_ical_key( $room_id ) {
+	$key = (string) get_post_meta( $room_id, '_cobble_ical_key', true );
 	if ( '' === $key ) {
 		$key = strtolower( wp_generate_password( 24, false ) ); // Delete this meta to issue a new link.
-		update_post_meta( $room_id, '_cc_ical_key', $key );
+		update_post_meta( $room_id, '_cobble_ical_key', $key );
 	}
 	return $key;
 }
@@ -31,11 +31,11 @@ function cc_room_ical_key( $room_id ) {
  * @param int $room_id Room post ID.
  * @return string
  */
-function cc_room_ical_url( $room_id ) {
+function cobble_room_ical_url( $room_id ) {
 	return add_query_arg(
 		array(
-			'cc_room_ical' => (int) $room_id,
-			'key'          => cc_room_ical_key( $room_id ),
+			'cobble_room_ical' => (int) $room_id,
+			'key'              => cobble_room_ical_key( $room_id ),
 		),
 		home_url( '/' )
 	);
@@ -45,37 +45,42 @@ function cc_room_ical_url( $room_id ) {
  * Serve the export feed: site bookings (pending and confirmed) as all-day "Reserved" events.
  * Imported nights are left out so platforms don't echo each other's bookings back.
  */
-function cc_serve_room_ical() {
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only feed guarded by a secret key.
-	if ( ! isset( $_GET['cc_room_ical'] ) ) {
+function cobble_serve_room_ical() {
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- read-only feed guarded by a secret key.
+	// cc_room_ical: feed links pasted into Airbnb/Booking.com before the 1.0 prefix change keep working.
+	if ( isset( $_GET['cobble_room_ical'] ) ) {
+		$room_id = absint( $_GET['cobble_room_ical'] );
+	} elseif ( isset( $_GET['cc_room_ical'] ) ) {
+		$room_id = absint( $_GET['cc_room_ical'] );
+	} else {
 		return;
 	}
-	$room_id = absint( $_GET['cc_room_ical'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	// phpcs:enable
 	$key     = isset( $_GET['key'] ) ? sanitize_key( wp_unslash( $_GET['key'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	if ( ! $room_id || 'cc_room' !== get_post_type( $room_id ) || ! hash_equals( cc_room_ical_key( $room_id ), $key ) ) {
+	if ( ! $room_id || 'cobble_room' !== get_post_type( $room_id ) || ! hash_equals( cobble_room_ical_key( $room_id ), $key ) ) {
 		status_header( 404 );
 		exit;
 	}
 	$host     = wp_parse_url( home_url(), PHP_URL_HOST );
 	$bookings = get_posts(
 		array(
-			'post_type'      => 'cc_booking',
+			'post_type'      => 'cobble_booking',
 			'post_status'    => 'publish',
 			'posts_per_page' => 500, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page -- one room's bookings in a date window; small and bounded.
 			'fields'         => 'ids',
 			'no_found_rows'  => true,
 			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- feed polled by calendar services, small result set.
 				array(
-					'key'   => 'cc_room',
+					'key'   => 'cobble_room',
 					'value' => $room_id,
 				),
 				array(
-					'key'     => 'cc_status',
-					'value'   => cc_booking_holding_statuses(),
+					'key'     => 'cobble_status',
+					'value'   => cobble_booking_holding_statuses(),
 					'compare' => 'IN',
 				),
 				array(
-					'key'     => 'cc_check_out',
+					'key'     => 'cobble_check_out',
 					'value'   => wp_date( 'Y-m-d', strtotime( '-30 days' ) ),
 					'compare' => '>=',
 				),
@@ -88,18 +93,18 @@ function cc_serve_room_ical() {
 		'PRODID:-//Cobble & Candle Core//Rooms//EN',
 		'CALSCALE:GREGORIAN',
 		'METHOD:PUBLISH',
-		'X-WR-CALNAME:' . cc_ics_text( cc_plain_title( $room_id ) ),
+		'X-WR-CALNAME:' . cobble_ics_text( cobble_plain_title( $room_id ) ),
 	);
 	foreach ( $bookings as $booking_id ) {
-		$in  = (string) get_post_meta( $booking_id, 'cc_check_in', true );
-		$out = (string) get_post_meta( $booking_id, 'cc_check_out', true );
-		if ( ! cc_is_valid_date( $in ) || ! cc_is_valid_date( $out ) ) {
+		$in  = (string) get_post_meta( $booking_id, 'cobble_check_in', true );
+		$out = (string) get_post_meta( $booking_id, 'cobble_check_out', true );
+		if ( ! cobble_is_valid_date( $in ) || ! cobble_is_valid_date( $out ) ) {
 			continue;
 		}
 		array_push(
 			$lines,
 			'BEGIN:VEVENT',
-			'UID:' . md5( $booking_id . '|' . cc_room_ical_key( $room_id ) ) . '@' . $host, // No sequential IDs.
+			'UID:' . md5( $booking_id . '|' . cobble_room_ical_key( $room_id ) ) . '@' . $host, // No sequential IDs.
 			'DTSTAMP:' . gmdate( 'Ymd\THis\Z' ),
 			'DTSTART;VALUE=DATE:' . str_replace( '-', '', $in ),
 			'DTEND;VALUE=DATE:' . str_replace( '-', '', $out ),
@@ -112,10 +117,10 @@ function cc_serve_room_ical() {
 	nocache_headers();
 	header( 'X-Robots-Tag: noindex, nofollow' );
 	header( 'Content-Type: text/calendar; charset=utf-8' );
-	echo implode( "\r\n", $lines ) . "\r\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- text/calendar body: dates are validated, the name goes through cc_ics_text().
+	echo implode( "\r\n", $lines ) . "\r\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- text/calendar body: dates are validated, the name goes through cobble_ics_text().
 	exit;
 }
-add_action( 'template_redirect', 'cc_serve_room_ical', 0 );
+add_action( 'template_redirect', 'cobble_serve_room_ical', 0 );
 
 /**
  * Parse all-day (or timed) VEVENTs from an iCal body into night ranges.
@@ -123,7 +128,7 @@ add_action( 'template_redirect', 'cc_serve_room_ical', 0 );
  * @param string $body iCal text.
  * @return array<int, array{start: string, end: string}>|null Null when the body can't be parsed.
  */
-function cc_parse_ical_ranges( $body ) {
+function cobble_parse_ical_ranges( $body ) {
 	$body   = preg_replace( "/\r?\n[ \t]/", '', (string) $body ); // Unfold long lines.
 	$ranges = array();
 	$found  = null === $body ? false : preg_match_all( '/BEGIN:VEVENT(.*?)END:VEVENT/s', $body, $events );
@@ -142,7 +147,7 @@ function cc_parse_ical_ranges( $body ) {
 		$end   = preg_match( '/^DTEND[^:\r\n]*:(\d{8})/m', $event, $match ) ? $match[1] : gmdate( 'Ymd', strtotime( $start[1] . ' +1 day' ) );
 		$start = substr( $start[1], 0, 4 ) . '-' . substr( $start[1], 4, 2 ) . '-' . substr( $start[1], 6, 2 );
 		$end   = substr( $end, 0, 4 ) . '-' . substr( $end, 4, 2 ) . '-' . substr( $end, 6, 2 );
-		if ( ! cc_is_valid_date( $start ) || ! cc_is_valid_date( $end ) || $end <= $today || $start > $horizon ) {
+		if ( ! cobble_is_valid_date( $start ) || ! cobble_is_valid_date( $end ) || $end <= $today || $start > $horizon ) {
 			continue;
 		}
 		if ( $end <= $start ) {
@@ -168,9 +173,15 @@ function cc_parse_ical_ranges( $body ) {
  * @param int $room_id Room post ID.
  * @return array{ok: int, failed: int}
  */
-function cc_sync_room_ical( $room_id ) {
-	$feeds    = array_slice( (array) get_post_meta( $room_id, 'cc_ical_import', true ), 0, 5 );
-	$previous = (array) get_post_meta( $room_id, '_cc_ical_cache', true );
+function cobble_sync_room_ical( $room_id ) {
+	if ( 'cobble_room' !== get_post_type( $room_id ) ) {
+		return array(
+			'ok'     => 0,
+			'failed' => 0,
+		); // A queued sync for a room deleted since: don't write meta for a missing post.
+	}
+	$feeds    = array_slice( (array) get_post_meta( $room_id, 'cobble_ical_import', true ), 0, 5 );
+	$previous = (array) get_post_meta( $room_id, '_cobble_ical_cache', true );
 	$cache    = array();
 	$result   = array(
 		'ok'     => 0,
@@ -188,13 +199,13 @@ function cc_sync_room_ical( $room_id ) {
 			array(
 				'timeout'             => 10,
 				'limit_response_size' => 2 * MB_IN_BYTES,
-				'user-agent'          => 'CobbleAndCandle/' . CC_CORE_VERSION . '; ' . home_url( '/' ),
+				'user-agent'          => 'CobbleAndCandle/' . COBBLE_CORE_VERSION . '; ' . home_url( '/' ),
 			)
 		);
 		$body     = is_wp_error( $response ) ? '' : wp_remote_retrieve_body( $response );
 		// A complete calendar only: a cut-off body would silently free the nights it lost.
 		$ranges = 200 === (int) wp_remote_retrieve_response_code( $response ) && false !== strpos( $body, 'BEGIN:VCALENDAR' ) && false !== strpos( $body, 'END:VCALENDAR' )
-			? cc_parse_ical_ranges( $body )
+			? cobble_parse_ical_ranges( $body )
 			: null;
 		if ( null !== $ranges ) {
 			$cache[ $hash ] = $ranges;
@@ -202,7 +213,7 @@ function cc_sync_room_ical( $room_id ) {
 		} else {
 			$cache[ $hash ] = isset( $previous[ $hash ] ) && is_array( $previous[ $hash ] ) ? $previous[ $hash ] : array();
 			++$result['failed'];
-			cc_log(
+			cobble_log(
 				'warning',
 				'ical',
 				__( 'A calendar feed could not be read; its last known nights stay blocked.', 'cobbleandcandle-core' ),
@@ -214,20 +225,20 @@ function cc_sync_room_ical( $room_id ) {
 			);
 		}
 	}
-	update_post_meta( $room_id, '_cc_ical_cache', $cache );
-	update_post_meta( $room_id, '_cc_ical_blocks', array_merge( array(), ...array_values( $cache ) ) );
-	update_post_meta( $room_id, '_cc_ical_synced', time() );
-	update_post_meta( $room_id, '_cc_ical_failed', $result['failed'] );
+	update_post_meta( $room_id, '_cobble_ical_cache', $cache );
+	update_post_meta( $room_id, '_cobble_ical_blocks', array_merge( array(), ...array_values( $cache ) ) );
+	update_post_meta( $room_id, '_cobble_ical_synced', time() );
+	update_post_meta( $room_id, '_cobble_ical_failed', $result['failed'] );
 	return $result;
 }
 
 /**
  * Hourly: sync every room with import calendars.
  */
-function cc_sync_all_room_icals() {
+function cobble_sync_all_room_icals() {
 	$rooms = get_posts(
 		array(
-			'post_type'      => 'cc_room',
+			'post_type'      => 'cobble_room',
 			'post_status'    => array( 'publish', 'private' ), // Not drafts: only rooms an editor has published fetch remote links.
 			'posts_per_page' => 100,
 			'fields'         => 'ids',
@@ -235,50 +246,50 @@ function cc_sync_all_room_icals() {
 		)
 	);
 	foreach ( $rooms as $room_id ) {
-		if ( get_post_meta( $room_id, 'cc_ical_import', true ) ) {
-			cc_sync_room_ical( $room_id );
+		if ( get_post_meta( $room_id, 'cobble_ical_import', true ) ) {
+			cobble_sync_room_ical( $room_id );
 		}
 	}
 }
-add_action( 'cc_ical_sync', 'cc_sync_all_room_icals' );
+add_action( 'cobble_ical_sync', 'cobble_sync_all_room_icals' );
 
 /**
  * Keep the hourly sync scheduled.
  */
-function cc_schedule_ical_sync() {
-	if ( ! wp_next_scheduled( 'cc_ical_sync' ) ) {
-		wp_schedule_event( time() + 5 * MINUTE_IN_SECONDS, 'hourly', 'cc_ical_sync' );
+function cobble_schedule_ical_sync() {
+	if ( ! wp_next_scheduled( 'cobble_ical_sync' ) ) {
+		wp_schedule_event( time() + 5 * MINUTE_IN_SECONDS, 'hourly', 'cobble_ical_sync' );
 	}
 }
-add_action( 'init', 'cc_schedule_ical_sync' );
+add_action( 'init', 'cobble_schedule_ical_sync' );
 
 /**
  * Sync a room right after its import links are saved.
  *
  * @param int $room_id Room post ID.
  */
-function cc_sync_room_on_save( $room_id ) {
+function cobble_sync_room_on_save( $room_id ) {
 	if ( wp_is_post_revision( $room_id ) || wp_is_post_autosave( $room_id ) || ! in_array( get_post_status( $room_id ), array( 'publish', 'private' ), true ) ) {
 		return;
 	}
-	wp_schedule_single_event( time(), 'cc_ical_sync_room', array( (int) $room_id ) );
+	wp_schedule_single_event( time(), 'cobble_ical_sync_room', array( (int) $room_id ) );
 }
-add_action( 'save_post_cc_room', 'cc_sync_room_on_save' );
-add_action( 'cc_ical_sync_room', 'cc_sync_room_ical' );
+add_action( 'save_post_cobble_room', 'cobble_sync_room_on_save' );
+add_action( 'cobble_ical_sync_room', 'cobble_sync_room_ical' );
 
 /**
  * Room edit screen: the export link and the last sync.
  */
-function cc_room_ical_meta_box() {
+function cobble_room_ical_meta_box() {
 	add_meta_box(
-		'cc-room-ical',
+		'cobble-room-ical',
 		__( 'Calendar export', 'cobbleandcandle-core' ),
 		static function ( $post ) {
-			$synced = (int) get_post_meta( $post->ID, '_cc_ical_synced', true );
-			$failed = (int) get_post_meta( $post->ID, '_cc_ical_failed', true );
+			$synced = (int) get_post_meta( $post->ID, '_cobble_ical_synced', true );
+			$failed = (int) get_post_meta( $post->ID, '_cobble_ical_failed', true );
 			?>
 			<p><?php esc_html_e( 'Paste this link into Airbnb, Booking.com or Vrbo (“import calendar”) so nights booked here are blocked there. Keep it private.', 'cobbleandcandle-core' ); ?></p>
-			<input type="text" class="widefat" readonly value="<?php echo esc_attr( cc_room_ical_url( $post->ID ) ); ?>" onfocus="this.select()" aria-label="<?php esc_attr_e( 'Export calendar link', 'cobbleandcandle-core' ); ?>">
+			<input type="text" class="widefat" readonly value="<?php echo esc_attr( cobble_room_ical_url( $post->ID ) ); ?>" onfocus="this.select()" aria-label="<?php esc_attr_e( 'Export calendar link', 'cobbleandcandle-core' ); ?>">
 			<?php if ( $synced ) : ?>
 				<p class="description">
 					<?php
@@ -292,9 +303,9 @@ function cc_room_ical_meta_box() {
 			<?php endif; ?>
 			<?php
 		},
-		'cc_room',
+		'cobble_room',
 		'side',
 		'low'
 	);
 }
-add_action( 'add_meta_boxes_cc_room', 'cc_room_ical_meta_box' );
+add_action( 'add_meta_boxes_cobble_room', 'cobble_room_ical_meta_box' );

@@ -14,7 +14,7 @@ defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 /**
  * Clean up one site.
  */
-function cc_uninstall_site() {
+function cobble_uninstall_site() {
 	global $wpdb;
 	$settings = get_option( 'cobbleandcandle_brand', array() );
 	if ( is_array( $settings ) && ! empty( $settings['remove_data'] ) ) {
@@ -22,10 +22,10 @@ function cc_uninstall_site() {
 		require_once __DIR__ . '/includes/post-types.php';
 		require_once __DIR__ . '/includes/rooms.php';
 		require_once __DIR__ . '/includes/messages.php';
-		cc_register_content_types();
-		cc_register_room_types();
-		cc_register_message_type();
-		foreach ( array( 'cc_location', 'cc_menu_item', 'cc_event', 'cc_room', 'cc_booking', 'cc_message' ) as $post_type ) {
+		cobble_register_content_types();
+		cobble_register_room_types();
+		cobble_register_message_type();
+		foreach ( array( 'cobble_location', 'cobble_menu_item', 'cobble_event', 'cobble_room', 'cobble_booking', 'cobble_message' ) as $post_type ) {
 			$ids = get_posts(
 				array(
 					'post_type'   => $post_type,
@@ -38,7 +38,7 @@ function cc_uninstall_site() {
 				wp_delete_post( $id, true );
 			}
 		}
-		foreach ( array( 'cc_menu', 'cc_menu_section', 'cc_gallery' ) as $taxonomy ) {
+		foreach ( array( 'cobble_menu', 'cobble_menu_section', 'cobble_gallery' ) as $taxonomy ) {
 			$terms = get_terms(
 				array(
 					'taxonomy'   => $taxonomy,
@@ -52,21 +52,24 @@ function cc_uninstall_site() {
 		}
 		delete_option( 'cobbleandcandle_brand' );
 	}
-	wp_clear_scheduled_hook( 'cc_ical_sync' );
-	wp_unschedule_hook( 'cc_ical_sync_room' );
-	delete_option( 'cc_log' ); // Event log: temporary diagnostics.
-	wp_clear_scheduled_hook( 'cc_prune_messages' );
-	delete_option( 'cc_mail_failures' );
-	// Rate-limit counters (transients named cc_rl_*). They expire on their own; removed here for tidiness.
-	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s", $wpdb->esc_like( '_transient_cc_rl_' ) . '%', $wpdb->esc_like( '_transient_timeout_cc_rl_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- one-off cleanup on uninstall; no API deletes transients by prefix.
+	wp_clear_scheduled_hook( 'cobble_ical_sync' );
+	wp_unschedule_hook( 'cobble_ical_sync_room' );
+	delete_option( 'cobble_log' ); // Event log: temporary diagnostics.
+	wp_clear_scheduled_hook( 'cobble_prune_messages' );
+	delete_option( 'cobble_mail_failures' );
+	delete_option( 'cobble_db_version' );
+	delete_option( 'cobble_migrating' );
+	delete_option( 'cobble_flush_rewrites' );
+	// Rate-limit counters (transients named cobble_rl_*). They expire on their own; removed here for tidiness.
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s", $wpdb->esc_like( '_transient_cobble_rl_' ) . '%', $wpdb->esc_like( '_transient_timeout_cobble_rl_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- one-off cleanup on uninstall; no API deletes transients by prefix.
 }
 
 if ( is_multisite() ) {
-	foreach ( get_sites( array( 'fields' => 'ids' ) ) as $cc_site ) {
-		switch_to_blog( $cc_site );
-		cc_uninstall_site();
+	foreach ( get_sites( array( 'fields' => 'ids' ) ) as $cobble_site ) {
+		switch_to_blog( $cobble_site );
+		cobble_uninstall_site();
 		restore_current_blog();
 	}
 } else {
-	cc_uninstall_site();
+	cobble_uninstall_site();
 }

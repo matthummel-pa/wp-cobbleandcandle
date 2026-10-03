@@ -4,12 +4,12 @@
   $notes = array_filter(array_map('trim', explode("\n", (string) $attributes['notes'])));
   $hid = wp_unique_id('rooms-');
 @endphp
-@if ($rooms || \App\is_editor_preview() || is_post_type_archive('cc_room'))
+@if ($rooms || \App\is_editor_preview() || is_post_type_archive('cobble_room'))
   <section {!! $wrapper !!} @if ($attributes['title'] !== '') aria-labelledby="{{ $hid }}" @endif>
     <div class="section">
       <div class="container">
         @if ($attributes['title'] !== '')
-          <x-section-head :eyebrow="$attributes['eyebrow']" :title="$attributes['title']" :intro="$attributes['intro']" :id="$hid" :link="$attributes['linkUrl'] && ! is_post_type_archive('cc_room') ? $attributes['linkUrl'] : null" :link-label="$attributes['linkLabel']" />
+          <x-section-head :eyebrow="$attributes['eyebrow']" :title="$attributes['title']" :intro="$attributes['intro']" :id="$hid" :link="$attributes['linkUrl'] && ! is_post_type_archive('cobble_room') ? $attributes['linkUrl'] : null" :link-label="$attributes['linkLabel']" />
         @endif
         @if ($rooms)
           <div class="grid-3 room-grid">

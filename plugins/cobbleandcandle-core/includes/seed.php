@@ -26,12 +26,12 @@ defined( 'ABSPATH' ) || exit;
  * @param array<int, string>    $args       Positional args.
  * @param array<string, string> $assoc_args Flags.
  */
-function cc_cli_seed( $args, $assoc_args ) {
-	$result = cc_import_demo( ! empty( $assoc_args['update'] ) );
+function cobble_cli_seed( $args, $assoc_args ) {
+	$result = cobble_import_demo( ! empty( $assoc_args['update'] ) );
 	if ( is_wp_error( $result ) ) {
 		WP_CLI::error( $result->get_error_message() );
 	}
-	foreach ( cc_seed_warn() as $warning ) {
+	foreach ( cobble_seed_warn() as $warning ) {
 		WP_CLI::warning( $warning );
 	}
 	WP_CLI::success( sprintf( 'Demo content: %d created, %d updated, %d skipped.', $result['created'], $result['updated'], $result['skipped'] ) );
@@ -43,11 +43,11 @@ function cc_cli_seed( $args, $assoc_args ) {
  * @param string|null $message Warning to add.
  * @return array<int, string>
  */
-function cc_seed_warn( $message = null ) {
+function cobble_seed_warn( $message = null ) {
 	static $warnings = array();
 	if ( null !== $message ) {
 		$warnings[] = $message;
-		cc_log( 'warning', 'import', $message );
+		cobble_log( 'warning', 'import', $message );
 	}
 	return $warnings;
 }
@@ -59,10 +59,10 @@ function cc_seed_warn( $message = null ) {
  * @param bool $update Update posts that already exist instead of skipping them.
  * @return array{created: int, updated: int, skipped: int}|WP_Error
  */
-function cc_import_demo( $update = false ) {
-	$data   = json_decode( (string) file_get_contents( CC_CORE_DIR . 'data/demo.json' ), true ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- local plugin file.
+function cobble_import_demo( $update = false ) {
+	$data   = json_decode( (string) file_get_contents( COBBLE_CORE_DIR . 'data/demo.json' ), true ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- local plugin file.
 	if ( ! is_array( $data ) ) {
-		return new WP_Error( 'cc_demo_missing', __( 'The demo data file (data/demo.json) is missing or invalid.', 'cobbleandcandle-core' ) );
+		return new WP_Error( 'cobble_demo_missing', __( 'The demo data file (data/demo.json) is missing or invalid.', 'cobbleandcandle-core' ) );
 	}
 
 	$counts       = array(
@@ -73,22 +73,22 @@ function cc_import_demo( $update = false ) {
 	$location_ids = array();
 
 	foreach ( $data['locations'] as $order => $loc ) {
-		$location_ids[] = cc_seed_post(
-			'cc_location',
+		$location_ids[] = cobble_seed_post(
+			'cobble_location',
 			$loc['name'],
 			array( 'menu_order' => $order ),
 			array(
-				'cc_street'        => $loc['street'],
-				'cc_locality'      => $loc['locality'],
-				'cc_phone'         => $loc['phone'],
-				'cc_email'         => $loc['email'],
-				'cc_hours'         => $loc['hours'],
-				'cc_holiday_hours' => $loc['holiday_hours'],
-				'cc_parking'       => $loc['parking'],
-				'cc_transit'       => $loc['transit'],
-				'cc_accessibility' => $loc['accessibility'],
-				'cc_booking_mode'  => $loc['booking_mode'],
-				'cc_price_range'   => $loc['price_range'],
+				'cobble_street'        => $loc['street'],
+				'cobble_locality'      => $loc['locality'],
+				'cobble_phone'         => $loc['phone'],
+				'cobble_email'         => $loc['email'],
+				'cobble_hours'         => $loc['hours'],
+				'cobble_holiday_hours' => $loc['holiday_hours'],
+				'cobble_parking'       => $loc['parking'],
+				'cobble_transit'       => $loc['transit'],
+				'cobble_accessibility' => $loc['accessibility'],
+				'cobble_booking_mode'  => $loc['booking_mode'],
+				'cobble_price_range'   => $loc['price_range'],
 			),
 			$update,
 			$counts
@@ -96,23 +96,23 @@ function cc_import_demo( $update = false ) {
 	}
 
 	foreach ( $data['menus'] as $menu_order => $menu ) {
-		$menu_term = cc_seed_term( 'cc_menu', $menu['name'], sanitize_title( $menu['name'] ), $menu_order, $menu['intro'] );
+		$menu_term = cobble_seed_term( 'cobble_menu', $menu['name'], sanitize_title( $menu['name'] ), $menu_order, $menu['intro'] );
 		foreach ( $menu['sections'] as $section_order => $section ) {
-			$section_term = cc_seed_term( 'cc_menu_section', $section['name'], sanitize_title( $menu['name'] . '-' . $section['name'] ), $section_order );
+			$section_term = cobble_seed_term( 'cobble_menu_section', $section['name'], sanitize_title( $menu['name'] . '-' . $section['name'] ), $section_order );
 			foreach ( $section['items'] as $item_order => $item ) {
-				$id = cc_seed_post(
-					'cc_menu_item',
+				$id = cobble_seed_post(
+					'cobble_menu_item',
 					$item['name'],
 					array(
 						'post_excerpt' => $item['desc'],
 						'menu_order'   => $item_order,
 					),
 					array(
-						'cc_price'     => $item['price'],
-						'cc_variants'  => $item['variants'],
-						'cc_diet'      => $item['diet'],
-						'cc_flag'      => $item['flag'],
-						'cc_chef_pick' => $item['chef_pick'],
+						'cobble_price'     => $item['price'],
+						'cobble_variants'  => $item['variants'],
+						'cobble_diet'      => $item['diet'],
+						'cobble_flag'      => $item['flag'],
+						'cobble_chef_pick' => $item['chef_pick'],
 					),
 					$update,
 					$counts,
@@ -120,8 +120,8 @@ function cc_import_demo( $update = false ) {
 					array( $menu_term, $section_term )
 				);
 				if ( $id ) {
-					wp_set_object_terms( $id, $menu_term, 'cc_menu', true );
-					wp_set_object_terms( $id, $section_term, 'cc_menu_section', true );
+					wp_set_object_terms( $id, $menu_term, 'cobble_menu', true );
+					wp_set_object_terms( $id, $section_term, 'cobble_menu_section', true );
 				}
 			}
 		}
@@ -132,20 +132,20 @@ function cc_import_demo( $update = false ) {
 		foreach ( (array) ( $event['content'] ?? array() ) as $paragraph ) {
 			$content .= "<!-- wp:paragraph -->\n<p>" . esc_html( $paragraph ) . "</p>\n<!-- /wp:paragraph -->\n\n";
 		}
-		cc_seed_post(
-			'cc_event',
+		cobble_seed_post(
+			'cobble_event',
 			$event['title'],
 			array(
 				'post_excerpt' => $event['excerpt'],
 				'post_content' => $content,
 			),
 			array(
-				'cc_start'        => $event['start'],
-				'cc_location'     => $location_ids[ $event['location'] ] ?? 0,
-				'cc_type'         => $event['type'],
-				'cc_price'        => $event['price'],
-				'cc_availability' => $event['availability'],
-				'cc_courses'      => $event['courses'] ?? array(),
+				'cobble_start'        => $event['start'],
+				'cobble_location'     => $location_ids[ $event['location'] ] ?? 0,
+				'cobble_type'         => $event['type'],
+				'cobble_price'        => $event['price'],
+				'cobble_availability' => $event['availability'],
+				'cobble_courses'      => $event['courses'] ?? array(),
 			),
 			$update,
 			$counts
@@ -157,8 +157,8 @@ function cc_import_demo( $update = false ) {
 		foreach ( (array) ( $room['content'] ?? array() ) as $paragraph ) {
 			$content .= "<!-- wp:paragraph -->\n<p>" . esc_html( $paragraph ) . "</p>\n<!-- /wp:paragraph -->\n\n";
 		}
-		cc_seed_post(
-			'cc_room',
+		cobble_seed_post(
+			'cobble_room',
 			$room['title'],
 			array(
 				'post_excerpt' => $room['excerpt'],
@@ -166,15 +166,15 @@ function cc_import_demo( $update = false ) {
 				'menu_order'   => $order,
 			),
 			array(
-				'cc_price_night'   => $room['price_night'],
-				'cc_price_weekend' => $room['price_weekend'],
-				'cc_min_nights'    => $room['min_nights'],
-				'cc_max_guests'    => $room['max_guests'],
-				'cc_units'         => $room['units'],
-				'cc_beds'          => $room['beds'],
-				'cc_size'          => $room['size'],
-				'cc_amenities'     => $room['amenities'],
-				'cc_location'      => $location_ids[ $room['location'] ] ?? 0,
+				'cobble_price_night'   => $room['price_night'],
+				'cobble_price_weekend' => $room['price_weekend'],
+				'cobble_min_nights'    => $room['min_nights'],
+				'cobble_max_guests'    => $room['max_guests'],
+				'cobble_units'         => $room['units'],
+				'cobble_beds'          => $room['beds'],
+				'cobble_size'          => $room['size'],
+				'cobble_amenities'     => $room['amenities'],
+				'cobble_location'      => $location_ids[ $room['location'] ] ?? 0,
 			),
 			$update,
 			$counts
@@ -210,7 +210,7 @@ function cc_import_demo( $update = false ) {
  * @param array<int, int>      $term_ids  Optional terms the match must also have (menu items).
  * @return int Post ID.
  */
-function cc_seed_post( $post_type, $title, array $postarr, array $meta, $update, array &$counts, array $term_ids = array() ) {
+function cobble_seed_post( $post_type, $title, array $postarr, array $meta, $update, array &$counts, array $term_ids = array() ) {
 	$existing = 0;
 	$query    = array(
 		'post_type'      => $post_type,
@@ -224,11 +224,11 @@ function cc_seed_post( $post_type, $title, array $postarr, array $meta, $update,
 		$query['tax_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- one-off CLI seed.
 			'relation' => 'AND',
 			array(
-		'taxonomy' => 'cc_menu',
+		'taxonomy' => 'cobble_menu',
 		'terms'    => $term_ids[0],
 		),
 			array(
-		'taxonomy' => 'cc_menu_section',
+		'taxonomy' => 'cobble_menu_section',
 		'terms'    => $term_ids[1],
 		),
 		);
@@ -257,7 +257,7 @@ function cc_seed_post( $post_type, $title, array $postarr, array $meta, $update,
 		true
 	);
 	if ( is_wp_error( $id ) ) {
-		cc_seed_warn( $title . ': ' . $id->get_error_message() );
+		cobble_seed_warn( $title . ': ' . $id->get_error_message() );
 		return 0;
 	}
 	foreach ( $meta as $key => $value ) {
@@ -277,27 +277,27 @@ function cc_seed_post( $post_type, $title, array $postarr, array $meta, $update,
  * @param string $intro    Optional intro (menus).
  * @return int Term ID.
  */
-function cc_seed_term( $taxonomy, $name, $slug, $order, $intro = '' ) {
+function cobble_seed_term( $taxonomy, $name, $slug, $order, $intro = '' ) {
 	$term = get_term_by( 'slug', $slug, $taxonomy );
 	if ( $term ) {
 		$id = (int) $term->term_id;
 	} else {
 		$created = wp_insert_term( $name, $taxonomy, array( 'slug' => $slug ) );
 		if ( is_wp_error( $created ) ) {
-			cc_seed_warn( $name . ': ' . $created->get_error_message() );
+			cobble_seed_warn( $name . ': ' . $created->get_error_message() );
 			return 0;
 		}
 		$id = (int) $created['term_id'];
 	}
 	if ( $id ) {
-		update_term_meta( $id, 'cc_order', (int) $order );
+		update_term_meta( $id, 'cobble_order', (int) $order );
 		if ( '' !== $intro ) {
-			update_term_meta( $id, 'cc_intro', $intro );
+			update_term_meta( $id, 'cobble_intro', $intro );
 		}
 	}
 	return $id;
 }
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
-	WP_CLI::add_command( 'cobbleandcandle seed', 'cc_cli_seed' );
+	WP_CLI::add_command( 'cobbleandcandle seed', 'cobble_cli_seed' );
 }

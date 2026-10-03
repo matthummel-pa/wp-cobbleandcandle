@@ -2,14 +2,14 @@
  * Cobble & Candle Core: logo picker on Settings → Restaurant (WordPress media library).
  */
 ( function ( $ ) {
-	$( '.cc-image-field' ).each( function () {
+	$( '.cobble-image-field' ).each( function () {
 		const field = $( this );
 		const input = field.find( 'input[type=hidden]' );
-		const preview = field.find( '.cc-image-preview' );
-		const remove = field.find( '.cc-image-remove' );
+		const preview = field.find( '.cobble-image-preview' );
+		const remove = field.find( '.cobble-image-remove' );
 		let frame;
 
-		field.find( '.cc-image-choose' ).on( 'click', function () {
+		field.find( '.cobble-image-choose' ).on( 'click', function () {
 			frame = frame || wp.media( { library: { type: 'image' }, multiple: false } );
 			frame.off( 'select' ).on( 'select', function () {
 				const image = frame.state().get( 'selection' ).first().toJSON();

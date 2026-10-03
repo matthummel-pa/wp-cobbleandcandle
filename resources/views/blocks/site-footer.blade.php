@@ -2,7 +2,7 @@
 @php
   $about = $attributes['about'] ?: get_bloginfo('description');
   // Profiles from Settings → Restaurant, with this block's own fields (sanitized) as a fallback.
-  $profiles = function_exists('cc_social_profiles') ? cc_social_profiles() : [];
+  $profiles = function_exists('cobble_social_profiles') ? cobble_social_profiles() : [];
   $profiles += array_filter(['instagram' => esc_url_raw($attributes['instagram']), 'facebook' => esc_url_raw($attributes['facebook'])]);
   if ($attributes['email'] !== '' && is_email($attributes['email'])) {
       $profiles['mail'] = 'mailto:'.sanitize_email($attributes['email']);

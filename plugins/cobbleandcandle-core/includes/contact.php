@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array<string, string>
  */
-function cc_contact_topics() {
+function cobble_contact_topics() {
 	/**
 	 * Topics offered on the contact form.
 	 *
 	 * @param array<string, string> $topics Key => label. Keys must be lowercase a-z, 0-9, _ or - (sanitize_key-safe).
 	 */
 	return (array) apply_filters(
-		'cc_contact_topics',
+		'cobble_contact_topics',
 		array(
 			'general'     => __( 'General', 'cobbleandcandle-core' ),
 			'reservation' => __( 'Reservation', 'cobbleandcandle-core' ),
@@ -34,7 +34,7 @@ function cc_contact_topics() {
 /**
  * Handle a contact message (logged in or not).
  */
-function cc_handle_contact() {
+function cobble_handle_contact() {
 	$back = wp_get_referer() ? wp_get_referer() : home_url( '/' );
 	$back = remove_query_arg( 'contact', $back );
 	$done = static function ( $status ) use ( $back ) {
@@ -42,34 +42,34 @@ function cc_handle_contact() {
 		exit;
 	};
 
-	if ( ! isset( $_POST['cc_contact_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['cc_contact_nonce'] ) ), 'cc_contact' ) ) {
+	if ( ! isset( $_POST['cobble_contact_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['cobble_contact_nonce'] ) ), 'cobble_contact' ) ) {
 		$done( 'expired' );
 	}
 	// Honeypot: real visitors never see or fill this field.
-	if ( ! empty( $_POST['cc_website'] ) ) {
+	if ( ! empty( $_POST['cobble_website'] ) ) {
 		$done( 'sent' );
 	}
-	if ( cc_form_rate_limited( 'contact' ) ) {
+	if ( cobble_form_rate_limited( 'contact' ) ) {
 		$done( 'busy' );
 	}
 
-	$topics   = cc_contact_topics();
-	$topic    = isset( $_POST['cc_topic'] ) ? sanitize_key( wp_unslash( $_POST['cc_topic'] ) ) : '';
-	$name     = isset( $_POST['cc_name'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_name'] ) ) : '';
-	$email    = isset( $_POST['cc_email'] ) ? sanitize_email( wp_unslash( $_POST['cc_email'] ) ) : '';
-	$phone    = isset( $_POST['cc_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_phone'] ) ) : '';
-	$message  = isset( $_POST['cc_message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['cc_message'] ) ) : '';
-	$location = isset( $_POST['cc_location'] ) ? absint( $_POST['cc_location'] ) : 0;
-	$consent  = ! empty( $_POST['cc_consent'] );
+	$topics   = cobble_contact_topics();
+	$topic    = isset( $_POST['cobble_topic'] ) ? sanitize_key( wp_unslash( $_POST['cobble_topic'] ) ) : '';
+	$name     = isset( $_POST['cobble_name'] ) ? sanitize_text_field( wp_unslash( $_POST['cobble_name'] ) ) : '';
+	$email    = isset( $_POST['cobble_email'] ) ? sanitize_email( wp_unslash( $_POST['cobble_email'] ) ) : '';
+	$phone    = isset( $_POST['cobble_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['cobble_phone'] ) ) : '';
+	$message  = isset( $_POST['cobble_message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['cobble_message'] ) ) : '';
+	$location = isset( $_POST['cobble_location'] ) ? absint( $_POST['cobble_location'] ) : 0;
+	$consent  = ! empty( $_POST['cobble_consent'] );
 
 	$valid = $consent && '' !== $name && is_email( $email ) && '' !== $message
 		&& isset( $topics[ $topic ] )
-		&& ( 0 === $location || cc_is_public_location( $location ) );
+		&& ( 0 === $location || cobble_is_public_location( $location ) );
 	if ( ! $valid ) {
 		$done( 'invalid' );
 	}
 
-	$to = $location ? sanitize_email( (string) get_post_meta( $location, 'cc_email', true ) ) : '';
+	$to = $location ? sanitize_email( (string) get_post_meta( $location, 'cobble_email', true ) ) : '';
 	$to = $to ? $to : get_option( 'admin_email' );
 	/* translators: 1: topic, 2: sender name */
 	$subject = sprintf( __( 'Website message (%1$s) from %2$s', 'cobbleandcandle-core' ), $topics[ $topic ], $name );
@@ -80,15 +80,15 @@ function cc_handle_contact() {
 			__( 'Name', 'cobbleandcandle-core' ) . ': ' . $name,
 			__( 'Email', 'cobbleandcandle-core' ) . ': ' . $email,
 			__( 'Phone', 'cobbleandcandle-core' ) . ': ' . ( '' !== $phone ? $phone : '—' ),
-			__( 'Location', 'cobbleandcandle-core' ) . ': ' . ( $location ? cc_plain_title( $location ) : '—' ),
+			__( 'Location', 'cobbleandcandle-core' ) . ': ' . ( $location ? cobble_plain_title( $location ) : '—' ),
 			'',
 			$message,
 		)
 	);
-	$sent    = wp_mail( $to, $subject, $body, array( 'Reply-To: ' . cc_mail_name( $name ) . ' <' . $email . '>' ) );
-	$stored  = cc_store_message( 'contact', $subject, $body, $email, $location, $sent );
+	$sent    = wp_mail( $to, $subject, $body, array( 'Reply-To: ' . cobble_mail_name( $name ) . ' <' . $email . '>' ) );
+	$stored  = cobble_store_message( 'contact', $subject, $body, $email, $location, $sent );
 
 	$done( $sent || $stored ? 'sent' : 'error' );
 }
-add_action( 'admin_post_cc_contact', 'cc_handle_contact' );
-add_action( 'admin_post_nopriv_cc_contact', 'cc_handle_contact' );
+add_action( 'admin_post_cobble_contact', 'cobble_handle_contact' );
+add_action( 'admin_post_nopriv_cobble_contact', 'cobble_handle_contact' );

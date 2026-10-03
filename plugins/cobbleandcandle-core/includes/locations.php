@@ -14,12 +14,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array<int, \WP_Post>
  */
-function cc_get_locations() {
+function cobble_get_locations() {
 	static $locations = null;
 	if ( null === $locations ) {
 		$locations = get_posts(
 			array(
-				'post_type'      => 'cc_location',
+				'post_type'      => 'cobble_location',
 				'post_status'    => 'publish',
 				'posts_per_page' => 20,
 				'orderby'        => array(
@@ -39,18 +39,18 @@ function cc_get_locations() {
  * @param int|\WP_Post $location Location post or ID.
  * @return array<string, mixed>
  */
-function cc_location( $location ) {
+function cobble_location( $location ) {
 	$post = get_post( $location );
-	if ( ! $post || 'cc_location' !== $post->post_type ) {
+	if ( ! $post || 'cobble_location' !== $post->post_type ) {
 		return array();
 	}
 	$id      = $post->ID;
 	$meta    = static function ( $key ) use ( $id ) {
 		return get_post_meta( $id, $key, true );
 	};
-	$phone   = (string) $meta( 'cc_phone' );
-	$address = implode( ', ', array_filter( array( $meta( 'cc_street' ), $meta( 'cc_locality' ), $meta( 'cc_region' ), $meta( 'cc_postcode' ) ) ) );
-	$map     = (string) $meta( 'cc_map_url' );
+	$phone   = (string) $meta( 'cobble_phone' );
+	$address = implode( ', ', array_filter( array( $meta( 'cobble_street' ), $meta( 'cobble_locality' ), $meta( 'cobble_region' ), $meta( 'cobble_postcode' ) ) ) );
+	$map     = (string) $meta( 'cobble_map_url' );
 	if ( '' === $map && '' !== $address ) {
 		$map = 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode( $address );
 	}
@@ -58,44 +58,44 @@ function cc_location( $location ) {
 	return array(
 		'id'           => $id,
 		'slug'         => $post->post_name,
-		'name'         => cc_plain_title( $post ),
+		'name'         => cobble_plain_title( $post ),
 		'url'          => get_permalink( $post ),
-		'street'       => (string) $meta( 'cc_street' ),
-		'locality'     => (string) $meta( 'cc_locality' ),
+		'street'       => (string) $meta( 'cobble_street' ),
+		'locality'     => (string) $meta( 'cobble_locality' ),
 		'address'      => $address,
 		'phone'        => $phone,
 		'tel'          => '' !== $phone ? 'tel:' . preg_replace( '/[^0-9+]/', '', $phone ) : '',
-		'email'        => (string) $meta( 'cc_email' ),
+		'email'        => (string) $meta( 'cobble_email' ),
 		'map_url'      => $map,
-		'order_url'    => (string) $meta( 'cc_order_url' ),
-		'booking_mode' => (string) $meta( 'cc_booking_mode' ),
-		'booking_url'  => (string) $meta( 'cc_booking_url' ),
-		'status'       => cc_location_status( $id ),
-		'hours'        => cc_hours_grouped( $id ),
-		'today'        => cc_today_hours( $id ),
+		'order_url'    => (string) $meta( 'cobble_order_url' ),
+		'booking_mode' => (string) $meta( 'cobble_booking_mode' ),
+		'booking_url'  => (string) $meta( 'cobble_booking_url' ),
+		'status'       => cobble_location_status( $id ),
+		'hours'        => cobble_hours_grouped( $id ),
+		'today'        => cobble_today_hours( $id ),
 	);
 }
 
 /**
  * The current location for server rendering: ?loc=slug, else the first location.
  *
- * The visitor's saved choice (the cc_loc cookie) is applied in the browser, so a cached page never
- * shows one visitor's location to everyone. Filter `cc_current_location_slug` to change the default.
+ * The visitor's saved choice (the cobble_loc cookie) is applied in the browser, so a cached page never
+ * shows one visitor's location to everyone. Filter `cobble_current_location_slug` to change the default.
  *
  * @return array<string, mixed> Empty when there are no locations.
  */
-function cc_current_location() {
-	$locations = cc_get_locations();
+function cobble_current_location() {
+	$locations = cobble_get_locations();
 	if ( ! $locations ) {
 		return array();
 	}
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only display preference.
 	$wanted = isset( $_GET['loc'] ) ? sanitize_title( wp_unslash( $_GET['loc'] ) ) : '';
-	$wanted = (string) apply_filters( 'cc_current_location_slug', $wanted );
+	$wanted = (string) apply_filters( 'cobble_current_location_slug', $wanted );
 	foreach ( $locations as $post ) {
 		if ( $post->post_name === $wanted ) {
-			return cc_location( $post );
+			return cobble_location( $post );
 		}
 	}
-	return cc_location( $locations[0] );
+	return cobble_location( $locations[0] );
 }
