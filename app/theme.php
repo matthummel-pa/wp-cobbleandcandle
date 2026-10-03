@@ -23,6 +23,7 @@ function directions(): array
         'lampwright' => ['label' => 'Lampwright', 'title' => __('Candlelit Old Town', 'cobbleandcandle'), 'sw' => ['#15110D', '#C79A55'], 'font' => 'BodoniModa-400-normal.woff2'],
         'ember-arch' => ['label' => 'Ember & Arch', 'title' => __('Brick & Ember', 'cobbleandcandle'), 'sw' => ['#1F1410', '#E2692A'], 'font' => 'EBGaramond-500-normal.woff2'],
         'ashlar-iron' => ['label' => 'Ashlar & Iron', 'title' => __('Limestone & Iron', 'cobbleandcandle'), 'sw' => ['#EFE6D6', '#7A2A2E'], 'font' => 'Marcellus-400-normal.woff2'],
+        'daylight' => ['label' => 'Daylight', 'title' => __('Café & Brunch', 'cobbleandcandle'), 'sw' => ['#FBF7F0', '#B14E25'], 'font' => 'Outfit-var.woff2'],
     ];
 }
 
