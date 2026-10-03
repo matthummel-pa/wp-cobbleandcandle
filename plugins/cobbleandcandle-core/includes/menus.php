@@ -103,22 +103,57 @@ function cc_menu_items( $menu_id, $section_id = null, $limit = -1 ) {
  * @return array<int, array<string, mixed>>
  */
 function cc_get_menus() {
+	$menus    = cc_ordered_terms( 'cc_menu' );
+	$sections = cc_ordered_terms( 'cc_menu_section' );
+	if ( ! $menus ) {
+		return array();
+	}
+	// One query for every item (terms and meta primed with it), grouped below: not one query per menu × section.
+	$posts  = get_posts(
+		array(
+			'post_type'      => 'cc_menu_item',
+			'post_status'    => 'publish',
+			'posts_per_page' => 500, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page -- every dish on every menu, in one query instead of dozens.
+			'orderby'        => array(
+				'menu_order' => 'ASC',
+				'title'      => 'ASC',
+			),
+			'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- one query for all menus.
+				array(
+					'taxonomy' => 'cc_menu',
+					'terms'    => wp_list_pluck( $menus, 'term_id' ),
+				),
+			),
+			'no_found_rows'  => true,
+		)
+	);
+	$groups = array();
+	foreach ( $posts as $post ) {
+		$item      = null;
+		$in_menus  = wp_list_pluck( (array) get_the_terms( $post, 'cc_menu' ), 'term_id' );
+		$in_sects  = wp_list_pluck( (array) get_the_terms( $post, 'cc_menu_section' ), 'term_id' );
+		foreach ( $in_menus as $menu_id ) {
+			foreach ( $in_sects as $section_id ) {
+				$item                                 = $item ? $item : cc_menu_item( $post );
+				$groups[ $menu_id ][ $section_id ][] = $item;
+			}
+		}
+	}
 	$out = array();
-	foreach ( cc_ordered_terms( 'cc_menu' ) as $menu ) {
-		$sections = array();
-		foreach ( cc_ordered_terms( 'cc_menu_section' ) as $section ) {
-			$items = cc_menu_items( $menu->term_id, $section->term_id );
-			if ( $items ) {
-				$sections[] = array(
+	foreach ( $menus as $menu ) {
+		$menu_sections = array();
+		foreach ( $sections as $section ) {
+			if ( ! empty( $groups[ $menu->term_id ][ $section->term_id ] ) ) {
+				$menu_sections[] = array(
 					'term'  => $section,
-					'items' => $items,
+					'items' => $groups[ $menu->term_id ][ $section->term_id ],
 				);
 			}
 		}
 		$out[] = array(
 			'term'     => $menu,
 			'intro'    => (string) get_term_meta( $menu->term_id, 'cc_intro', true ),
-			'sections' => $sections,
+			'sections' => $menu_sections,
 		);
 	}
 	return $out;

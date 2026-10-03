@@ -5,6 +5,10 @@
   @if ((int) $imageId > 0)
     {!! wp_get_attachment_image((int) $imageId, $size, false, array_filter(['loading' => $eager ? 'eager' : 'lazy', 'fetchpriority' => $eager ? 'high' : null, 'decoding' => 'async'])) !!}
   @else
-    @includeIf('art.'.$kind, ['uid' => $uid])
+    @if (\App\art_ref($kind, false) !== '')
+      {!! \App\art_ref($kind) !!}
+    @else
+      @includeIf('art.'.$kind, ['uid' => $uid])
+    @endif
   @endif
 </div>
