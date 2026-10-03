@@ -1,0 +1,16 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/timeline",
+  "title": "Timeline",
+  "category": "cobbleandcandle",
+  "description": "Milestones in your history. One per line: Year | Title | Short text.",
+  "keywords": ["history", "timeline", "about", "milestones"],
+  "textdomain": "cobbleandcandle-core",
+  "attributes": {
+    "eyebrow": { "type": "string", "default": "Since 1888" },
+    "title": { "type": "string", "default": "A short history" },
+    "items": { "type": "string", "default": "1888 | The first supper | Lamplighter Josiah Wren opens his parlour to the evening tide.\n1931 | The cellar opens | The old coal store becomes a wine cellar of 400 bins.\n1998 | Cathedral Close | A second house opens in a former vestry beside the cathedral.\n2014 | Chef Margot | Margot Ellery takes the pass and rewrites the bill of fare." }
+  },
+  "supports": { "html": false, "align": ["full"] }
+}

@@ -1,28 +1,12 @@
 <?php
 
 /**
- * Custom blocks: every resources/blocks/<name>/block.json is registered as a dynamic
- * block rendered by resources/views/blocks/<name>.blade.php.
- *
- * Editor UI lives in resources/js/editor.js (ServerSideRender preview + sidebar settings).
+ * Block rendering: the Cobble & Candle Core plugin registers the blocks (plugins/cobbleandcandle-core/
+ * blocks/<name>/block.json, editor UI included) and the theme draws them with
+ * resources/views/blocks/<name>.blade.php through the `cobble_render_block` filter.
  */
 
 namespace App;
-
-/**
- * Block metadata files, keyed by block folder name.
- *
- * @return array<string, string>
- */
-function block_manifests(): array
-{
-    $out = [];
-    foreach (glob(get_theme_file_path('resources/blocks/*/block.json')) ?: [] as $file) {
-        $out[basename(dirname($file))] = $file;
-    }
-
-    return $out;
-}
 
 /**
  * The page that holds one of the theme's blocks (e.g. the Reservations block), or 0.
@@ -92,33 +76,38 @@ function localize_attributes(array $attributes, \WP_Block_Type $type): array
     return $attributes;
 }
 
-add_action('init', function () {
-    foreach (block_manifests() as $name => $file) {
-        register_block_type(dirname($file), [
-            'render_callback' => function (array $attributes, string $content, \WP_Block $block) use ($name): string {
-                return view("blocks.{$name}", [
-                    'attributes' => localize_attributes($attributes, $block->block_type),
-                    'content' => $content,
-                    'block' => $block,
-                    'wrapper' => get_block_wrapper_attributes(),
-                ])->render();
-            },
-        ]);
+/**
+ * Render the Cobble & Candle blocks. The Core plugin registers them (block registration is plugin
+ * territory) and asks the theme for their markup: each block has a Blade view in
+ * resources/views/blocks/<name>.blade.php.
+ */
+add_filter('cobble_render_block', function ($html, string $name, array $attributes, string $content, \WP_Block $block) {
+    if (! view()->exists("blocks.{$name}")) {
+        return $html;
     }
-});
+
+    return view("blocks.{$name}", [
+        'attributes' => localize_attributes($attributes, $block->block_type),
+        'content' => $content,
+        'block' => $block,
+        'wrapper' => get_block_wrapper_attributes(),
+    ])->render();
+}, 10, 5);
 
 /**
- * "Cobble & Candle" block category in the inserter.
+ * Without the Core plugin the blocks aren't registered, so the site chrome would vanish. Keep a plain,
+ * working header, footer, page heading and 404 message until the plugin is installed.
  */
-add_filter('block_categories_all', function (array $categories): array {
-    array_unshift($categories, [
-        'slug' => 'cobbleandcandle',
-        'title' => __('Cobble & Candle', 'cobbleandcandle'),
-        'icon' => null,
-    ]);
+add_filter('render_block', function (string $html, array $parsed): string {
+    $name = (string) ($parsed['blockName'] ?? '');
+    $fallbacks = ['site-header', 'site-footer', 'page-hero', 'not-found'];
+    $short = str_starts_with($name, 'cobbleandcandle/') ? substr($name, 16) : '';
+    if ($short === '' || ! in_array($short, $fallbacks, true) || \WP_Block_Type_Registry::get_instance()->is_registered($name)) {
+        return $html;
+    }
 
-    return $categories;
-});
+    return view("fallback.{$short}")->render();
+}, 10, 2);
 
 /**
  * "Cobble & Candle" pattern category (patterns/*.php register themselves).

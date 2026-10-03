@@ -1,0 +1,17 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/chef-picks",
+  "title": "Signature Dishes",
+  "category": "cobbleandcandle",
+  "description": "Photo cards for the menu items marked “Show in Chef’s picks”.",
+  "keywords": ["dishes", "menu", "chef"],
+  "textdomain": "cobbleandcandle-core",
+  "attributes": {
+    "eyebrow": { "type": "string", "default": "Signature dishes" },
+    "title": { "type": "string", "default": "Signatures of the house" },
+    "intro": { "type": "string", "default": "Three plates that have stayed on the menu through every season, because guests would riot otherwise." },
+    "count": { "type": "number", "default": 3 }
+  },
+  "supports": { "html": false, "align": ["full"] }
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/cta-band",
+  "title": "Call to Action Band",
+  "category": "cobbleandcandle",
+  "description": "A full-width band with a heading and buttons you type on the canvas.",
+  "keywords": ["cta", "call to action", "band", "buttons"],
+  "textdomain": "cobbleandcandle-core",
+  "supports": { "html": false, "align": ["full"] }
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/reservations",
+  "title": "Reservations",
+  "category": "cobbleandcandle",
+  "description": "Choose a house, then book the way that house takes bookings: the form on this site, an OpenTable or Resy widget, or by phone.",
+  "keywords": ["book", "booking", "table", "reserve", "opentable", "resy"],
+  "textdomain": "cobbleandcandle-core",
+  "attributes": {
+    "notes": { "type": "string", "default": "Tables are held for 15 minutes.\nCancel free up to 24 hours before.\nParties of 9 or more: ask about private dining.\nTell us about allergies when booking.\nSmart-casual; no dress code." },
+    "callHours": { "type": "string", "default": "Phones answered daily 11am – 6pm. Walk-ins always welcome at the bar." }
+  },
+  "supports": { "html": false, "align": ["full"] }
+}

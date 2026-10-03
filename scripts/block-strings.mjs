@@ -1,5 +1,5 @@
 // Writes resources/lang/block-strings.php: every user-facing string default from
-// resources/blocks/*/block.json wrapped in __() so `wp i18n make-pot` can extract it.
+// plugins/cobbleandcandle-core/blocks/*/block.json wrapped in __() so `wp i18n make-pot` can extract it.
 // At render time app/blocks.php swaps an untouched default for its translation.
 // Run: npm run translate:blocks (also part of npm run translate).
 import { readFileSync, writeFileSync, readdirSync } from 'node:fs'
@@ -9,8 +9,8 @@ const SKIP = new Set(['boardMenu', 'art', 'seatings'])
 const php = (s) => `'${s.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`
 
 const lines = []
-for (const dir of readdirSync('resources/blocks').sort()) {
-  const meta = JSON.parse(readFileSync(`resources/blocks/${dir}/block.json`, 'utf8'))
+for (const dir of readdirSync('plugins/cobbleandcandle-core/blocks').sort()) {
+  const meta = JSON.parse(readFileSync(`plugins/cobbleandcandle-core/blocks/${dir}/block.json`, 'utf8'))
   for (const [key, schema] of Object.entries(meta.attributes || {})) {
     const value = schema.default
     if (typeof value !== 'string' || value === '' || value.startsWith('/') || SKIP.has(key)) continue

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/page-hero",
+  "title": "Page Hero",
+  "category": "cobbleandcandle",
+  "description": "Breadcrumbs, eyebrow, page title and intro over a photo. Empty fields use the page's title, excerpt and featured image.",
+  "keywords": ["hero", "title", "breadcrumbs", "banner"],
+  "textdomain": "cobbleandcandle-core",
+  "attributes": {
+    "eyebrow": { "type": "string", "default": "" },
+    "title": { "type": "string", "default": "" },
+    "lede": { "type": "string", "default": "" },
+    "imageId": { "type": "number", "default": 0 },
+    "art": { "type": "string", "default": "room" },
+    "showCrumbs": { "type": "boolean", "default": true }
+  },
+  "supports": { "html": false, "align": ["full"] }
+}

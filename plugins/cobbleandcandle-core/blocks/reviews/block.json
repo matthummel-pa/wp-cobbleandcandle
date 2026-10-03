@@ -1,0 +1,11 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/reviews",
+  "title": "Reviews & Press",
+  "category": "cobbleandcandle",
+  "description": "Press names and review quotes as cards with stars.",
+  "textdomain": "cobbleandcandle-core",
+  "attributes": { "eyebrow": { "type": "string", "default": "Reviews & press" }, "title": { "type": "string", "default": "Kind words" }, "press": { "type": "string", "default": "The Old Town Courier, Harbour & Hearth, Coastal Table, The Night Ledger" } },
+  "supports": { "html": false, "align": ["full"] }
+}

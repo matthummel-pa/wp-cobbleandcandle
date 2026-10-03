@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cobbleandcandle/location-details",
+  "title": "Location Details",
+  "category": "cobbleandcandle",
+  "description": "The map, address, hours and getting-there notes for one location. On a location page it shows that location.",
+  "keywords": ["location", "map", "hours", "address"],
+  "textdomain": "cobbleandcandle-core",
+  "attributes": {
+    "reserveUrl": { "type": "string", "default": "/reservations/" },
+    "reserveLabel": { "type": "string", "default": "Reserve a table" }
+  },
+  "supports": { "html": false, "align": ["full"] }
+}
