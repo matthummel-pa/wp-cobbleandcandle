@@ -7,7 +7,7 @@
       @include('partials.theme-switcher')
     </div>
     <div class="demobar-r">
-      <a class="demobar-cta" href="{!! esc_url(apply_filters('cobbleandcandle/demo_link', 'https://matthummel.com/projects/cobbleandcandle/')) !!}">{{ __('Get this theme', 'cobbleandcandle') }}<x-icon name="arrow" /></a>
+      <a class="demobar-cta" href="{!! esc_url(apply_filters('cobbleandcandle/demo_link', 'https://matthummel.com/projects/cobbleandcandle/')) !!}" target="_blank" rel="noopener">{{ __('Get this theme', 'cobbleandcandle') }}<x-icon name="arrow" /></a>
       <button type="button" class="demobar-x" @click="hide()"><x-icon name="close" /><span class="sr">{{ __('Hide the demo bar', 'cobbleandcandle') }}</span></button>
     </div>
   </div>

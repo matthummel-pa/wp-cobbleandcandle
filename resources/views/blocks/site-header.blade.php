@@ -26,7 +26,7 @@
   @if ($attributes['showStyleSwitcher'])
     {{-- Demo only: re-apply a visitor's chosen direction (or ?theme=) before the page paints. Remembered per business kind. --}}
     @php($directionsPattern = implode('|', array_map(fn ($d) => preg_quote($d, '/'), array_keys(\App\directions()))))
-    {!! wp_get_inline_script_tag("(function(d){try{var k=d.documentElement.dataset.kind?'rm-theme:'+d.documentElement.dataset.kind:'rm-theme';var t=new URLSearchParams(location.search).get('theme')||localStorage.getItem(k);if(/^(".$directionsPattern.")$/.test(t)){d.documentElement.dataset.theme=t;localStorage.setItem(k,t)}}catch(e){}})(document);") !!}
+    {!! wp_get_inline_script_tag("(function(d){try{var k=d.documentElement.dataset.kind?'rm-theme:'+d.documentElement.dataset.kind:'rm-theme';var t=new URLSearchParams(location.search).get('theme')||localStorage.getItem(k);if(/^(".$directionsPattern.")$/.test(t)){d.documentElement.dataset.theme=t;localStorage.setItem(k,t)}var b=d.querySelector('[data-demobar]');if(b&&sessionStorage.getItem('rm-demobar')==='hidden'){b.hidden=true}}catch(e){}})(document);") !!}
   @endif
   @if ($showUtility)
     <div class="util" role="region" aria-label="{{ __('Contact', 'cobbleandcandle') }}">
