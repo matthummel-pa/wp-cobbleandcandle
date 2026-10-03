@@ -1,0 +1,40 @@
+name: 🐞 Bug report
+description: Something in the theme or Cobble & Candle Core isn’t working.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks! Please first open **Tools → Cobble & Candle status** in your dashboard and fix anything marked *Problem*. Never paste guest names, emails, phone numbers or passwords here: issues are public.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead. Screenshots help.
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Page URL
+      placeholder: https://example.com/menu/
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [Menus, Hours / open now, Table bookings, Rooms & stays, Events, Setup wizard, Menu import, Messages / email, Styles / design, SEO, Accessibility, Other]
+    validations:
+      required: true
+  - type: textarea
+    id: report
+    attributes:
+      label: System report
+      description: Paste the report from Tools → Cobble & Candle status (versions and settings only).
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device (for display issues)
+      placeholder: Safari on iPhone 15

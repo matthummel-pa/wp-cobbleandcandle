@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Owner guide and FAQ
+    url: https://github.com/matthummel-pa/wp-cobbleandcandle/tree/main/docs/guide
+    about: Setup, hours, menus, bookings, rooms, troubleshooting.
+  - name: 🔒 Report a security issue privately
+    url: https://github.com/matthummel-pa/wp-cobbleandcandle/security/advisories/new
+    about: Please don’t open a public issue for vulnerabilities.
+  - name: 🛒 Purchase, licence or refund
+    url: https://matthummel.com/shop/
+    about: Questions about a purchase go through the store.
