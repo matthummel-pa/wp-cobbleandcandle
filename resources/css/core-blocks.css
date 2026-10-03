@@ -52,3 +52,12 @@ main > .wp-block-post-content > :last-child:not(.alignfull) { margin-bottom: cla
 .post-single .comment { padding-block: 20px; border-bottom: 1px solid var(--color-line); }
 .post-single .post-comments :where(input:not([type=submit]), textarea) { width: 100%; padding: 12px 14px; color: var(--color-text); background: color-mix(in srgb, var(--color-text) 5%, var(--color-bg)); border: 1px solid color-mix(in srgb, var(--color-text) 52%, var(--color-bg)); border-radius: var(--radius-input); }
 .post-single .post-comments .wp-block-button__link, .post-single .post-comments input[type=submit] { padding: 14px 24px; color: var(--color-accent-contrast); background: var(--color-accent); border: 0; border-radius: var(--radius-btn); font-weight: 700; cursor: pointer; }
+
+/* Menu section links: WordPress's unlayered link colour beats the layered component rules, so the colours
+   are restated here. Desktop: muted list, current/hovered in the text colour. Phones: chips, and the
+   current chip sits on an accent fill, so its label uses the accent-contrast colour. */
+.catbar a { color: var(--color-muted); }
+.catbar a[aria-current="true"], .catbar a:hover { color: var(--color-text); }
+@media (max-width: 767px) {
+	.catbar a[aria-current="true"] { color: var(--color-accent-contrast); }
+}

@@ -167,8 +167,9 @@ Alpine.data('tabs', () => ({
   keys(event) {
     const count = this.tabs().length
     const go = (i) => { event.preventDefault(); this.select((i + count) % count, true) }
-    if (event.key === 'ArrowRight') go(this.active + 1)
-    else if (event.key === 'ArrowLeft') go(this.active - 1)
+    const step = getComputedStyle(this.$el).direction === 'rtl' ? -1 : 1 // Arrows follow the reading direction.
+    if (event.key === 'ArrowRight') go(this.active + step)
+    else if (event.key === 'ArrowLeft') go(this.active - step)
     else if (event.key === 'Home') go(0)
     else if (event.key === 'End') go(count - 1)
   },

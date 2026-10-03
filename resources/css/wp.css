@@ -66,15 +66,15 @@
 :is(.wp-block-post-content, .prose) h2:is([class="wp-block-heading"], :not([class])) { font-size: calc(var(--text-3xl) * var(--display-scale)); line-height: 1.1; }
 :is(.wp-block-post-content, .prose) h3:is([class="wp-block-heading"], :not([class])) { font-size: calc(var(--text-2xl) * var(--display-scale)); line-height: 1.15; }
 :is(.wp-block-post-content, .prose) h4:is([class="wp-block-heading"], :not([class])) { font-size: var(--text-xl); line-height: 1.2; }
-:is(.wp-block-post-content, .prose) :is(ul, ol)[class="wp-block-list"] { padding-left: 1.4em; margin: 0 0 1.1em; }
+:is(.wp-block-post-content, .prose) :is(ul, ol)[class="wp-block-list"] { padding-inline-start: 1.4em; margin: 0 0 1.1em; }
 :is(.wp-block-post-content, .prose) ul[class="wp-block-list"] { list-style: disc; }
 :is(.wp-block-post-content, .prose) ol[class="wp-block-list"] { list-style: decimal; }
 :is(.wp-block-post-content, .prose) [class="wp-block-list"] > li { margin-block: .3em; }
 :is(.wp-block-post-content, .prose) [class="wp-block-list"] > li::marker { color: var(--color-accent); }
 :is(.wp-block-post-content, .prose) :is(p, li, td) > a:not([class]) { text-decoration: underline; color: var(--color-accent); }
-:is(.wp-block-post-content, .prose) .wp-block-quote:not(.pull) { margin: 0 0 1.1em; border-left: 2px solid var(--color-accent); padding-left: 24px; font-family: var(--font-display); font-style: var(--em-style); font-size: var(--text-xl); }
+:is(.wp-block-post-content, .prose) .wp-block-quote:not(.pull) { margin: 0 0 1.1em; border-inline-start: 2px solid var(--color-accent); padding-inline-start: 24px; font-family: var(--font-display); font-style: var(--em-style); font-size: var(--text-xl); }
 :is(.wp-block-post-content, .prose) .wp-block-table table { width: 100%; border-collapse: collapse; }
-:is(.wp-block-post-content, .prose) .wp-block-table :is(th, td) { border: 0; border-bottom: 1px solid var(--color-line); padding: 10px 8px; text-align: left; }
+:is(.wp-block-post-content, .prose) .wp-block-table :is(th, td) { border: 0; border-bottom: 1px solid var(--color-line); padding: 10px 8px; text-align:start; }
 :is(.wp-block-post-content, .prose) .wp-block-separator { border: 0; border-top: 1px solid var(--color-line); margin-block: 2em; }
 
 /* Page headers over a real photo: keep the dark mood and a dark band behind the heading, but let the
