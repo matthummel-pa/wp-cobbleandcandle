@@ -248,7 +248,9 @@ function cobble_import_demo_pages( array &$counts ) {
 			),
 		)
 	);
-	if ( ! $found && 'cobbleandcandle' === get_template() ) {
+	// A Site Editor change: needs edit_theme_options (WP-CLI runs as the site owner).
+	$may_edit_theme = ( defined( 'WP_CLI' ) && WP_CLI ) || current_user_can( 'edit_theme_options' );
+	if ( ! $found && $may_edit_theme && 'cobbleandcandle' === get_template() ) {
 		$id = wp_insert_post(
 			array(
 				'post_type'    => 'wp_template_part',

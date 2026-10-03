@@ -52,7 +52,7 @@ function kind_home_url(string $kind): string
     }
     $page = get_page_by_path($def['home'], OBJECT, 'page');
 
-    return $page && $page->post_status === 'publish' ? (string) get_permalink($page) : '';
+    return $page && $page->post_status === 'publish' && ! post_password_required($page) ? (string) get_permalink($page) : '';
 }
 
 /**
@@ -63,3 +63,18 @@ add_filter('language_attributes', function (string $output): string {
 
     return $kind === '' ? $output : $output.' data-kind="'.esc_attr($kind).'"';
 }, 11);
+
+/**
+ * Register the two page meta keys so only theme editors can set them, and only to known values.
+ */
+add_action('init', function () {
+    foreach (['cobble_kind' => array_keys(kinds()), 'cobble_direction' => array_keys(directions())] as $key => $allowed) {
+        register_post_meta('page', $key, [
+            'type' => 'string',
+            'single' => true,
+            'show_in_rest' => false,
+            'sanitize_callback' => fn ($value) => in_array($value, $allowed, true) ? $value : '',
+            'auth_callback' => fn ($allowed_, $meta_key, $post_id) => current_user_can('edit_theme_options') && current_user_can('edit_post', $post_id),
+        ]);
+    }
+});

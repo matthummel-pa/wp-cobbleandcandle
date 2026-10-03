@@ -116,3 +116,14 @@ add_filter('render_block', function ($html, array $parsed): string {
 add_action('init', function () {
     register_block_pattern_category('cobbleandcandle', ['label' => __('Cobble & Candle', 'cobbleandcandle')]);
 });
+
+/**
+ * A string for a block-comment JSON attribute in a pattern. Encoded like the editor's serializer
+ * (JSON escapes, no HTML entities, no `--` to close the comment); the block escapes it on output.
+ */
+function block_attr(string $value): string
+{
+    $json = (string) wp_json_encode($value, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_HEX_APOS | JSON_UNESCAPED_UNICODE);
+
+    return str_replace('--', '\\u002d\\u002d', substr($json, 1, -1));
+}

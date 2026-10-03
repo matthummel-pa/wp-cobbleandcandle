@@ -8,8 +8,10 @@
  * Block Types: core/post-content
  * Viewport Width: 1440
  */
+
+use function App\block_attr;
 ?>
-<!-- wp:cobbleandcandle/hero {"align": "full", "caption": "The taproom at last orders"} -->
+<!-- wp:cobbleandcandle/hero {"align": "full", "caption": "<?php echo block_attr(__('The taproom at last orders', 'cobbleandcandle')); ?>"} -->
 <!-- wp:paragraph {"className": "eyebrow eyebrow--hero"} -->
 <p class="eyebrow eyebrow--hero"><?php echo esc_html(\App\brand('est') !== ''
     /* translators: %s: year established (Settings → Restaurant) */
@@ -36,15 +38,15 @@
 <!-- /wp:buttons -->
 <!-- /wp:cobbleandcandle/hero -->
 
-<!-- wp:cobbleandcandle/hours-strip {"align": "full", "tonightNote": "<?php echo esc_attr__('Kitchen till 10 · Bar till late', 'cobbleandcandle'); ?>"} /-->
+<!-- wp:cobbleandcandle/hours-strip {"align": "full", "tonightNote": "<?php echo block_attr(__('Kitchen till 10 · Bar till late', 'cobbleandcandle')); ?>"} /-->
 
-<!-- wp:cobbleandcandle/menu-teaser {"align": "full", "eyebrow": "<?php echo esc_attr__('The bar', 'cobbleandcandle'); ?>", "title": "<?php echo esc_attr__('From the taps and the cellar', 'cobbleandcandle'); ?>", "intro": "<?php echo esc_attr__('Six casks on rotation, a wall of bottles and a wine list the cellarman argues about daily.', 'cobbleandcandle'); ?>", "boardEyebrow": "<?php echo esc_attr__('On tonight', 'cobbleandcandle'); ?>", "boardTitle": "<?php echo esc_attr__('The board', 'cobbleandcandle'); ?>", "boardFoot": "<?php echo esc_attr__('Ask at the bar', 'cobbleandcandle'); ?>"} /-->
+<!-- wp:cobbleandcandle/menu-teaser {"align": "full", "eyebrow": "<?php echo block_attr(__('The bar', 'cobbleandcandle')); ?>", "title": "<?php echo block_attr(__('From the taps and the cellar', 'cobbleandcandle')); ?>", "intro": "<?php echo block_attr(__('Six casks on rotation, a wall of bottles and a wine list the cellarman argues about daily.', 'cobbleandcandle')); ?>", "boardEyebrow": "<?php echo block_attr(__('On tonight', 'cobbleandcandle')); ?>", "boardTitle": "<?php echo block_attr(__('The board', 'cobbleandcandle')); ?>", "boardFoot": "<?php echo block_attr(__('Ask at the bar', 'cobbleandcandle')); ?>"} /-->
 
-<!-- wp:cobbleandcandle/events-list {"align": "full", "eyebrow": "<?php echo esc_attr__('Music & nights', 'cobbleandcandle'); ?>", "title": "<?php echo esc_attr__('What’s on this week', 'cobbleandcandle'); ?>", "intro": "<?php echo esc_attr__('Quartets in the parlour, quiz on Tuesdays and the odd late lock-in for the regulars.', 'cobbleandcandle'); ?>"} /-->
+<!-- wp:cobbleandcandle/events-list {"align": "full", "eyebrow": "<?php echo block_attr(__('Music & nights', 'cobbleandcandle')); ?>", "title": "<?php echo block_attr(__('What’s on this week', 'cobbleandcandle')); ?>", "intro": "<?php echo block_attr(__('Quartets in the parlour, quiz on Tuesdays and the odd late lock-in for the regulars.', 'cobbleandcandle')); ?>"} /-->
 
-<!-- wp:cobbleandcandle/chef-picks {"align": "full", "eyebrow": "<?php echo esc_attr__('Bar plates', 'cobbleandcandle'); ?>", "title": "<?php echo esc_attr__('Plates for the long table', 'cobbleandcandle'); ?>", "intro": "<?php echo esc_attr__('Three things to order with a pint, because nobody has ever regretted them.', 'cobbleandcandle'); ?>"} /-->
+<!-- wp:cobbleandcandle/chef-picks {"align": "full", "eyebrow": "<?php echo block_attr(__('Bar plates', 'cobbleandcandle')); ?>", "title": "<?php echo block_attr(__('Plates for the long table', 'cobbleandcandle')); ?>", "intro": "<?php echo block_attr(__('Three things to order with a pint, because nobody has ever regretted them.', 'cobbleandcandle')); ?>"} /-->
 
-<!-- wp:cobbleandcandle/story {"align": "full", "reverse": true, "caption": "<?php echo esc_attr__('The cellarman · Keeper of the casks since 1998', 'cobbleandcandle'); ?>"} -->
+<!-- wp:cobbleandcandle/story {"align": "full", "reverse": true, "caption": "<?php echo block_attr(__('The cellarman · Keeper of the casks since 1998', 'cobbleandcandle')); ?>"} -->
 <!-- wp:paragraph {"className": "eyebrow"} -->
 <p class="eyebrow"><?php echo esc_html__('The house', 'cobbleandcandle'); ?></p>
 <!-- /wp:paragraph -->
@@ -74,7 +76,7 @@
 <!-- /wp:buttons -->
 <!-- /wp:cobbleandcandle/story -->
 
-<!-- wp:cobbleandcandle/reviews {"align": "full", "title": "<?php echo esc_attr__('Word at the bar', 'cobbleandcandle'); ?>"} -->
+<!-- wp:cobbleandcandle/reviews {"align": "full", "title": "<?php echo block_attr(__('Word at the bar', 'cobbleandcandle')); ?>"} -->
 <!-- wp:quote -->
 <blockquote class="wp-block-quote"><!-- wp:paragraph -->
 <p><?php echo esc_html__('The best-kept cask in the Old Town, and a fire you can sit at until they turn the lamps down.', 'cobbleandcandle'); ?></p>
@@ -94,7 +96,7 @@
 <!-- /wp:quote -->
 <!-- /wp:cobbleandcandle/reviews -->
 
-<!-- wp:cobbleandcandle/gallery-mosaic {"align": "full", "title": "<?php echo esc_attr__('Inside the tavern', 'cobbleandcandle'); ?>"} /-->
+<!-- wp:cobbleandcandle/gallery-mosaic {"align": "full", "title": "<?php echo block_attr(__('Inside the tavern', 'cobbleandcandle')); ?>"} /-->
 
 <!-- wp:cobbleandcandle/private-dining {"align": "full"} -->
 <!-- wp:paragraph {"className": "eyebrow"} -->

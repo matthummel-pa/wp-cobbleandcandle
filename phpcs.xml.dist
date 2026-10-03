@@ -49,7 +49,7 @@
 		<properties>
 			<!-- Theme helpers that already return escaped / kses'd markup. -->
 			<property name="customAutoEscapedFunctions" type="array">
-				
+				<element value="block_attr"/>
 			</property>
 		</properties>
 	</rule>

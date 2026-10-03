@@ -8,8 +8,10 @@
  * Block Types: core/post-content
  * Viewport Width: 1440
  */
+
+use function App\block_attr;
 ?>
-<!-- wp:cobbleandcandle/hero {"align": "full", "caption": "The Lamplighter room at first light"} -->
+<!-- wp:cobbleandcandle/hero {"align": "full", "caption": "<?php echo block_attr(__('The Lamplighter room at first light', 'cobbleandcandle')); ?>"} -->
 <!-- wp:paragraph {"className": "eyebrow eyebrow--hero"} -->
 <p class="eyebrow eyebrow--hero"><?php echo esc_html(\App\brand('est') !== ''
     /* translators: %s: year established (Settings → Restaurant) */
@@ -36,13 +38,13 @@
 <!-- /wp:buttons -->
 <!-- /wp:cobbleandcandle/hero -->
 
-<!-- wp:cobbleandcandle/rooms-list {"align": "full", "count": 4, "eyebrow": "<?php echo esc_attr__('The rooms', 'cobbleandcandle'); ?>", "title": "<?php echo esc_attr__('Four rooms, one roof', 'cobbleandcandle'); ?>", "intro": "<?php echo esc_attr__('Beams, brass beds and the quiet of a street that closes at dusk. Breakfast is included; supper is downstairs.', 'cobbleandcandle'); ?>", "linkLabel": "<?php echo esc_attr__('Rooms and availability', 'cobbleandcandle'); ?>"} /-->
+<!-- wp:cobbleandcandle/rooms-list {"align": "full", "count": 4, "eyebrow": "<?php echo block_attr(__('The rooms', 'cobbleandcandle')); ?>", "title": "<?php echo block_attr(__('Four rooms, one roof', 'cobbleandcandle')); ?>", "intro": "<?php echo block_attr(__('Beams, brass beds and the quiet of a street that closes at dusk. Breakfast is included; supper is downstairs.', 'cobbleandcandle')); ?>", "linkLabel": "<?php echo block_attr(__('Rooms and availability', 'cobbleandcandle')); ?>"} /-->
 
-<!-- wp:cobbleandcandle/hours-strip {"align": "full", "tonightNote": "<?php echo esc_attr__('Breakfast 7:30–10 · Supper from 6', 'cobbleandcandle'); ?>"} /-->
+<!-- wp:cobbleandcandle/hours-strip {"align": "full", "tonightNote": "<?php echo block_attr(__('Breakfast 7:30–10 · Supper from 6', 'cobbleandcandle')); ?>"} /-->
 
-<!-- wp:cobbleandcandle/chef-picks {"align": "full", "eyebrow": "<?php echo esc_attr__('Breakfast', 'cobbleandcandle'); ?>", "title": "<?php echo esc_attr__('The morning table', 'cobbleandcandle'); ?>", "intro": "<?php echo esc_attr__('Cooked to order from seven-thirty. Eggs from the walled garden, bread from the cellar oven, coffee from the roaster two doors down.', 'cobbleandcandle'); ?>"} /-->
+<!-- wp:cobbleandcandle/chef-picks {"align": "full", "eyebrow": "<?php echo block_attr(__('Breakfast', 'cobbleandcandle')); ?>", "title": "<?php echo block_attr(__('The morning table', 'cobbleandcandle')); ?>", "intro": "<?php echo block_attr(__('Cooked to order from seven-thirty. Eggs from the walled garden, bread from the cellar oven, coffee from the roaster two doors down.', 'cobbleandcandle')); ?>"} /-->
 
-<!-- wp:cobbleandcandle/story {"align": "full", "art": "room", "caption": "<?php echo esc_attr__('The Hayloft · Restored 2019', 'cobbleandcandle'); ?>", "showStats": false} -->
+<!-- wp:cobbleandcandle/story {"align": "full", "art": "room", "caption": "<?php echo block_attr(__('The Hayloft · Restored 2019', 'cobbleandcandle')); ?>", "showStats": false} -->
 <!-- wp:paragraph {"className": "eyebrow"} -->
 <p class="eyebrow"><?php echo esc_html__('The house', 'cobbleandcandle'); ?></p>
 <!-- /wp:paragraph -->
@@ -72,9 +74,9 @@
 <!-- /wp:buttons -->
 <!-- /wp:cobbleandcandle/story -->
 
-<!-- wp:cobbleandcandle/events-list {"align": "full", "eyebrow": "<?php echo esc_attr__('While you stay', 'cobbleandcandle'); ?>", "title": "<?php echo esc_attr__('Suppers and evenings', 'cobbleandcandle'); ?>", "intro": "<?php echo esc_attr__('Guests get first call on every cellar supper and concert in the parlour.', 'cobbleandcandle'); ?>"} /-->
+<!-- wp:cobbleandcandle/events-list {"align": "full", "eyebrow": "<?php echo block_attr(__('While you stay', 'cobbleandcandle')); ?>", "title": "<?php echo block_attr(__('Suppers and evenings', 'cobbleandcandle')); ?>", "intro": "<?php echo block_attr(__('Guests get first call on every cellar supper and concert in the parlour.', 'cobbleandcandle')); ?>"} /-->
 
-<!-- wp:cobbleandcandle/reviews {"align": "full", "title": "<?php echo esc_attr__('From the guest book', 'cobbleandcandle'); ?>"} -->
+<!-- wp:cobbleandcandle/reviews {"align": "full", "title": "<?php echo block_attr(__('From the guest book', 'cobbleandcandle')); ?>"} -->
 <!-- wp:quote -->
 <blockquote class="wp-block-quote"><!-- wp:paragraph -->
 <p><?php echo esc_html__('Dinner by candlelight, then up one flight to the best sleep of the year. We never found a reason to leave the building.', 'cobbleandcandle'); ?></p>
@@ -94,4 +96,4 @@
 <!-- /wp:quote -->
 <!-- /wp:cobbleandcandle/reviews -->
 
-<!-- wp:cobbleandcandle/gallery-mosaic {"align": "full", "title": "<?php echo esc_attr__('Rooms and mornings', 'cobbleandcandle'); ?>"} /-->
+<!-- wp:cobbleandcandle/gallery-mosaic {"align": "full", "title": "<?php echo block_attr(__('Rooms and mornings', 'cobbleandcandle')); ?>"} /-->
