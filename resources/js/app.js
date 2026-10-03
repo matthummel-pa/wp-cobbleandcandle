@@ -473,5 +473,17 @@ Alpine.data('siteHeader', () => ({
   },
 }))
 
+/* Demo bar (theme demo only): the close button hides it for the rest of the session. */
+Alpine.data('demoBar', () => ({
+  hidden: false,
+  init() {
+    try { this.hidden = sessionStorage.getItem('rm-demobar') === 'hidden' } catch {}
+  },
+  hide() {
+    this.hidden = true
+    try { sessionStorage.setItem('rm-demobar', 'hidden') } catch {}
+  },
+}))
+
 window.Alpine = Alpine
 Alpine.start()

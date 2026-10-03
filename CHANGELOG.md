@@ -6,6 +6,7 @@ All notable changes to the Cobble & Candle theme and the Cobble & Candle Core pl
 
 ### Added
 - **Three demos in one theme:** Restaurant, Tavern and B&B home pages (patterns `home-tavern`, `home-bnb`) with a “Demo” switcher in the header next to the style switcher. A page can declare its kind (`cobble_kind`): it gets a paired look (Lampwright / Ashlar & Iron / Daylight), “Book a stay” on the B&B, and Stay first in the mobile bar. The demo import creates the pages and turns the switchers on.
+- **Demo bar** above the header (theme demo only): business type, the four styles, a “Get this theme” link and a close button that hides it for the session. The utility bar is back to location, status and phone.
 - **Rooms & stays (B&B)**: rooms with nightly and weekend prices, minimum stay, units and amenities; a live availability calendar; booking requests confirmed from the dashboard with guest emails; two-way iCal sync with Airbnb, Booking.com and Vrbo; HotelRoom structured data.
 - **Stay & dine**: guests can add a dinner table on their first night when booking a room.
 - **Setup wizard** (Settings → Restaurant setup) with one-click demo import, pages and menus; no WP-CLI needed.
