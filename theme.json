@@ -56,5 +56,7 @@
       "area": "footer"
     }
   ],
-  "customTemplates": []
+  "customTemplates": [
+    { "name": "page-landing", "title": "Landing page (no page heading)", "postTypes": ["page"] }
+  ]
 }

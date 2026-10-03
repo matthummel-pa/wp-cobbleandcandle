@@ -32,7 +32,15 @@ function directions(): array
  */
 function direction(): string
 {
-    $direction = (string) (wp_get_global_settings(['custom', 'direction']) ?: 'lampwright');
+    // A demo page can declare its own look (meta cobble_direction) or follow its kind's pairing.
+    $kind = page_kind();
+    $direction = $kind === '' ? '' : (string) get_post_meta((int) get_queried_object_id(), 'cobble_direction', true);
+    if ($direction === '' && $kind !== '') {
+        $direction = kinds()[$kind]['direction'];
+    }
+    if ($direction === '') {
+        $direction = (string) (wp_get_global_settings(['custom', 'direction']) ?: 'lampwright');
+    }
 
     return array_key_exists($direction, directions()) ? $direction : 'lampwright';
 }

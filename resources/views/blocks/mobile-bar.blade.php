@@ -7,6 +7,7 @@
   // Stay: only when the site has rooms. On a room page it leads, straight to that room's calendar.
   $onRoom = is_singular('cobble_room') && ! post_password_required(get_queried_object()); // Locked rooms have no booking card.
   $stay = $attributes['showStay'] && \App\rooms(1) ? ($onRoom ? '#book' : $attributes['stayUrl']) : '';
+  $onRoom = $onRoom || (\App\page_kind() === 'bnb' && $stay !== ''); // The B&B demo page leads with Stay too.
   $bind = $current ? ['tel' => '$store.site.loc.tel', 'nav' => '$store.site.loc.map_url'] : [];
   $items = array_filter([
     ['url' => $attributes['reserveUrl'], 'icon' => 'calendar', 'label' => __('Reserve', 'cobbleandcandle'), 'primary' => ! $onRoom || $stay === ''],

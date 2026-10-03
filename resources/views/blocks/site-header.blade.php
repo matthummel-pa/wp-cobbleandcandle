@@ -1,6 +1,13 @@
 {{-- Site Header block: utility bar, split nav with centred crest, Order/Reserve, mobile drawer (HANDOFF §3). --}}
 @php
   $reserveUrl = $attributes['reserveUrl'] ?: '';
+  $reserveLabel = $attributes['reserveLabel'];
+  // A page that declares a business kind (demo pages) gets that kind's primary action: "Book a stay" on the B&B.
+  $kind = \App\page_kind();
+  if ($kind !== '' && $kind !== 'restaurant' && $reserveUrl !== '') {
+    $reserveLabel = \App\kinds()[$kind]['cta'];
+    $reserveUrl = \App\page_link(\App\kinds()[$kind]['cta_url']);
+  }
   $orderUrl = $attributes['orderUrl'] ?: '';
   $locations = \App\locations();
   $current = \App\current_location();
@@ -14,8 +21,9 @@
     <script type="application/json" id="cobble-status">{!! \App\status_json() !!}</script>
   @endif
   @if ($attributes['showStyleSwitcher'])
-    {{-- Demo only: re-apply a visitor's chosen direction (or ?theme=) before the page paints. --}}
-    {!! wp_get_inline_script_tag("(function(d){try{var t=new URLSearchParams(location.search).get('theme')||localStorage.getItem('rm-theme');if(/^(lampwright|ember-arch|ashlar-iron)$/.test(t)){d.documentElement.dataset.theme=t;localStorage.setItem('rm-theme',t)}}catch(e){}})(document);") !!}
+    {{-- Demo only: re-apply a visitor's chosen direction (or ?theme=) before the page paints. Remembered per business kind. --}}
+    @php($directionsPattern = implode('|', array_map(fn ($d) => preg_quote($d, '/'), array_keys(\App\directions()))))
+    {!! wp_get_inline_script_tag("(function(d){try{var k=d.documentElement.dataset.kind?'rm-theme:'+d.documentElement.dataset.kind:'rm-theme';var t=new URLSearchParams(location.search).get('theme')||localStorage.getItem(k);if(/^(".$directionsPattern.")$/.test(t)){d.documentElement.dataset.theme=t;localStorage.setItem(k,t)}}catch(e){}})(document);") !!}
   @endif
   @if ($showUtility)
     <div class="util" role="region" aria-label="{{ __('Contact and style', 'cobbleandcandle') }}">
@@ -33,6 +41,7 @@
         </div>
         <div class="util-r">
           @if ($attributes['showStyleSwitcher'])
+            @include('partials.kind-switcher')
             @include('partials.theme-switcher')
           @endif
         </div>
@@ -50,7 +59,7 @@
           <x-button :href="$orderUrl" variant="secondary" size="sm" class="hdr-order">{{ $attributes['orderLabel'] }}</x-button>
         @endif
         @if ($reserveUrl !== '')
-          <x-button :href="$reserveUrl" size="sm" class="hdr-reserve">{{ $attributes['reserveLabel'] }}</x-button>
+          <x-button :href="$reserveUrl" size="sm" class="hdr-reserve">{{ $reserveLabel }}</x-button>
         @endif
         <button type="button" class="hdr-burger" aria-controls="drawer" aria-expanded="false" :aria-expanded="open.toString()" x-ref="burger" @click="openDrawer()">
           <x-icon name="menu" /><span class="sr">{{ __('Open menu', 'cobbleandcandle') }}</span>
@@ -68,7 +77,7 @@
       <nav aria-label="{{ __('Mobile', 'cobbleandcandle') }}">{!! \App\menu('primary_navigation', 'drawer-nav') !!}{!! \App\menu('secondary_navigation', 'drawer-nav') !!}</nav>
       <div class="drawer-cta">
         @if ($reserveUrl !== '')
-          <x-button :href="$reserveUrl" icon="calendar">{{ $attributes['reserveLabel'] }}</x-button>
+          <x-button :href="$reserveUrl" icon="calendar">{{ $reserveLabel }}</x-button>
         @endif
         @if ($orderUrl !== '')
           <x-button :href="$orderUrl" variant="secondary" icon="bag">{{ $attributes['orderLabel'] }}</x-button>
