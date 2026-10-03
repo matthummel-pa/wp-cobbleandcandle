@@ -183,16 +183,55 @@ function cc_parse_menu_csv( $path ) {
  * @return int Post ID or 0.
  */
 function cc_menu_csv_match( array $row ) {
-	$menu    = get_term_by( 'slug', sanitize_title( $row['menu'] ), 'cc_menu' );
-	$section = $menu ? get_term_by( 'slug', sanitize_title( $row['menu'] . '-' . $row['section'] ), 'cc_menu_section' ) : false;
+	$menu    = cc_menu_csv_find_term( 'cc_menu', $row['menu'], sanitize_title( $row['menu'] ) );
+	$section = $menu ? cc_menu_csv_find_term( 'cc_menu_section', $row['section'], sanitize_title( $row['menu'] . '-' . $row['section'] ) ) : null;
 	if ( ! $menu || ! $section ) {
 		return 0;
 	}
+	// Titles may be stored with & as &amp; (users without unfiltered_html): try both spellings.
+	foreach ( array_unique( array( $row['name'], esc_html( $row['name'] ) ) ) as $title ) {
+		$found = cc_menu_csv_find_dish( $title, (int) $menu->term_id, (int) $section->term_id );
+		if ( $found ) {
+			return $found;
+		}
+	}
+	return 0;
+}
+
+/**
+ * A menu or section term: by the importer's slug first, then by name (sections created in the
+ * WordPress UI have a slug from the name alone).
+ *
+ * @param string $taxonomy Taxonomy.
+ * @param string $name     Name.
+ * @param string $slug     Importer slug.
+ * @return WP_Term|null
+ */
+function cc_menu_csv_find_term( $taxonomy, $name, $slug ) {
+	$term = get_term_by( 'slug', $slug, $taxonomy );
+	if ( ! $term ) {
+		$term = get_term_by( 'name', $name, $taxonomy );
+	}
+	if ( ! $term ) {
+		$term = get_term_by( 'name', esc_html( $name ), $taxonomy );
+	}
+	return $term instanceof WP_Term ? $term : null;
+}
+
+/**
+ * A dish by exact title in a menu and section.
+ *
+ * @param string $title      Title as stored.
+ * @param int    $menu_id    Menu term.
+ * @param int    $section_id Section term.
+ * @return int Post ID or 0.
+ */
+function cc_menu_csv_find_dish( $title, $menu_id, $section_id ) {
 	$found = get_posts(
 		array(
 			'post_type'      => 'cc_menu_item',
 			'post_status'    => array( 'publish', 'draft', 'pending', 'private' ),
-			'title'          => $row['name'],
+			'title'          => $title,
 			'posts_per_page' => 1,
 			'fields'         => 'ids',
 			'no_found_rows'  => true,
@@ -200,11 +239,11 @@ function cc_menu_csv_match( array $row ) {
 				'relation' => 'AND',
 				array(
 					'taxonomy' => 'cc_menu',
-					'terms'    => (int) $menu->term_id,
+					'terms'    => $menu_id,
 				),
 				array(
 					'taxonomy' => 'cc_menu_section',
-					'terms'    => (int) $section->term_id,
+					'terms'    => $section_id,
 				),
 			),
 		)
@@ -221,7 +260,7 @@ function cc_menu_csv_match( array $row ) {
  * @return int Term ID or 0.
  */
 function cc_menu_csv_term( $taxonomy, $name, $slug ) {
-	$term = get_term_by( 'slug', $slug, $taxonomy );
+	$term = cc_menu_csv_find_term( $taxonomy, $name, $slug );
 	if ( $term ) {
 		return (int) $term->term_id;
 	}
@@ -307,9 +346,8 @@ function cc_handle_menu_import_run() {
 			$intros[ $menu_id ] = true;
 			update_term_meta( $menu_id, 'cc_intro', $row['menu_intro'] );
 		}
-		$key            = $menu_id . '-' . $section_id;
-		$order[ $key ]  = ( $order[ $key ] ?? -1 ) + 1;
-		$existing       = cc_menu_csv_match( $row ); // Re-check: the preview may be 30 minutes old.
+		$key      = $menu_id . '-' . $section_id;
+		$existing = cc_menu_csv_match( $row ); // Re-check: the preview may be 30 minutes old.
 		if ( $existing && $skip ) {
 			++$counts['skipped'];
 			continue;
@@ -325,9 +363,37 @@ function cc_handle_menu_import_run() {
 		$postarr = array(
 			'post_type'  => 'cc_menu_item',
 			'post_title' => $row['name'],
-			'menu_order' => $order[ $key ],
 			'meta_input' => array(),
 		);
+		if ( ! $existing ) {
+			// New dishes go after the section's existing dishes, in file order; existing dishes keep their place.
+			if ( ! isset( $order[ $key ] ) ) {
+				$last          = get_posts(
+					array(
+						'post_type'      => 'cc_menu_item',
+						'post_status'    => 'any',
+						'posts_per_page' => 1,
+						'orderby'        => 'menu_order',
+						'order'          => 'DESC',
+						'no_found_rows'  => true,
+						'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- once per section per import.
+							'relation' => 'AND',
+							array(
+								'taxonomy' => 'cc_menu',
+								'terms'    => $menu_id,
+							),
+							array(
+								'taxonomy' => 'cc_menu_section',
+								'terms'    => $section_id,
+							),
+						),
+					)
+				);
+				$order[ $key ] = $last ? (int) $last[0]->menu_order : -1;
+			}
+			$order[ $key ]          = $order[ $key ] + 1;
+			$postarr['menu_order'] = $order[ $key ];
+		}
 		foreach ( $meta as $column => list( $meta_key, $value ) ) {
 			// Updating: a column missing from the file leaves that field alone (nothing is wiped).
 			if ( ! $existing || in_array( $column, $present, true ) ) {
@@ -396,7 +462,7 @@ function cc_handle_menu_export() {
 					$lines[]  = array(
 						html_entity_decode( $menu['term']->name, ENT_QUOTES, 'UTF-8' ),
 						html_entity_decode( $section_name, ENT_QUOTES, 'UTF-8' ),
-						$post ? cc_plain_title( $post ) : '',
+						$post ? html_entity_decode( $post->post_title, ENT_QUOTES, 'UTF-8' ) : '', // Raw title (not texturized) so re-import matches.
 						$post ? $post->post_excerpt : '',
 						(string) get_post_meta( $item['id'], 'cc_price', true ),
 						implode(
