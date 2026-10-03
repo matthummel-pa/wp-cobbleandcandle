@@ -517,8 +517,14 @@ function cc_render_menu_import_page() {
 	$pending = 'preview' === $status ? get_transient( cc_menu_import_key() ) : false;
 	$export  = wp_nonce_url( admin_url( 'admin-post.php?action=cc_menu_export' ), 'cc_menu_export' );
 	?>
-	<div class="wrap">
-		<h1><?php esc_html_e( 'Import / export menus', 'cobbleandcandle-core' ); ?></h1>
+	<div class="wrap cc-admin">
+		<?php
+		cc_admin_header(
+			__( 'Import / export menus', 'cobbleandcandle-core' ),
+			__( 'Add or update a whole menu from a spreadsheet. Dishes are matched by name within the same menu and section; nothing is deleted.', 'cobbleandcandle-core' ),
+			admin_url( 'edit.php?post_type=cc_menu_item&page=cc-menu-import' )
+		);
+		?>
 
 		<?php if ( 'done' === $status ) : ?>
 			<div class="notice notice-success"><p>
@@ -539,6 +545,12 @@ function cc_render_menu_import_page() {
 			$rows    = (array) $pending['rows'];
 			$updates = count( array_filter( array_column( $rows, 'match' ) ) );
 			?>
+			<ol class="cc-steps" aria-label="<?php esc_attr_e( 'Import steps', 'cobbleandcandle-core' ); ?>">
+				<li class="is-done"><?php esc_html_e( '1 · Upload', 'cobbleandcandle-core' ); ?></li>
+				<li aria-current="step"><?php esc_html_e( '2 · Check', 'cobbleandcandle-core' ); ?></li>
+				<li><?php esc_html_e( '3 · Import', 'cobbleandcandle-core' ); ?></li>
+			</ol>
+			<section class="cc-card">
 			<h2><?php esc_html_e( 'Check before importing', 'cobbleandcandle-core' ); ?></h2>
 			<p>
 				<?php
@@ -590,8 +602,10 @@ function cc_render_menu_import_page() {
 					<a class="button" href="<?php echo esc_url( admin_url( 'edit.php?post_type=cc_menu_item&page=cc-menu-import' ) ); ?>"><?php esc_html_e( 'Cancel', 'cobbleandcandle-core' ); ?></a>
 				</form>
 			<?php endif; ?>
+			</section>
 		<?php else : ?>
-			<p><?php esc_html_e( 'Add or update a whole menu from a spreadsheet. Dishes are matched by name within the same menu and section; nothing is deleted.', 'cobbleandcandle-core' ); ?></p>
+			<div class="cc-grid">
+			<section class="cc-card">
 			<h2><?php esc_html_e( 'Import', 'cobbleandcandle-core' ); ?></h2>
 			<form method="post" enctype="multipart/form-data" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 				<input type="hidden" name="action" value="cc_menu_import_upload">
@@ -604,9 +618,13 @@ function cc_render_menu_import_page() {
 				<?php esc_html_e( 'Columns: menu, section, name, description, price, sizes (Glass: $12 | Bottle: $48), diet (v, vg, gf, spicy), flag, chef_pick (yes/no), menu_intro. Only menu, section and name are required.', 'cobbleandcandle-core' ); ?>
 				<a href="<?php echo esc_url( add_query_arg( 'sample', '1', $export ) ); ?>"><?php esc_html_e( 'Download a sample file', 'cobbleandcandle-core' ); ?></a>
 			</p>
+			</section>
+			<section class="cc-card">
 			<h2><?php esc_html_e( 'Export', 'cobbleandcandle-core' ); ?></h2>
 			<p><?php esc_html_e( 'Download every menu in the same format, edit it in Excel, Numbers or Google Sheets, and import it back.', 'cobbleandcandle-core' ); ?></p>
-			<p><a class="button" href="<?php echo esc_url( $export ); ?>"><?php esc_html_e( 'Export menus (CSV)', 'cobbleandcandle-core' ); ?></a></p>
+			<p><a class="button button-primary" href="<?php echo esc_url( $export ); ?>"><?php esc_html_e( 'Export menus (CSV)', 'cobbleandcandle-core' ); ?></a></p>
+			</section>
+			</div>
 		<?php endif; ?>
 	</div>
 	<?php
