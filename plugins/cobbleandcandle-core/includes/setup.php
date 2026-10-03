@@ -170,11 +170,7 @@ function cc_setup_apply_direction( $slug ) {
  * @return string
  */
 function cc_setup_pattern( $slug ) {
-	$registry = WP_Block_Patterns_Registry::get_instance();
-	if ( ! $registry->is_registered( $slug ) && function_exists( '_register_theme_block_patterns' ) ) {
-		_register_theme_block_patterns();
-	}
-	$pattern = $registry->get_registered( $slug );
+	$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( $slug );
 	return $pattern ? (string) $pattern['content'] : '';
 }
 
@@ -237,12 +233,15 @@ function cc_setup_page( $key, array $page ) {
  */
 function cc_setup_nav_menu( $name, $location ) {
 	$menu = wp_get_nav_menu_object( $name );
-	$id   = $menu ? (int) $menu->term_id : (int) wp_create_nav_menu( $name );
-	if ( ! $id || is_wp_error( $id ) ) {
+	$id   = $menu ? (int) $menu->term_id : wp_create_nav_menu( $name );
+	if ( is_wp_error( $id ) || ! $id ) {
 		return array( 0, false );
 	}
-	$locations              = (array) get_theme_mod( 'nav_menu_locations', array() );
-	$locations[ $location ] = $locations[ $location ] ?? $id; // Never replace a menu the owner already assigned.
+	$id        = (int) $id;
+	$locations = (array) get_theme_mod( 'nav_menu_locations', array() );
+	$current   = (int) ( $locations[ $location ] ?? 0 );
+	// Never replace a menu the owner assigned; fill the location only when empty or pointing at a deleted menu.
+	$locations[ $location ] = $current && is_nav_menu( $current ) ? $current : $id;
 	set_theme_mod( 'nav_menu_locations', $locations );
 	return array( (int) $locations[ $location ], ! wp_get_nav_menu_items( (int) $locations[ $location ] ) );
 }
@@ -315,13 +314,14 @@ function cc_setup_save() {
 		}
 		update_option( 'cobbleandcandle_brand', cc_sanitize_settings( $brand ) );
 		$clock = isset( $_POST['cc_clock'] ) ? sanitize_key( wp_unslash( $_POST['cc_clock'] ) ) : '';
-		if ( '24' === $clock ) {
+		$is24  = (bool) preg_match( '/[GH]/', (string) get_option( 'time_format' ) );
+		if ( '24' === $clock && ! $is24 ) { // Only when the clock actually changes: a custom format is kept.
 			update_option( 'time_format', 'H:i' );
-		} elseif ( '12' === $clock ) {
+		} elseif ( '12' === $clock && $is24 ) {
 			update_option( 'time_format', 'g:i a' );
 		}
 		$direction = isset( $_POST['cc_direction'] ) ? sanitize_key( wp_unslash( $_POST['cc_direction'] ) ) : '';
-		if ( '' !== $direction && $direction !== cc_setup_current_direction() ) {
+		if ( '' !== $direction && cc_setup_current_direction() !== $direction && current_user_can( 'edit_theme_options' ) ) {
 			cc_setup_apply_direction( $direction );
 		}
 	} elseif ( 'content' === $step ) {
@@ -369,11 +369,12 @@ function cc_setup_save() {
 				$ids[ $key ] = cc_setup_page( $key, $page )['id'];
 			}
 		}
-		if ( ! empty( $ids['home'] ) && ! empty( $_POST['cc_front'] ) ) {
+		$has_front = 'page' === get_option( 'show_on_front' ) && get_option( 'page_on_front' );
+		if ( ! empty( $ids['home'] ) && ! empty( $_POST['cc_front'] ) && ! $has_front && current_user_can( 'edit_theme_options' ) ) {
 			update_option( 'show_on_front', 'page' );
 			update_option( 'page_on_front', $ids['home'] );
 		}
-		if ( ! empty( $_POST['cc_menus'] ) ) {
+		if ( ! empty( $_POST['cc_menus'] ) && current_user_can( 'edit_theme_options' ) ) {
 			$registered = get_registered_nav_menus();
 			$events     = post_type_exists( 'cc_event' ) ? (string) get_post_type_archive_link( 'cc_event' ) : '';
 			$rooms      = in_array( 'rooms', $state['kinds'], true ) && post_type_exists( 'cc_room' ) ? (string) get_post_type_archive_link( 'cc_room' ) : '';
@@ -523,11 +524,11 @@ function cc_render_setup_page() {
 						<?php foreach ( $directions as $slug => $dir ) : ?>
 							<label class="cc-style">
 								<input type="radio" name="cc_direction" value="<?php echo esc_attr( $slug ); ?>" <?php checked( $slug, cc_setup_current_direction() ); ?>>
-								<span class="cc-style-sw" style="background:linear-gradient(135deg,<?php echo esc_attr( $dir['sw'][0] ); ?> 55%,<?php echo esc_attr( $dir['sw'][1] ); ?> 55%)"></span>
+								<span class="cc-style-sw" style="background:linear-gradient(135deg,<?php echo esc_attr( (string) sanitize_hex_color( $dir['sw'][0] ) ); ?> 55%,<?php echo esc_attr( (string) sanitize_hex_color( $dir['sw'][1] ) ); ?> 55%)"></span>
 								<strong><?php echo esc_html( $dir['label'] ); ?></strong> <span class="description"><?php echo esc_html( $dir['title'] ); ?></span>
 							</label>
 						<?php endforeach; ?>
-						<p class="description"><?php esc_html_e( 'Changing style replaces colour and font changes made in the Site Editor. You can switch again any time under Appearance → Editor → Styles.', 'cobbleandcandle-core' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Changing style replaces colour and font changes made in the Site Editor (earlier versions stay in Appearance → Editor → Styles → Revisions). Keep the current style to leave them as they are.', 'cobbleandcandle-core' ); ?></p>
 						</fieldset></td></tr>
 				<?php endif; ?>
 				<tr><th scope="row"><label for="cc-brandline"><?php esc_html_e( 'Brand line', 'cobbleandcandle-core' ); ?></label></th>
@@ -579,7 +580,11 @@ function cc_render_setup_page() {
 					<?php if ( $exists ) : ?><span class="description">— <?php esc_html_e( 'already exists, kept as is', 'cobbleandcandle-core' ); ?></span><?php endif; ?></label>
 				<?php endforeach; ?>
 			</fieldset>
-			<p><label><input type="checkbox" name="cc_front" value="1" checked> <?php esc_html_e( 'Use Home as the front page', 'cobbleandcandle-core' ); ?></label></p>
+			<?php if ( 'page' === get_option( 'show_on_front' ) && get_option( 'page_on_front' ) ) : ?>
+				<p class="description"><?php esc_html_e( 'Your site already has a front page, so it is kept.', 'cobbleandcandle-core' ); ?></p>
+			<?php else : ?>
+				<p><label><input type="checkbox" name="cc_front" value="1" checked> <?php esc_html_e( 'Use Home as the front page', 'cobbleandcandle-core' ); ?></label></p>
+			<?php endif; ?>
 			<p><label><input type="checkbox" name="cc_menus" value="1" checked> <?php esc_html_e( 'Set up the header and footer menus (only menus that are still empty)', 'cobbleandcandle-core' ); ?></label></p>
 			<?php cc_setup_form_close( 'pages', __( 'Create pages and finish', 'cobbleandcandle-core' ) ); ?>
 

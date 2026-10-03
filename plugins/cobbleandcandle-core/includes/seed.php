@@ -242,7 +242,8 @@ function cc_seed_post( $post_type, $title, array $postarr, array $meta, $update,
 	}
 
 	$id = wp_insert_post(
-		array_merge(
+		wp_slash(
+			array_merge(
 			array(
 				'ID'          => $existing,
 				'post_type'   => $post_type,
@@ -250,6 +251,7 @@ function cc_seed_post( $post_type, $title, array $postarr, array $meta, $update,
 				'post_status' => 'publish',
 			),
 			$postarr
+			)
 		),
 		true
 	);
