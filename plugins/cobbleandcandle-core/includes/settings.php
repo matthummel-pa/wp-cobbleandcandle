@@ -29,7 +29,7 @@ function cc_settings_fields() {
 		'tripadvisor' => array( 'Tripadvisor', 'url', '' ),
 		'yelp'        => array( 'Yelp', 'url', '' ),
 		'google'      => array( __( 'Google Business Profile', 'cobbleandcandle-core' ), 'url', '' ),
-		'remove_data' => array( __( 'Remove data on uninstall', 'cobbleandcandle-core' ), 'checkbox', __( 'Delete all locations, menus, menu items, events, rooms, bookings and gallery categories when this plugin is deleted. Leave unticked to keep your content.', 'cobbleandcandle-core' ) ),
+		'remove_data' => array( __( 'Remove data on uninstall', 'cobbleandcandle-core' ), 'checkbox', __( 'Delete all locations, menus, menu items, events, rooms, bookings, messages and gallery categories when this plugin is deleted. Leave unticked to keep your content.', 'cobbleandcandle-core' ) ),
 	);
 }
 

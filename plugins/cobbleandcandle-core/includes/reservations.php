@@ -17,18 +17,19 @@ defined( 'ABSPATH' ) || exit;
 function cc_reservation_choices() {
 	return array(
 		'party'     => array( '1', '2', '3', '4', '5', '6', '7', '8' ),
+		// Stable keys are posted; labels are only shown (a language switch can't break a submission).
 		'seating'   => array(
-			__( 'No preference', 'cobbleandcandle-core' ),
-			__( 'Dining room', 'cobbleandcandle-core' ),
-			__( 'Bar / counter', 'cobbleandcandle-core' ),
-			__( 'Outdoors', 'cobbleandcandle-core' ),
+			'any'      => __( 'No preference', 'cobbleandcandle-core' ),
+			'dining'   => __( 'Dining room', 'cobbleandcandle-core' ),
+			'bar'      => __( 'Bar / counter', 'cobbleandcandle-core' ),
+			'outdoors' => __( 'Outdoors', 'cobbleandcandle-core' ),
 		),
 		'occasions' => array(
-			__( 'None', 'cobbleandcandle-core' ),
-			__( 'Birthday', 'cobbleandcandle-core' ),
-			__( 'Anniversary', 'cobbleandcandle-core' ),
-			__( 'Business', 'cobbleandcandle-core' ),
-			__( 'Other', 'cobbleandcandle-core' ),
+			'none'        => __( 'None', 'cobbleandcandle-core' ),
+			'birthday'    => __( 'Birthday', 'cobbleandcandle-core' ),
+			'anniversary' => __( 'Anniversary', 'cobbleandcandle-core' ),
+			'business'    => __( 'Business', 'cobbleandcandle-core' ),
+			'other'       => __( 'Other', 'cobbleandcandle-core' ),
 		),
 	);
 }
@@ -143,8 +144,8 @@ function cc_handle_reservation() {
 	$date     = isset( $_POST['cc_date'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_date'] ) ) : '';
 	$time     = isset( $_POST['cc_time'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_time'] ) ) : '';
 	$party    = isset( $_POST['cc_party'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_party'] ) ) : '';
-	$seating  = isset( $_POST['cc_seating'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_seating'] ) ) : '';
-	$occasion = isset( $_POST['cc_occasion'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_occasion'] ) ) : '';
+	$seating  = isset( $_POST['cc_seating'] ) ? sanitize_key( wp_unslash( $_POST['cc_seating'] ) ) : 'any';
+	$occasion = isset( $_POST['cc_occasion'] ) ? sanitize_key( wp_unslash( $_POST['cc_occasion'] ) ) : 'none';
 	$name     = isset( $_POST['cc_name'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_name'] ) ) : '';
 	$phone    = isset( $_POST['cc_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_phone'] ) ) : '';
 	$email    = isset( $_POST['cc_email'] ) ? sanitize_email( wp_unslash( $_POST['cc_email'] ) ) : '';
@@ -156,8 +157,7 @@ function cc_handle_reservation() {
 		&& preg_match( '/^([01]\d|2[0-3]):[0-5]\d$/', $time )
 		&& cc_is_bookable( $location, $date, $time )
 		&& in_array( $party, $choices['party'], true )
-		&& in_array( $seating, $choices['seating'], true )
-		&& in_array( $occasion, $choices['occasions'], true )
+		&& isset( $choices['seating'][ $seating ], $choices['occasions'][ $occasion ] )
 		&& '' !== $name && '' !== $phone && is_email( $email );
 	if ( ! $valid ) {
 		$done( 'invalid' );
@@ -174,8 +174,8 @@ function cc_handle_reservation() {
 			__( 'Date', 'cobbleandcandle-core' ) . ': ' . $date,
 			__( 'Time', 'cobbleandcandle-core' ) . ': ' . cc_time_label( $time ),
 			__( 'Party size', 'cobbleandcandle-core' ) . ': ' . $party,
-			__( 'Seating', 'cobbleandcandle-core' ) . ': ' . $seating,
-			__( 'Occasion', 'cobbleandcandle-core' ) . ': ' . $occasion,
+			__( 'Seating', 'cobbleandcandle-core' ) . ': ' . $choices['seating'][ $seating ],
+			__( 'Occasion', 'cobbleandcandle-core' ) . ': ' . $choices['occasions'][ $occasion ],
 			__( 'Name', 'cobbleandcandle-core' ) . ': ' . $name,
 			__( 'Phone', 'cobbleandcandle-core' ) . ': ' . $phone,
 			__( 'Email', 'cobbleandcandle-core' ) . ': ' . $email,
@@ -184,7 +184,8 @@ function cc_handle_reservation() {
 			$requests,
 		)
 	);
-	$sent    = wp_mail( $to, $subject, $body, array( 'Reply-To: ' . $name . ' <' . $email . '>' ) );
+	$sent    = wp_mail( $to, $subject, $body, array( 'Reply-To: ' . cc_mail_name( $name ) . ' <' . $email . '>' ) );
+	$stored  = cc_store_message( 'reservation', $subject, $body, $email, $location, $sent );
 
 	/**
 	 * Fires after a table request is emailed, for CRMs, newsletters or booking systems.
@@ -194,7 +195,7 @@ function cc_handle_reservation() {
 	 */
 	do_action( 'cc_reservation_requested', compact( 'location', 'date', 'time', 'party', 'seating', 'occasion', 'name', 'phone', 'email', 'requests', 'news' ), $sent );
 
-	$done( $sent ? 'sent' : 'error' );
+	$done( $sent || $stored ? 'sent' : 'error' );
 }
 add_action( 'admin_post_cc_reservation', 'cc_handle_reservation' );
 add_action( 'admin_post_nopriv_cc_reservation', 'cc_handle_reservation' );

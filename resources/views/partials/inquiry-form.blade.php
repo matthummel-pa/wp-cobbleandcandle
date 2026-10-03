@@ -30,7 +30,7 @@
     @if ($locations)
       <div class="field"><label for="{{ $fid }}-loc">{{ __('House', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><div class="select"><select id="{{ $fid }}-loc" name="cc_location" required>@foreach ($locations as $l)<option value="{{ $l['id'] }}" @selected($l['id'] === ($current['id'] ?? 0))>{{ $l['name'] }}</option>@endforeach</select><x-icon name="chev-down" /></div></div>
     @endif
-    <div class="field"><label for="{{ $fid }}-occ">{{ __('Occasion', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><div class="select"><select id="{{ $fid }}-occ" name="cc_occasion" required>@foreach ($choices['occasions'] as $o)<option>{{ $o }}</option>@endforeach</select><x-icon name="chev-down" /></div></div>
+    <div class="field"><label for="{{ $fid }}-occ">{{ __('Occasion', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><div class="select"><select id="{{ $fid }}-occ" name="cc_occasion" required>@foreach ($choices['occasions'] as $key => $o)<option value="{{ $key }}">{{ $o }}</option>@endforeach</select><x-icon name="chev-down" /></div></div>
     <div class="field field--full"><label for="{{ $fid }}-msg">{{ __('Tell us about your event', 'cobbleandcandle') }} <span class="opt">{{ __('(optional)', 'cobbleandcandle') }}</span></label><textarea id="{{ $fid }}-msg" name="cc_message" rows="4"></textarea></div>
   </div>
   <button class="btn btn--primary btn--block" type="submit">{{ __('Send inquiry', 'cobbleandcandle') }}</button>

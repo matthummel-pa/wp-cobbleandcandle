@@ -9,24 +9,24 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Contact topics.
+ * Contact topics: stable key => label (the key is posted, the label shown).
  *
- * @return array<int, string>
+ * @return array<string, string>
  */
 function cc_contact_topics() {
 	/**
 	 * Topics offered on the contact form.
 	 *
-	 * @param array<int, string> $topics Topic labels.
+	 * @param array<string, string> $topics Key => label.
 	 */
 	return (array) apply_filters(
 		'cc_contact_topics',
 		array(
-			__( 'General', 'cobbleandcandle-core' ),
-			__( 'Reservation', 'cobbleandcandle-core' ),
-			__( 'Private dining', 'cobbleandcandle-core' ),
-			__( 'Press', 'cobbleandcandle-core' ),
-			__( 'Lost property', 'cobbleandcandle-core' ),
+			'general'     => __( 'General', 'cobbleandcandle-core' ),
+			'reservation' => __( 'Reservation', 'cobbleandcandle-core' ),
+			'private'     => __( 'Private dining', 'cobbleandcandle-core' ),
+			'press'       => __( 'Press', 'cobbleandcandle-core' ),
+			'lost'        => __( 'Lost property', 'cobbleandcandle-core' ),
 		)
 	);
 }
@@ -53,7 +53,8 @@ function cc_handle_contact() {
 		$done( 'busy' );
 	}
 
-	$topic    = isset( $_POST['cc_topic'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_topic'] ) ) : '';
+	$topics   = cc_contact_topics();
+	$topic    = isset( $_POST['cc_topic'] ) ? sanitize_key( wp_unslash( $_POST['cc_topic'] ) ) : '';
 	$name     = isset( $_POST['cc_name'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_name'] ) ) : '';
 	$email    = isset( $_POST['cc_email'] ) ? sanitize_email( wp_unslash( $_POST['cc_email'] ) ) : '';
 	$phone    = isset( $_POST['cc_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_phone'] ) ) : '';
@@ -62,7 +63,7 @@ function cc_handle_contact() {
 	$consent  = ! empty( $_POST['cc_consent'] );
 
 	$valid = $consent && '' !== $name && is_email( $email ) && '' !== $message
-		&& in_array( $topic, cc_contact_topics(), true )
+		&& isset( $topics[ $topic ] )
 		&& ( 0 === $location || cc_is_public_location( $location ) );
 	if ( ! $valid ) {
 		$done( 'invalid' );
@@ -71,11 +72,11 @@ function cc_handle_contact() {
 	$to = $location ? sanitize_email( (string) get_post_meta( $location, 'cc_email', true ) ) : '';
 	$to = $to ? $to : get_option( 'admin_email' );
 	/* translators: 1: topic, 2: sender name */
-	$subject = sprintf( __( 'Website message (%1$s) from %2$s', 'cobbleandcandle-core' ), $topic, $name );
+	$subject = sprintf( __( 'Website message (%1$s) from %2$s', 'cobbleandcandle-core' ), $topics[ $topic ], $name );
 	$body    = implode(
 		"\n",
 		array(
-			__( 'Topic', 'cobbleandcandle-core' ) . ': ' . $topic,
+			__( 'Topic', 'cobbleandcandle-core' ) . ': ' . $topics[ $topic ],
 			__( 'Name', 'cobbleandcandle-core' ) . ': ' . $name,
 			__( 'Email', 'cobbleandcandle-core' ) . ': ' . $email,
 			__( 'Phone', 'cobbleandcandle-core' ) . ': ' . ( '' !== $phone ? $phone : '—' ),
@@ -84,9 +85,10 @@ function cc_handle_contact() {
 			$message,
 		)
 	);
-	$sent    = wp_mail( $to, $subject, $body, array( 'Reply-To: ' . $name . ' <' . $email . '>' ) );
+	$sent    = wp_mail( $to, $subject, $body, array( 'Reply-To: ' . cc_mail_name( $name ) . ' <' . $email . '>' ) );
+	$stored  = cc_store_message( 'contact', $subject, $body, $email, $location, $sent );
 
-	$done( $sent ? 'sent' : 'error' );
+	$done( $sent || $stored ? 'sent' : 'error' );
 }
 add_action( 'admin_post_cc_contact', 'cc_handle_contact' );
 add_action( 'admin_post_nopriv_cc_contact', 'cc_handle_contact' );

@@ -49,8 +49,8 @@
           <fieldset class="topics">
             <legend>{{ __('Topic', 'cobbleandcandle') }}</legend>
             <div class="fchips">
-              @foreach ($topics as $j => $topic)
-                <label class="fchip"><input type="radio" name="cc_topic" value="{{ $topic }}" @checked($j === 0)><span>{{ $topic }}</span></label>
+              @foreach ($topics as $key => $topic)
+                <label class="fchip"><input type="radio" name="cc_topic" value="{{ $key }}" @checked($loop->first)><span>{{ $topic }}</span></label>
               @endforeach
             </div>
           </fieldset>

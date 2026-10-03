@@ -20,17 +20,17 @@ function cc_inquiry_form_url() {
 /**
  * Guest-count and occasion choices.
  *
- * @return array{guests: array<int, string>, occasions: array<int, string>}
+ * @return array{guests: array<int, string>, occasions: array<string, string>}
  */
 function cc_inquiry_choices() {
 	return array(
 		'guests'    => array( '10 – 20', '21 – 40', '41 – 80', '80+' ),
-		'occasions' => array(
-			__( 'Celebration', 'cobbleandcandle-core' ),
-			__( 'Business dinner', 'cobbleandcandle-core' ),
-			__( 'Wedding / rehearsal', 'cobbleandcandle-core' ),
-			__( 'Wake or memorial', 'cobbleandcandle-core' ),
-			__( 'Other', 'cobbleandcandle-core' ),
+		'occasions' => array( // Stable keys are posted; labels are only shown.
+			'celebration' => __( 'Celebration', 'cobbleandcandle-core' ),
+			'business'    => __( 'Business dinner', 'cobbleandcandle-core' ),
+			'wedding'     => __( 'Wedding / rehearsal', 'cobbleandcandle-core' ),
+			'memorial'    => __( 'Wake or memorial', 'cobbleandcandle-core' ),
+			'other'       => __( 'Other', 'cobbleandcandle-core' ),
 		),
 	);
 }
@@ -61,14 +61,14 @@ function cc_handle_inquiry() {
 	$email    = isset( $_POST['cc_email'] ) ? sanitize_email( wp_unslash( $_POST['cc_email'] ) ) : '';
 	$date     = isset( $_POST['cc_date'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_date'] ) ) : '';
 	$guests   = isset( $_POST['cc_guests'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_guests'] ) ) : '';
-	$occasion = isset( $_POST['cc_occasion'] ) ? sanitize_text_field( wp_unslash( $_POST['cc_occasion'] ) ) : '';
+	$occasion = isset( $_POST['cc_occasion'] ) ? sanitize_key( wp_unslash( $_POST['cc_occasion'] ) ) : '';
 	$message  = isset( $_POST['cc_message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['cc_message'] ) ) : '';
 	$location = isset( $_POST['cc_location'] ) ? absint( $_POST['cc_location'] ) : 0;
 
 	$valid = '' !== $name && is_email( $email )
 		&& cc_is_valid_date( $date )
 		&& in_array( $guests, $choices['guests'], true )
-		&& in_array( $occasion, $choices['occasions'], true )
+		&& isset( $choices['occasions'][ $occasion ] )
 		&& ( 0 === $location || cc_is_public_location( $location ) );
 	if ( ! $valid ) {
 		wp_safe_redirect( add_query_arg( 'inquiry', 'invalid', $back ) . '#private-dining' );
@@ -86,15 +86,16 @@ function cc_handle_inquiry() {
 			__( 'Email', 'cobbleandcandle-core' ) . ': ' . $email,
 			__( 'Date', 'cobbleandcandle-core' ) . ': ' . $date,
 			__( 'Guests', 'cobbleandcandle-core' ) . ': ' . $guests,
-			__( 'Occasion', 'cobbleandcandle-core' ) . ': ' . $occasion,
+			__( 'Occasion', 'cobbleandcandle-core' ) . ': ' . $choices['occasions'][ $occasion ],
 			__( 'Location', 'cobbleandcandle-core' ) . ': ' . ( $location ? cc_plain_title( $location ) : '—' ),
 			'',
 			$message,
 		)
 	);
-	$sent    = wp_mail( $to, $subject, $body, array( 'Reply-To: ' . $name . ' <' . $email . '>' ) );
+	$sent    = wp_mail( $to, $subject, $body, array( 'Reply-To: ' . cc_mail_name( $name ) . ' <' . $email . '>' ) );
+	$stored  = cc_store_message( 'inquiry', $subject, $body, $email, $location, $sent );
 
-	wp_safe_redirect( add_query_arg( 'inquiry', $sent ? 'sent' : 'error', $back ) . '#private-dining' );
+	wp_safe_redirect( add_query_arg( 'inquiry', $sent || $stored ? 'sent' : 'error', $back ) . '#private-dining' );
 	exit;
 }
 add_action( 'admin_post_cc_inquiry', 'cc_handle_inquiry' );

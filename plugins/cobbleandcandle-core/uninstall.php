@@ -2,7 +2,7 @@
 /**
  * Uninstall Cobble & Candle Core.
  *
- * Always removes temporary data (rate-limit counters). Content (locations, menu items, events, rooms, bookings,
+ * Always removes temporary data (rate-limit counters). Content (locations, menu items, events, rooms, bookings, messages,
  * menus, sections, gallery categories) and the Restaurant settings are deleted only if "Remove data
  * on uninstall" was ticked in Settings → Restaurant. Runs for every site on multisite.
  *
@@ -21,9 +21,11 @@ function cc_uninstall_site() {
 		// The plugin is not loaded during uninstall: register its types so terms can be found and deleted.
 		require_once __DIR__ . '/includes/post-types.php';
 		require_once __DIR__ . '/includes/rooms.php';
+		require_once __DIR__ . '/includes/messages.php';
 		cc_register_content_types();
 		cc_register_room_types();
-		foreach ( array( 'cc_location', 'cc_menu_item', 'cc_event', 'cc_room', 'cc_booking' ) as $post_type ) {
+		cc_register_message_type();
+		foreach ( array( 'cc_location', 'cc_menu_item', 'cc_event', 'cc_room', 'cc_booking', 'cc_message' ) as $post_type ) {
 			$ids = get_posts(
 				array(
 					'post_type'   => $post_type,
