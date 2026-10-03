@@ -34,8 +34,8 @@ Merging to `main` runs `.github/workflows/deploy-theme.yml`: Composer (no dev) +
   the queried object on the front end, the global post in the editor preview (`?post_id=` is passed by
   `resources/js/editor.js`). Alpine directives in block views need an `x-data` ancestor in the block itself.
 - Location and Events pages are post type archives (`/locations/`, `/events/`), rendered by
-  `templates/archive-cc_location.html` and `archive-cc_event.html`. A Page with the same slug is shadowed.
-- Forms post to `admin-post.php` handlers in the Core plugin (`cc_inquiry`, `cc_reservation`, `cc_contact`)
+  `templates/archive-cobble_location.html` and `archive-cobble_event.html`. A Page with the same slug is shadowed.
+- Forms post to `admin-post.php` handlers in the Core plugin (`cobble_inquiry`, `cobble_reservation`, `cobble_contact`)
   and redirect back with `?inquiry=` / `?reservation=` / `?contact=` = sent | invalid | expired | error.
   Locally a valid submission shows "error" unless a mail catcher is set up.
 - OpenTable / Resy booking modes load the location's "Provider booking page" URL in an iframe only after

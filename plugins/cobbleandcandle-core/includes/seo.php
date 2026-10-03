@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return bool
  */
-function cc_seo_plugin_active() {
+function cobble_seo_plugin_active() {
 	$active = defined( 'WPSEO_VERSION' ) || defined( 'RANK_MATH_VERSION' ) || defined( 'AIOSEO_VERSION' )
 		|| defined( 'SEOPRESS_VERSION' ) || defined( 'THE_SEO_FRAMEWORK_VERSION' ) || defined( 'SLIM_SEO_VER' );
 	/**
@@ -23,7 +23,7 @@ function cc_seo_plugin_active() {
 	 *
 	 * @param bool $active Detected.
 	 */
-	return (bool) apply_filters( 'cc_seo_plugin_active', $active );
+	return (bool) apply_filters( 'cobble_seo_plugin_active', $active );
 }
 
 /**
@@ -33,7 +33,7 @@ function cc_seo_plugin_active() {
  * @param int    $post_id Post for restaurant/menu IDs.
  * @return string
  */
-function cc_schema_id( $type, $post_id = 0 ) {
+function cobble_schema_id( $type, $post_id = 0 ) {
 	if ( 'organization' === $type || 'website' === $type ) {
 		return home_url( '/#' . $type );
 	}
@@ -45,8 +45,8 @@ function cc_schema_id( $type, $post_id = 0 ) {
  *
  * @return string
  */
-function cc_schema_logo_url() {
-	$logo = (int) cc_setting( 'logo_id' ) ? (int) cc_setting( 'logo_id' ) : (int) get_theme_mod( 'custom_logo' );
+function cobble_schema_logo_url() {
+	$logo = (int) cobble_setting( 'logo_id' ) ? (int) cobble_setting( 'logo_id' ) : (int) get_theme_mod( 'custom_logo' );
 	$url  = $logo ? wp_get_attachment_image_url( $logo, 'full' ) : '';
 	return $url ? $url : (string) get_site_icon_url( 512 );
 }
@@ -56,15 +56,15 @@ function cc_schema_logo_url() {
  *
  * @return array<string, mixed>
  */
-function cc_schema_organization() {
+function cobble_schema_organization() {
 	return array_filter(
 		array(
 			'@type'  => 'Organization',
-			'@id'    => cc_schema_id( 'organization' ),
+			'@id'    => cobble_schema_id( 'organization' ),
 			'name'   => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
 			'url'    => home_url( '/' ),
-			'logo'   => cc_schema_logo_url(),
-			'sameAs' => array_values( cc_social_profiles() ),
+			'logo'   => cobble_schema_logo_url(),
+			'sameAs' => array_values( cobble_social_profiles() ),
 		)
 	);
 }
@@ -74,13 +74,13 @@ function cc_schema_organization() {
  *
  * @return array<string, mixed>
  */
-function cc_schema_website() {
+function cobble_schema_website() {
 	return array(
 		'@type'     => 'WebSite',
-		'@id'       => cc_schema_id( 'website' ),
+		'@id'       => cobble_schema_id( 'website' ),
 		'url'       => home_url( '/' ),
 		'name'      => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
-		'publisher' => array( '@id' => cc_schema_id( 'organization' ) ),
+		'publisher' => array( '@id' => cobble_schema_id( 'organization' ) ),
 	);
 }
 
@@ -90,8 +90,8 @@ function cc_schema_website() {
  * @param int $minutes Minutes since midnight.
  * @return string
  */
-function cc_schema_time( $minutes ) {
-	return cc_minutes_to_time( $minutes );
+function cobble_schema_time( $minutes ) {
+	return cobble_minutes_to_time( $minutes );
 }
 
 /**
@@ -101,9 +101,9 @@ function cc_schema_time( $minutes ) {
  * @param int $location_id Location post ID.
  * @return array<int, array<string, mixed>>
  */
-function cc_schema_opening_hours( $location_id ) {
+function cobble_schema_opening_hours( $location_id ) {
 	$days    = array( 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' );
-	$windows = cc_status_windows( $location_id );
+	$windows = cobble_status_windows( $location_id );
 	$groups  = array();
 	foreach ( $windows['week'] as $i => $window ) {
 		if ( ! $window ) {
@@ -114,8 +114,8 @@ function cc_schema_opening_hours( $location_id ) {
 			$groups[ $key ] = array(
 				'@type'     => 'OpeningHoursSpecification',
 				'dayOfWeek' => array(),
-				'opens'     => cc_schema_time( $window[0] ),
-				'closes'    => cc_schema_time( $window[1] ),
+				'opens'     => cobble_schema_time( $window[0] ),
+				'closes'    => cobble_schema_time( $window[1] ),
 			);
 		}
 		$groups[ $key ]['dayOfWeek'][] = $days[ $i ];
@@ -129,8 +129,8 @@ function cc_schema_opening_hours( $location_id ) {
 			'@type'        => 'OpeningHoursSpecification',
 			'validFrom'    => $date,
 			'validThrough' => $date,
-			'opens'        => $window ? cc_schema_time( $window[0] ) : '00:00',
-			'closes'       => $window ? cc_schema_time( $window[1] ) : '00:00',
+			'opens'        => $window ? cobble_schema_time( $window[0] ) : '00:00',
+			'closes'       => $window ? cobble_schema_time( $window[1] ) : '00:00',
 		);
 	}
 	return $specs;
@@ -142,23 +142,23 @@ function cc_schema_opening_hours( $location_id ) {
  * @param int $location_id Location post ID.
  * @return array<string, mixed>
  */
-function cc_schema_restaurant( $location_id ) {
-	$l = cc_location( $location_id );
+function cobble_schema_restaurant( $location_id ) {
+	$l = cobble_location( $location_id );
 	if ( ! $l ) {
 		return array();
 	}
 	$meta    = static function ( $key ) use ( $location_id ) {
 		return (string) get_post_meta( $location_id, $key, true );
 	};
-	$lat     = $meta( 'cc_lat' );
-	$lng     = $meta( 'cc_lng' );
+	$lat     = $meta( 'cobble_lat' );
+	$lng     = $meta( 'cobble_lng' );
 	$image   = get_the_post_thumbnail_url( $location_id, 'full' );
-	$cuisine = array_filter( array_map( 'trim', explode( ',', cc_setting( 'cuisine' ) ) ) );
+	$cuisine = array_filter( array_map( 'trim', explode( ',', cobble_setting( 'cuisine' ) ) ) );
 	$booking = '' !== $l['booking_url'] ? $l['booking_url'] : '';
 
 	$node      = array(
 		'@type'                     => 'Restaurant',
-		'@id'                       => cc_schema_id( 'restaurant', $location_id ),
+		'@id'                       => cobble_schema_id( 'restaurant', $location_id ),
 		'name'                      => $l['name'],
 		'url'                       => $l['url'],
 		'image'                     => $image ? array( $image ) : null,
@@ -169,9 +169,9 @@ function cc_schema_restaurant( $location_id ) {
 				'@type'           => 'PostalAddress',
 				'streetAddress'   => $l['street'],
 				'addressLocality' => $l['locality'],
-				'addressRegion'   => $meta( 'cc_region' ),
-				'postalCode'      => $meta( 'cc_postcode' ),
-				'addressCountry'  => $meta( 'cc_country' ),
+				'addressRegion'   => $meta( 'cobble_region' ),
+				'postalCode'      => $meta( 'cobble_postcode' ),
+				'addressCountry'  => $meta( 'cobble_country' ),
 			)
 		),
 		'geo'                       => '' !== $lat && '' !== $lng ? array(
@@ -180,12 +180,12 @@ function cc_schema_restaurant( $location_id ) {
 			'longitude' => (float) $lng,
 		) : null,
 		'servesCuisine'             => $cuisine ? array_values( $cuisine ) : null,
-		'priceRange'                => '' !== $meta( 'cc_price_range' ) ? $meta( 'cc_price_range' ) : cc_setting( 'price_range' ),
+		'priceRange'                => '' !== $meta( 'cobble_price_range' ) ? $meta( 'cobble_price_range' ) : cobble_setting( 'price_range' ),
 		'acceptsReservations'       => '' !== $booking ? $booking : true,
-		'openingHoursSpecification' => cc_schema_opening_hours( $location_id ),
-		'parentOrganization'        => array( '@id' => cc_schema_id( 'organization' ) ),
+		'openingHoursSpecification' => cobble_schema_opening_hours( $location_id ),
+		'parentOrganization'        => array( '@id' => cobble_schema_id( 'organization' ) ),
 	);
-	$menu_page = cc_menu_page_id();
+	$menu_page = cobble_menu_page_id();
 	if ( $menu_page ) {
 		$node['hasMenu'] = add_query_arg( 'loc', $l['slug'], get_permalink( $menu_page ) );
 	}
@@ -201,7 +201,7 @@ function cc_schema_restaurant( $location_id ) {
 	 * @param array<string, mixed> $node        Restaurant.
 	 * @param int                  $location_id Location post ID.
 	 */
-	return (array) apply_filters( 'cc_schema_restaurant', array_filter( $node, static fn( $v ) => null !== $v && '' !== $v && array() !== $v ), $location_id );
+	return (array) apply_filters( 'cobble_schema_restaurant', array_filter( $node, static fn( $v ) => null !== $v && '' !== $v && array() !== $v ), $location_id );
 }
 
 /**
@@ -209,7 +209,7 @@ function cc_schema_restaurant( $location_id ) {
  *
  * @return int
  */
-function cc_menu_page_id() {
+function cobble_menu_page_id() {
 	static $id = null;
 	if ( null === $id ) {
 		$found = get_posts(
@@ -226,7 +226,7 @@ function cc_menu_page_id() {
 		 *
 		 * @param int $id Detected page ID (0 when none).
 		 */
-		$id = (int) apply_filters( 'cc_menu_page_id', $found ? (int) $found[0] : 0 );
+		$id = (int) apply_filters( 'cobble_menu_page_id', $found ? (int) $found[0] : 0 );
 	}
 	return $id;
 }
@@ -237,13 +237,13 @@ function cc_menu_page_id() {
  * @param int $page_id Menu page ID.
  * @return array<int, array<string, mixed>>
  */
-function cc_schema_menus( $page_id ) {
+function cobble_schema_menus( $page_id ) {
 	$diets    = array(
 		'v'  => 'https://schema.org/VegetarianDiet',
 		'vg' => 'https://schema.org/VeganDiet',
 		'gf' => 'https://schema.org/GlutenFreeDiet',
 	);
-	$currency = (string) apply_filters( 'cc_currency', 'USD' );
+	$currency = (string) apply_filters( 'cobble_currency', 'USD' );
 	$price    = static function ( $text, $name = '' ) use ( $currency ) {
 		if ( ! preg_match( '/\d+(?:[.,]\d{1,2})?/', (string) $text, $m ) ) {
 			return null;
@@ -258,7 +258,7 @@ function cc_schema_menus( $page_id ) {
 		);
 	};
 	$nodes    = array();
-	foreach ( cc_get_menus() as $menu ) {
+	foreach ( cobble_get_menus() as $menu ) {
 		$sections = array();
 		foreach ( $menu['sections'] as $section ) {
 			$items = array();
@@ -304,12 +304,12 @@ function cc_schema_menus( $page_id ) {
 }
 
 /**
- * BreadcrumbList from the theme's trail (filter `cc_breadcrumb_trail`: list of [label, url]).
+ * BreadcrumbList from the theme's trail (filter `cobble_breadcrumb_trail`: list of [label, url]).
  *
  * @return array<string, mixed>
  */
-function cc_schema_breadcrumbs() {
-	$trail = is_front_page() ? array() : (array) apply_filters( 'cc_breadcrumb_trail', array() );
+function cobble_schema_breadcrumbs() {
+	$trail = is_front_page() ? array() : (array) apply_filters( 'cobble_breadcrumb_trail', array() );
 	if ( count( $trail ) < 2 ) {
 		return array();
 	}
@@ -336,46 +336,46 @@ function cc_schema_breadcrumbs() {
  *
  * @return array<int, array<string, mixed>>
  */
-function cc_schema_page_nodes() {
+function cobble_schema_page_nodes() {
 	$nodes = array();
-	if ( is_singular( 'cc_location' ) ) {
-		$nodes[] = cc_schema_restaurant( get_queried_object_id() );
-	} elseif ( is_post_type_archive( 'cc_location' ) || is_front_page() ) {
-		foreach ( cc_get_locations() as $location ) {
-			$nodes[] = cc_schema_restaurant( $location->ID );
+	if ( is_singular( 'cobble_location' ) ) {
+		$nodes[] = cobble_schema_restaurant( get_queried_object_id() );
+	} elseif ( is_post_type_archive( 'cobble_location' ) || is_front_page() ) {
+		foreach ( cobble_get_locations() as $location ) {
+			$nodes[] = cobble_schema_restaurant( $location->ID );
 		}
 	}
-	if ( is_singular( 'cc_event' ) && function_exists( 'cc_event_schema' ) ) {
-		$event = cc_event_schema( get_queried_object_id() );
+	if ( is_singular( 'cobble_event' ) && function_exists( 'cobble_event_schema' ) ) {
+		$event = cobble_event_schema( get_queried_object_id() );
 		unset( $event['@context'] );
 		$nodes[] = $event;
 	}
-	if ( is_singular( 'cc_room' ) && function_exists( 'cc_schema_room' ) ) {
-		$nodes[] = cc_schema_room( get_queried_object_id() );
+	if ( is_singular( 'cobble_room' ) && function_exists( 'cobble_schema_room' ) ) {
+		$nodes[] = cobble_schema_room( get_queried_object_id() );
 	}
 	if ( is_page() && has_block( 'cobbleandcandle/full-menu', get_queried_object() ) ) {
-		$nodes = array_merge( $nodes, cc_schema_menus( get_queried_object_id() ) );
+		$nodes = array_merge( $nodes, cobble_schema_menus( get_queried_object_id() ) );
 	}
 	/**
 	 * Filter the restaurant nodes added to the page's graph.
 	 *
 	 * @param array<int, array<string, mixed>> $nodes Nodes.
 	 */
-	return array_values( array_filter( (array) apply_filters( 'cc_schema_nodes', $nodes ) ) );
+	return array_values( array_filter( (array) apply_filters( 'cobble_schema_nodes', $nodes ) ) );
 }
 
 /**
  * Print the graph when no SEO plugin provides one.
  */
-function cc_print_schema() {
-	if ( is_admin() || is_feed() || ! apply_filters( 'cc_schema_enabled', true ) ) {
+function cobble_print_schema() {
+	if ( is_admin() || is_feed() || ! apply_filters( 'cobble_schema_enabled', true ) ) {
 		return;
 	}
 	if ( defined( 'WPSEO_VERSION' ) || defined( 'RANK_MATH_VERSION' ) ) {
 		return; // Added to their graph below.
 	}
-	$graph = array_merge( array( cc_schema_organization(), cc_schema_website() ), cc_schema_page_nodes() );
-	$crumb = cc_schema_breadcrumbs();
+	$graph = array_merge( array( cobble_schema_organization(), cobble_schema_website() ), cobble_schema_page_nodes() );
+	$crumb = cobble_schema_breadcrumbs();
 	if ( $crumb ) {
 		$graph[] = $crumb;
 	}
@@ -390,7 +390,7 @@ function cc_print_schema() {
 		array( 'type' => 'application/ld+json' )
 	);
 }
-add_action( 'wp_head', 'cc_print_schema', 20 );
+add_action( 'wp_head', 'cobble_print_schema', 20 );
 
 /**
  * Yoast SEO: add the restaurant nodes to its graph.
@@ -398,10 +398,10 @@ add_action( 'wp_head', 'cc_print_schema', 20 );
  * @param array<int, array<string, mixed>> $graph Yoast pieces.
  * @return array<int, array<string, mixed>>
  */
-function cc_yoast_schema_graph( $graph ) {
-	return apply_filters( 'cc_schema_enabled', true ) ? array_merge( (array) $graph, cc_schema_page_nodes() ) : $graph;
+function cobble_yoast_schema_graph( $graph ) {
+	return apply_filters( 'cobble_schema_enabled', true ) ? array_merge( (array) $graph, cobble_schema_page_nodes() ) : $graph;
 }
-add_filter( 'wpseo_schema_graph', 'cc_yoast_schema_graph' );
+add_filter( 'wpseo_schema_graph', 'cobble_yoast_schema_graph' );
 
 /**
  * Rank Math: add the restaurant nodes to its JSON-LD.
@@ -409,40 +409,40 @@ add_filter( 'wpseo_schema_graph', 'cc_yoast_schema_graph' );
  * @param array<string, mixed> $data Rank Math entities.
  * @return array<string, mixed>
  */
-function cc_rank_math_json_ld( $data ) {
-	if ( ! apply_filters( 'cc_schema_enabled', true ) ) {
+function cobble_rank_math_json_ld( $data ) {
+	if ( ! apply_filters( 'cobble_schema_enabled', true ) ) {
 		return $data;
 	}
-	foreach ( cc_schema_page_nodes() as $i => $node ) {
+	foreach ( cobble_schema_page_nodes() as $i => $node ) {
 		$data[ 'cobbleandcandle-' . $i ] = $node;
 	}
 	return $data;
 }
-add_filter( 'rank_math/json_ld', 'cc_rank_math_json_ld', 99 );
+add_filter( 'rank_math/json_ld', 'cobble_rank_math_json_ld', 99 );
 
 /**
  * Meta description for the current request (≤ 155 characters), or ''.
  *
  * @return string
  */
-function cc_meta_description() {
+function cobble_meta_description() {
 	$text = '';
 	if ( is_front_page() ) {
 		$text = get_bloginfo( 'description' );
-	} elseif ( is_singular( 'cc_location' ) ) {
-		$l     = cc_location( get_queried_object_id() );
-		$parts = array_filter( array( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) . ' ' . $l['name'], cc_setting( 'cuisine' ), $l['address'] ) );
+	} elseif ( is_singular( 'cobble_location' ) ) {
+		$l     = cobble_location( get_queried_object_id() );
+		$parts = array_filter( array( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) . ' ' . $l['name'], cobble_setting( 'cuisine' ), $l['address'] ) );
 		$text  = has_excerpt( get_queried_object_id() ) ? get_the_excerpt( get_queried_object_id() ) : implode( ' · ', $parts );
-	} elseif ( is_singular( 'cc_event' ) ) {
-		$event = cc_event( get_queried_object_id() );
+	} elseif ( is_singular( 'cobble_event' ) ) {
+		$event = cobble_event( get_queried_object_id() );
 		$text  = trim( $event['when'] . '. ' . $event['excerpt'] );
 	} elseif ( is_singular() ) {
 		$post = get_queried_object();
 		$text = has_excerpt( $post ) ? get_the_excerpt( $post ) : wp_trim_words( wp_strip_all_tags( strip_shortcodes( $post->post_content ) ), 30, '' );
-	} elseif ( is_post_type_archive( 'cc_location' ) ) {
+	} elseif ( is_post_type_archive( 'cobble_location' ) ) {
 		/* translators: %s: site name */
 		$text = sprintf( __( 'Find %s: addresses, opening hours, holiday hours and directions for every location.', 'cobbleandcandle-core' ), wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
-	} elseif ( is_post_type_archive( 'cc_event' ) ) {
+	} elseif ( is_post_type_archive( 'cobble_event' ) ) {
 		/* translators: %s: site name */
 		$text = sprintf( __( 'What’s on at %s: upcoming suppers, tastings, live music and holiday nights.', 'cobbleandcandle-core' ), wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	} elseif ( is_archive() ) {
@@ -453,7 +453,7 @@ function cc_meta_description() {
 	 *
 	 * @param string $text Description (plain text).
 	 */
-	$text = (string) apply_filters( 'cc_meta_description', $text );
+	$text = (string) apply_filters( 'cobble_meta_description', $text );
 	$text = trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( (string) $text ) ) );
 	return '' !== $text ? wp_html_excerpt( $text, 155, '…' ) : '';
 }
@@ -463,26 +463,26 @@ function cc_meta_description() {
  *
  * @return string
  */
-function cc_share_image() {
+function cobble_share_image() {
 	if ( is_singular() && has_post_thumbnail( get_queried_object_id() ) ) {
 		return (string) get_the_post_thumbnail_url( get_queried_object_id(), 'large' );
 	}
-	return cc_schema_logo_url();
+	return cobble_schema_logo_url();
 }
 
 /**
  * Fallback meta, Open Graph, Twitter and archive canonical tags (skipped when an SEO plugin runs).
  */
-function cc_print_meta_tags() {
-	if ( is_admin() || is_feed() || cc_seo_plugin_active() ) {
+function cobble_print_meta_tags() {
+	if ( is_admin() || is_feed() || cobble_seo_plugin_active() ) {
 		return;
 	}
-	$description = cc_meta_description();
+	$description = cobble_meta_description();
 	$title       = wp_get_document_title();
 	$url         = is_singular() ? get_permalink() : ( is_post_type_archive() ? get_post_type_archive_link( (string) get_query_var( 'post_type' ) ) : home_url( add_query_arg( array() ) ) );
-	$image       = cc_share_image();
+	$image       = cobble_share_image();
 
-	if ( is_post_type_archive( array( 'cc_location', 'cc_event' ) ) && $url ) {
+	if ( is_post_type_archive( array( 'cobble_location', 'cobble_event' ) ) && $url ) {
 		printf( '<link rel="canonical" href="%s">' . "\n", esc_url( $url ) );
 	}
 	if ( '' !== $description ) {
@@ -490,7 +490,7 @@ function cc_print_meta_tags() {
 	}
 	$og = array_filter(
 		array(
-			'og:type'        => is_singular( array( 'post', 'cc_event' ) ) ? 'article' : 'website',
+			'og:type'        => is_singular( array( 'post', 'cobble_event' ) ) ? 'article' : 'website',
 			'og:site_name'   => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
 			'og:title'       => $title,
 			'og:description' => $description,
@@ -504,15 +504,15 @@ function cc_print_meta_tags() {
 	}
 	printf( '<meta name="twitter:card" content="%s">' . "\n", $image ? 'summary_large_image' : 'summary' );
 }
-add_action( 'wp_head', 'cc_print_meta_tags', 5 );
+add_action( 'wp_head', 'cobble_print_meta_tags', 5 );
 
 /**
  * Page excerpts double as meta descriptions and page-header intros.
  */
-function cc_page_excerpts() {
+function cobble_page_excerpts() {
 	add_post_type_support( 'page', 'excerpt' );
 }
-add_action( 'init', 'cc_page_excerpts' );
+add_action( 'init', 'cobble_page_excerpts' );
 
 /**
  * Without an SEO plugin, keep author archives out of the core sitemap (thin pages on a restaurant site).
@@ -521,7 +521,7 @@ add_action( 'init', 'cc_page_excerpts' );
  * @param string                     $name     Provider name.
  * @return WP_Sitemaps_Provider|false
  */
-function cc_sitemap_providers( $provider, $name ) {
-	return 'users' === $name && ! cc_seo_plugin_active() ? false : $provider;
+function cobble_sitemap_providers( $provider, $name ) {
+	return 'users' === $name && ! cobble_seo_plugin_active() ? false : $provider;
 }
-add_filter( 'wp_sitemaps_add_provider', 'cc_sitemap_providers', 10, 2 );
+add_filter( 'wp_sitemaps_add_provider', 'cobble_sitemap_providers', 10, 2 );

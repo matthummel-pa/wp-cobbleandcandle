@@ -6,7 +6,7 @@
         {!! $content !!}
         <x-media :image-id="$attributes['imageId']" kind="table" ratio="r-16x9" class="pd-m" />
       </div>
-      @includeWhen(function_exists('cc_inquiry_form_url'), 'partials.inquiry-form')
+      @includeWhen(function_exists('cobble_inquiry_form_url'), 'partials.inquiry-form')
     </div>
   </section>
 </div>

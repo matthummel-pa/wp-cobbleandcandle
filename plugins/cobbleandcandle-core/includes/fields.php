@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array<string, array<int, array{title: string, fields: array<string, array<string, mixed>>}>>
  */
-function cc_field_schema() {
+function cobble_field_schema() {
 	$booking_modes = array(
 		'native'    => __( 'Booking form on this site', 'cobbleandcandle-core' ),
 		'opentable' => __( 'OpenTable widget', 'cobbleandcandle-core' ),
@@ -25,48 +25,48 @@ function cc_field_schema() {
 	);
 
 	return array(
-		'cc_location'  => array(
+		'cobble_location'  => array(
 			array(
 				'title'  => __( 'Address & contact', 'cobbleandcandle-core' ),
 				'fields' => array(
-					'cc_street'   => array(
+					'cobble_street'   => array(
 						'type'  => 'text',
 						'label' => __( 'Street address', 'cobbleandcandle-core' ),
 					),
-					'cc_locality' => array(
+					'cobble_locality' => array(
 						'type'  => 'text',
 						'label' => __( 'Neighbourhood or town', 'cobbleandcandle-core' ),
 					),
-					'cc_region'   => array(
+					'cobble_region'   => array(
 						'type'  => 'text',
 						'label' => __( 'State / region', 'cobbleandcandle-core' ),
 					),
-					'cc_postcode' => array(
+					'cobble_postcode' => array(
 						'type'  => 'text',
 						'label' => __( 'Postcode', 'cobbleandcandle-core' ),
 					),
-					'cc_country'  => array(
+					'cobble_country'  => array(
 						'type'    => 'text',
 						'label'   => __( 'Country code', 'cobbleandcandle-core' ),
 						'default' => 'US',
 					),
-					'cc_lat'      => array(
+					'cobble_lat'      => array(
 						'type'  => 'number',
 						'label' => __( 'Latitude', 'cobbleandcandle-core' ),
 					),
-					'cc_lng'      => array(
+					'cobble_lng'      => array(
 						'type'  => 'number',
 						'label' => __( 'Longitude', 'cobbleandcandle-core' ),
 					),
-					'cc_phone'    => array(
+					'cobble_phone'    => array(
 						'type'  => 'tel',
 						'label' => __( 'Phone', 'cobbleandcandle-core' ),
 					),
-					'cc_email'    => array(
+					'cobble_email'    => array(
 						'type'  => 'email',
 						'label' => __( 'Email', 'cobbleandcandle-core' ),
 					),
-					'cc_map_url'  => array(
+					'cobble_map_url'  => array(
 						'type'  => 'url',
 						'label' => __( 'Directions link (Google/Apple Maps)', 'cobbleandcandle-core' ),
 					),
@@ -75,11 +75,11 @@ function cc_field_schema() {
 			array(
 				'title'  => __( 'Opening hours', 'cobbleandcandle-core' ),
 				'fields' => array(
-					'cc_hours'         => array(
+					'cobble_hours'         => array(
 						'type'  => 'hours',
 						'label' => __( 'Weekly hours', 'cobbleandcandle-core' ),
 					),
-					'cc_holiday_hours' => array(
+					'cobble_holiday_hours' => array(
 						'type'   => 'list',
 						'label'  => __( 'Holiday hours', 'cobbleandcandle-core' ),
 						'add'    => __( 'Add holiday', 'cobbleandcandle-core' ),
@@ -111,29 +111,29 @@ function cc_field_schema() {
 			array(
 				'title'  => __( 'Reservations & ordering', 'cobbleandcandle-core' ),
 				'fields' => array(
-					'cc_booking_mode' => array(
+					'cobble_booking_mode' => array(
 						'type'    => 'select',
 						'label'   => __( 'How guests book', 'cobbleandcandle-core' ),
 						'options' => $booking_modes,
 						'default' => 'native',
 					),
-					'cc_booking_id'   => array(
+					'cobble_booking_id'   => array(
 						'type'  => 'text',
 						'label' => __( 'OpenTable rid / Resy venue ID', 'cobbleandcandle-core' ),
 					),
-					'cc_booking_url'  => array(
+					'cobble_booking_url'  => array(
 						'type'  => 'url',
 						'label' => __( 'Provider booking page (fallback link)', 'cobbleandcandle-core' ),
 					),
-					'cc_order_url'    => array(
+					'cobble_order_url'    => array(
 						'type'  => 'url',
 						'label' => __( 'Order online link', 'cobbleandcandle-core' ),
 					),
-					'cc_menu_pdf'     => array(
+					'cobble_menu_pdf'     => array(
 						'type'  => 'url',
 						'label' => __( 'Menu PDF link', 'cobbleandcandle-core' ),
 					),
-					'cc_price_range'  => array(
+					'cobble_price_range'  => array(
 						'type'  => 'text',
 						'label' => __( 'Price range (e.g. $$$)', 'cobbleandcandle-core' ),
 					),
@@ -142,30 +142,30 @@ function cc_field_schema() {
 			array(
 				'title'  => __( 'Getting there', 'cobbleandcandle-core' ),
 				'fields' => array(
-					'cc_parking'       => array(
+					'cobble_parking'       => array(
 						'type'  => 'textarea',
 						'label' => __( 'Parking', 'cobbleandcandle-core' ),
 					),
-					'cc_transit'       => array(
+					'cobble_transit'       => array(
 						'type'  => 'textarea',
 						'label' => __( 'Public transport', 'cobbleandcandle-core' ),
 					),
-					'cc_accessibility' => array(
+					'cobble_accessibility' => array(
 						'type'  => 'textarea',
 						'label' => __( 'Accessibility', 'cobbleandcandle-core' ),
 					),
 				),
 			),
 		),
-		'cc_menu_item' => array(
+		'cobble_menu_item' => array(
 			array(
 				'title'  => __( 'Price & details', 'cobbleandcandle-core' ),
 				'fields' => array(
-					'cc_price'        => array(
+					'cobble_price'        => array(
 						'type'  => 'text',
 						'label' => __( 'Price (leave empty when using sizes)', 'cobbleandcandle-core' ),
 					),
-					'cc_variants'     => array(
+					'cobble_variants'     => array(
 						'type'   => 'list',
 						'label'  => __( 'Sizes (e.g. Glass / Bottle, Starter / Main)', 'cobbleandcandle-core' ),
 						'add'    => __( 'Add size', 'cobbleandcandle-core' ),
@@ -180,7 +180,7 @@ function cc_field_schema() {
 							),
 						),
 					),
-					'cc_diet'         => array(
+					'cobble_diet'         => array(
 						'type'    => 'checkboxes',
 						'label'   => __( 'Dietary', 'cobbleandcandle-core' ),
 						'options' => array(
@@ -190,38 +190,38 @@ function cc_field_schema() {
 							'spicy' => __( 'Spicy', 'cobbleandcandle-core' ),
 						),
 					),
-					'cc_flag'         => array(
+					'cobble_flag'         => array(
 						'type'  => 'text',
 						'label' => __( 'Flag (e.g. Chef’s pick, Popular)', 'cobbleandcandle-core' ),
 					),
-					'cc_chef_pick'    => array(
+					'cobble_chef_pick'    => array(
 						'type'  => 'boolean',
 						'label' => __( 'Show in Chef’s picks', 'cobbleandcandle-core' ),
 					),
-					'cc_available_at' => array(
+					'cobble_available_at' => array(
 						'type'  => 'locations',
 						'label' => __( 'Served at (none = every location)', 'cobbleandcandle-core' ),
 					),
 				),
 			),
 		),
-		'cc_event'     => array(
+		'cobble_event'     => array(
 			array(
 				'title'  => __( 'When & where', 'cobbleandcandle-core' ),
 				'fields' => array(
-					'cc_start'    => array(
+					'cobble_start'    => array(
 						'type'  => 'datetime',
 						'label' => __( 'Starts', 'cobbleandcandle-core' ),
 					),
-					'cc_end'      => array(
+					'cobble_end'      => array(
 						'type'  => 'datetime',
 						'label' => __( 'Ends', 'cobbleandcandle-core' ),
 					),
-					'cc_location' => array(
+					'cobble_location' => array(
 						'type'  => 'location',
 						'label' => __( 'Location', 'cobbleandcandle-core' ),
 					),
-					'cc_type'     => array(
+					'cobble_type'     => array(
 						'type'  => 'text',
 						'label' => __( 'Type (e.g. Tasting, Live music)', 'cobbleandcandle-core' ),
 					),
@@ -230,19 +230,19 @@ function cc_field_schema() {
 			array(
 				'title'  => __( 'Tickets', 'cobbleandcandle-core' ),
 				'fields' => array(
-					'cc_price'        => array(
+					'cobble_price'        => array(
 						'type'  => 'text',
 						'label' => __( 'Price (e.g. $145 pp, No cover)', 'cobbleandcandle-core' ),
 					),
-					'cc_capacity'     => array(
+					'cobble_capacity'     => array(
 						'type'  => 'number',
 						'label' => __( 'Seats', 'cobbleandcandle-core' ),
 					),
-					'cc_availability' => array(
+					'cobble_availability' => array(
 						'type'  => 'text',
 						'label' => __( 'Availability note (e.g. 12 seats left)', 'cobbleandcandle-core' ),
 					),
-					'cc_booking_url'  => array(
+					'cobble_booking_url'  => array(
 						'type'  => 'url',
 						'label' => __( 'Booking link', 'cobbleandcandle-core' ),
 					),
@@ -251,7 +251,7 @@ function cc_field_schema() {
 			array(
 				'title'  => __( 'Menu for the evening', 'cobbleandcandle-core' ),
 				'fields' => array(
-					'cc_courses' => array(
+					'cobble_courses' => array(
 						'type'   => 'list',
 						'label'  => __( 'Courses', 'cobbleandcandle-core' ),
 						'add'    => __( 'Add course', 'cobbleandcandle-core' ),
@@ -269,39 +269,39 @@ function cc_field_schema() {
 				),
 			),
 		),
-		'cc_room'      => array(
+		'cobble_room'      => array(
 			array(
 				'title'  => __( 'Rates & capacity', 'cobbleandcandle-core' ),
 				'fields' => array(
-					'cc_price_night'   => array(
+					'cobble_price_night'   => array(
 						'type'  => 'number',
 						'label' => __( 'Price per night', 'cobbleandcandle-core' ),
 					),
-					'cc_price_weekend' => array(
+					'cobble_price_weekend' => array(
 						'type'  => 'number',
 						'label' => __( 'Friday & Saturday night price (optional)', 'cobbleandcandle-core' ),
 					),
-					'cc_min_nights'    => array(
+					'cobble_min_nights'    => array(
 						'type'  => 'number',
 						'label' => __( 'Minimum nights', 'cobbleandcandle-core' ),
 					),
-					'cc_max_guests'    => array(
+					'cobble_max_guests'    => array(
 						'type'  => 'number',
 						'label' => __( 'Maximum guests', 'cobbleandcandle-core' ),
 					),
-					'cc_units'         => array(
+					'cobble_units'         => array(
 						'type'  => 'number',
 						'label' => __( 'How many rooms of this kind', 'cobbleandcandle-core' ),
 					),
-					'cc_beds'          => array(
+					'cobble_beds'          => array(
 						'type'  => 'text',
 						'label' => __( 'Beds (e.g. 1 king)', 'cobbleandcandle-core' ),
 					),
-					'cc_size'          => array(
+					'cobble_size'          => array(
 						'type'  => 'text',
 						'label' => __( 'Size (e.g. 28 m²)', 'cobbleandcandle-core' ),
 					),
-					'cc_location'      => array(
+					'cobble_location'      => array(
 						'type'  => 'location',
 						'label' => __( 'House', 'cobbleandcandle-core' ),
 					),
@@ -310,17 +310,17 @@ function cc_field_schema() {
 			array(
 				'title'  => __( 'Amenities', 'cobbleandcandle-core' ),
 				'fields' => array(
-					'cc_amenities' => array(
+					'cobble_amenities' => array(
 						'type'    => 'checkboxes',
 						'label'   => __( 'In the room', 'cobbleandcandle-core' ),
-						'options' => cc_room_amenities(),
+						'options' => cobble_room_amenities(),
 					),
 				),
 			),
 			array(
 				'title'  => __( 'Calendar sync (Airbnb, Booking.com, Vrbo)', 'cobbleandcandle-core' ),
 				'fields' => array(
-					'cc_ical_import' => array(
+					'cobble_ical_import' => array(
 						'type'    => 'list',
 						'private' => true, // Platform links carry secret tokens: editors only, never the public REST API.
 						'label'   => __( 'Import calendars (iCal links)', 'cobbleandcandle-core' ),
@@ -348,7 +348,7 @@ function cc_field_schema() {
  * @param array<string, mixed> $field Field definition.
  * @return array<string, mixed>
  */
-function cc_field_rest_schema( array $field ) {
+function cobble_field_rest_schema( array $field ) {
 	switch ( $field['type'] ) {
 		case 'number':
 			return array( 'type' => 'number' );
@@ -384,7 +384,7 @@ function cc_field_rest_schema( array $field ) {
 		case 'list':
 			$properties = array();
 			foreach ( $field['fields'] as $key => $sub ) {
-				$properties[ $key ] = cc_field_rest_schema( $sub );
+				$properties[ $key ] = cobble_field_rest_schema( $sub );
 			}
 			return array(
 				'type'  => 'array',
@@ -405,7 +405,7 @@ function cc_field_rest_schema( array $field ) {
  * @param array<string, mixed> $field Field definition.
  * @return mixed
  */
-function cc_sanitize_field( $value, array $field ) {
+function cobble_sanitize_field( $value, array $field ) {
 	switch ( $field['type'] ) {
 		case 'textarea':
 			return sanitize_textarea_field( (string) $value );
@@ -436,8 +436,8 @@ function cc_sanitize_field( $value, array $field ) {
 			for ( $i = 0; $i < 7; $i++ ) {
 				$day    = (array) ( $value[ $i ] ?? array() );
 				$days[] = array(
-					'open'   => cc_sanitize_field( $day['open'] ?? '', array( 'type' => 'time' ) ),
-					'close'  => cc_sanitize_field( $day['close'] ?? '', array( 'type' => 'time' ) ),
+					'open'   => cobble_sanitize_field( $day['open'] ?? '', array( 'type' => 'time' ) ),
+					'close'  => cobble_sanitize_field( $day['close'] ?? '', array( 'type' => 'time' ) ),
 					'closed' => ! empty( $day['closed'] ),
 				);
 			}
@@ -447,7 +447,7 @@ function cc_sanitize_field( $value, array $field ) {
 			foreach ( (array) $value as $row ) {
 				$clean = array();
 				foreach ( $field['fields'] as $key => $sub ) {
-					$clean[ $key ] = cc_sanitize_field( ( (array) $row )[ $key ] ?? '', $sub );
+					$clean[ $key ] = cobble_sanitize_field( ( (array) $row )[ $key ] ?? '', $sub );
 				}
 				$rows[] = $clean;
 			}
@@ -460,11 +460,11 @@ function cc_sanitize_field( $value, array $field ) {
 /**
  * Register every field as REST-enabled post meta.
  */
-function cc_register_fields() {
-	foreach ( cc_field_schema() as $post_type => $panels ) {
+function cobble_register_fields() {
+	foreach ( cobble_field_schema() as $post_type => $panels ) {
 		foreach ( $panels as $panel ) {
 			foreach ( $panel['fields'] as $key => $field ) {
-				$schema = cc_field_rest_schema( $field );
+				$schema = cobble_field_rest_schema( $field );
 				if ( ! empty( $field['private'] ) ) {
 					$schema['context'] = array( 'edit' );
 				}
@@ -474,9 +474,9 @@ function cc_register_fields() {
 					array(
 						'type'              => $schema['type'],
 						'single'            => true,
-						'default'           => $field['default'] ?? cc_field_default( $field ),
+						'default'           => $field['default'] ?? cobble_field_default( $field ),
 						'sanitize_callback' => static function ( $value ) use ( $field ) {
-							return cc_sanitize_field( $value, $field );
+							return cobble_sanitize_field( $value, $field );
 						},
 						'auth_callback'     => static function ( $allowed, $meta_key, $post_id ) {
 							return current_user_can( 'edit_post', $post_id );
@@ -490,7 +490,7 @@ function cc_register_fields() {
 		}
 	}
 }
-add_action( 'init', 'cc_register_fields', 11 );
+add_action( 'init', 'cobble_register_fields', 11 );
 
 /**
  * Empty default for a field type.
@@ -498,8 +498,8 @@ add_action( 'init', 'cc_register_fields', 11 );
  * @param array<string, mixed> $field Field definition.
  * @return mixed
  */
-function cc_field_default( array $field ) {
-	switch ( cc_field_rest_schema( $field )['type'] ) {
+function cobble_field_default( array $field ) {
+	switch ( cobble_field_rest_schema( $field )['type'] ) {
 		case 'array':
 			return array();
 		case 'boolean':
@@ -515,25 +515,25 @@ function cc_field_default( array $field ) {
 /**
  * Editor sidebar panels (no build step: uses the wp.* globals).
  */
-function cc_enqueue_field_panels() {
+function cobble_enqueue_field_panels() {
 	$screen = get_current_screen();
-	if ( ! $screen || ! array_key_exists( (string) $screen->post_type, cc_field_schema() ) ) {
+	if ( ! $screen || ! array_key_exists( (string) $screen->post_type, cobble_field_schema() ) ) {
 		return;
 	}
 
 	wp_enqueue_script(
-		'cc-editor-fields',
-		CC_CORE_URL . 'assets/editor-fields.js',
+		'cobble-editor-fields',
+		COBBLE_CORE_URL . 'assets/editor-fields.js',
 		array( 'wp-plugins', 'wp-editor', 'wp-element', 'wp-components', 'wp-data', 'wp-core-data', 'wp-i18n' ),
-		CC_CORE_VERSION,
+		COBBLE_CORE_VERSION,
 		true
 	);
 	wp_add_inline_script(
-		'cc-editor-fields',
+		'cobble-editor-fields',
 		'window.ccFields = ' . wp_json_encode(
 			array(
 				'postType' => $screen->post_type,
-				'panels'   => cc_field_schema()[ $screen->post_type ],
+				'panels'   => cobble_field_schema()[ $screen->post_type ],
 				'days'     => array(
 					__( 'Monday', 'cobbleandcandle-core' ),
 					__( 'Tuesday', 'cobbleandcandle-core' ),
@@ -547,6 +547,6 @@ function cc_enqueue_field_panels() {
 		) . ';',
 		'before'
 	);
-	wp_set_script_translations( 'cc-editor-fields', 'cobbleandcandle-core' );
+	wp_set_script_translations( 'cobble-editor-fields', 'cobbleandcandle-core' );
 }
-add_action( 'enqueue_block_editor_assets', 'cc_enqueue_field_panels' );
+add_action( 'enqueue_block_editor_assets', 'cobble_enqueue_field_panels' );

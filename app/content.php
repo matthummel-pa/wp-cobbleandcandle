@@ -11,7 +11,7 @@ namespace App;
  */
 function menus(): array
 {
-    return function_exists('cc_get_menus') ? cc_get_menus() : [];
+    return function_exists('cobble_get_menus') ? cobble_get_menus() : [];
 }
 
 /**
@@ -19,7 +19,7 @@ function menus(): array
  */
 function chef_picks(int $limit = 3): array
 {
-    return function_exists('cc_chef_picks') ? cc_chef_picks($limit) : [];
+    return function_exists('cobble_chef_picks') ? cobble_chef_picks($limit) : [];
 }
 
 /**
@@ -27,7 +27,7 @@ function chef_picks(int $limit = 3): array
  */
 function upcoming_events(int $limit = 3): array
 {
-    return function_exists('cc_upcoming_events') ? cc_upcoming_events($limit) : [];
+    return function_exists('cobble_upcoming_events') ? cobble_upcoming_events($limit) : [];
 }
 
 /**
@@ -81,11 +81,11 @@ function pipe_lines(string $text, int $columns): array
  */
 function rooms(int $limit = 50): array
 {
-    if (! function_exists('cc_get_rooms')) {
+    if (! function_exists('cobble_get_rooms')) {
         return [];
     }
 
     return array_map(fn (array $room): array => $room + [
-        'from' => $room['price_night'] > 0 ? cc_money(min(array_filter([$room['price_night'], $room['price_weekend']]))) : '',
-    ], array_slice(cc_get_rooms(), 0, $limit));
+        'from' => $room['price_night'] > 0 ? cobble_money(min(array_filter([$room['price_night'], $room['price_weekend']]))) : '',
+    ], array_slice(cobble_get_rooms(), 0, $limit));
 }

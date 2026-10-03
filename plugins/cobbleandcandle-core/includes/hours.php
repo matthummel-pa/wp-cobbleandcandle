@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @param string $time Time string.
  * @return int|null
  */
-function cc_minutes( $time ) {
+function cobble_minutes( $time ) {
 	if ( ! preg_match( '/^(\d{1,2}):(\d{2})$/', (string) $time, $m ) ) {
 		return null;
 	}
@@ -28,7 +28,7 @@ function cc_minutes( $time ) {
  *
  * @return bool
  */
-function cc_uses_24_hour_clock() {
+function cobble_uses_24_hour_clock() {
 	return (bool) preg_match( '/[GH]/', (string) get_option( 'time_format', 'g:i a' ) );
 }
 
@@ -38,15 +38,15 @@ function cc_uses_24_hour_clock() {
  * @param string $time "HH:MM".
  * @return string
  */
-function cc_time_label( $time ) {
-	$minutes = cc_minutes( $time );
+function cobble_time_label( $time ) {
+	$minutes = cobble_minutes( $time );
 	if ( null === $minutes ) {
 		return '';
 	}
 	$minutes %= 1440;
 	$h        = intdiv( $minutes, 60 );
 	$m        = $minutes % 60;
-	if ( cc_uses_24_hour_clock() ) {
+	if ( cobble_uses_24_hour_clock() ) {
 		return sprintf( '%02d:%02d', $h, $m );
 	}
 	if ( 0 === $minutes ) {
@@ -66,12 +66,12 @@ function cc_time_label( $time ) {
  * @param array<string, mixed>|null $row Day row.
  * @return array{0: int, 1: int}|null
  */
-function cc_day_window( $row ) {
+function cobble_day_window( $row ) {
 	if ( ! is_array( $row ) || ! empty( $row['closed'] ) ) {
 		return null;
 	}
-	$open  = cc_minutes( $row['open'] ?? '' );
-	$close = cc_minutes( $row['close'] ?? '' );
+	$open  = cobble_minutes( $row['open'] ?? '' );
+	$close = cobble_minutes( $row['close'] ?? '' );
 	if ( null === $open || null === $close ) {
 		return null;
 	}
@@ -88,13 +88,13 @@ function cc_day_window( $row ) {
  * @param \DateTimeImmutable $date        Date (site timezone).
  * @return array<string, mixed>|null
  */
-function cc_hours_row_for_date( $location_id, \DateTimeImmutable $date ) {
-	foreach ( (array) get_post_meta( $location_id, 'cc_holiday_hours', true ) as $holiday ) {
+function cobble_hours_row_for_date( $location_id, \DateTimeImmutable $date ) {
+	foreach ( (array) get_post_meta( $location_id, 'cobble_holiday_hours', true ) as $holiday ) {
 		if ( is_array( $holiday ) && ( $holiday['date'] ?? '' ) === $date->format( 'Y-m-d' ) ) {
 			return $holiday;
 		}
 	}
-	$week = (array) get_post_meta( $location_id, 'cc_hours', true );
+	$week = (array) get_post_meta( $location_id, 'cobble_hours', true );
 	return $week[ (int) $date->format( 'N' ) - 1 ] ?? null;
 }
 
@@ -105,37 +105,37 @@ function cc_hours_row_for_date( $location_id, \DateTimeImmutable $date ) {
  * @param \DateTimeImmutable|null $now         Defaults to now in the site timezone.
  * @return array{state: string, text: string}
  */
-function cc_location_status( $location_id, ?\DateTimeImmutable $now = null ) {
+function cobble_location_status( $location_id, ?\DateTimeImmutable $now = null ) {
 	$now     = $now ? $now : new \DateTimeImmutable( 'now', wp_timezone() );
 	$minutes = (int) $now->format( 'G' ) * 60 + (int) $now->format( 'i' );
 
 	// Still open from a late night yesterday?
-	$yesterday = cc_day_window( cc_hours_row_for_date( $location_id, $now->modify( '-1 day' ) ) );
+	$yesterday = cobble_day_window( cobble_hours_row_for_date( $location_id, $now->modify( '-1 day' ) ) );
 	if ( $yesterday && $yesterday[1] > 1440 && $minutes < $yesterday[1] - 1440 ) {
-		return cc_status_open( $yesterday[1] - 1440 - $minutes, $yesterday[1] );
+		return cobble_status_open( $yesterday[1] - 1440 - $minutes, $yesterday[1] );
 	}
 
-	$today = cc_day_window( cc_hours_row_for_date( $location_id, $now ) );
+	$today = cobble_day_window( cobble_hours_row_for_date( $location_id, $now ) );
 	if ( $today && $minutes >= $today[0] && $minutes < $today[1] ) {
-		return cc_status_open( $today[1] - $minutes, $today[1] );
+		return cobble_status_open( $today[1] - $minutes, $today[1] );
 	}
 	if ( $today && $minutes < $today[0] ) {
 		return array(
 			'state' => 'off',
 			/* translators: %s: opening time, e.g. 5:30pm */
-			'text'  => sprintf( __( 'Closed · opens %s', 'cobbleandcandle-core' ), cc_time_label( cc_minutes_to_time( $today[0] ) ) ),
+			'text'  => sprintf( __( 'Closed · opens %s', 'cobbleandcandle-core' ), cobble_time_label( cobble_minutes_to_time( $today[0] ) ) ),
 		);
 	}
 
 	for ( $k = 1; $k <= 7; $k++ ) {
 		$day    = $now->modify( "+{$k} day" );
-		$window = cc_day_window( cc_hours_row_for_date( $location_id, $day ) );
+		$window = cobble_day_window( cobble_hours_row_for_date( $location_id, $day ) );
 		if ( $window ) {
 			$when = 1 === $k ? __( 'tomorrow', 'cobbleandcandle-core' ) : wp_date( 'D', $day->getTimestamp() );
 			return array(
 				'state' => 'off',
 				/* translators: 1: "tomorrow" or a weekday, 2: opening time */
-				'text'  => sprintf( __( 'Closed · opens %1$s %2$s', 'cobbleandcandle-core' ), $when, cc_time_label( cc_minutes_to_time( $window[0] ) ) ),
+				'text'  => sprintf( __( 'Closed · opens %1$s %2$s', 'cobbleandcandle-core' ), $when, cobble_time_label( cobble_minutes_to_time( $window[0] ) ) ),
 			);
 		}
 	}
@@ -153,8 +153,8 @@ function cc_location_status( $location_id, ?\DateTimeImmutable $now = null ) {
  * @param int $close Closing minute.
  * @return array{state: string, text: string}
  */
-function cc_status_open( $left, $close ) {
-	$label = cc_time_label( cc_minutes_to_time( $close ) );
+function cobble_status_open( $left, $close ) {
+	$label = cobble_time_label( cobble_minutes_to_time( $close ) );
 	if ( $left <= 60 ) {
 		return array(
 			'state' => 'warn',
@@ -175,7 +175,7 @@ function cc_status_open( $left, $close ) {
  * @param int $minutes Minutes.
  * @return string
  */
-function cc_minutes_to_time( $minutes ) {
+function cobble_minutes_to_time( $minutes ) {
 	$minutes %= 1440;
 	return sprintf( '%02d:%02d', intdiv( $minutes, 60 ), $minutes % 60 );
 }
@@ -186,13 +186,13 @@ function cc_minutes_to_time( $minutes ) {
  * @param int $location_id Location post ID.
  * @return array<int, array{0: string, 1: string}>
  */
-function cc_hours_grouped( $location_id ) {
-	$week  = (array) get_post_meta( $location_id, 'cc_hours', true );
+function cobble_hours_grouped( $location_id ) {
+	$week  = (array) get_post_meta( $location_id, 'cobble_hours', true );
 	$days  = array( __( 'Mon', 'cobbleandcandle-core' ), __( 'Tue', 'cobbleandcandle-core' ), __( 'Wed', 'cobbleandcandle-core' ), __( 'Thu', 'cobbleandcandle-core' ), __( 'Fri', 'cobbleandcandle-core' ), __( 'Sat', 'cobbleandcandle-core' ), __( 'Sun', 'cobbleandcandle-core' ) );
 	$label = static function ( $row ) {
-		$window = cc_day_window( $row );
+		$window = cobble_day_window( $row );
 		return $window
-			? cc_time_label( cc_minutes_to_time( $window[0] ) ) . ' – ' . cc_time_label( cc_minutes_to_time( $window[1] ) )
+			? cobble_time_label( cobble_minutes_to_time( $window[0] ) ) . ' – ' . cobble_time_label( cobble_minutes_to_time( $window[1] ) )
 			: __( 'Closed', 'cobbleandcandle-core' );
 	};
 
@@ -214,10 +214,10 @@ function cc_hours_grouped( $location_id ) {
  * @param int $location_id Location post ID.
  * @return string
  */
-function cc_today_hours( $location_id ) {
-	$window = cc_day_window( cc_hours_row_for_date( $location_id, new \DateTimeImmutable( 'now', wp_timezone() ) ) );
+function cobble_today_hours( $location_id ) {
+	$window = cobble_day_window( cobble_hours_row_for_date( $location_id, new \DateTimeImmutable( 'now', wp_timezone() ) ) );
 	return $window
-		? cc_time_label( cc_minutes_to_time( $window[0] ) ) . ' – ' . cc_time_label( cc_minutes_to_time( $window[1] ) )
+		? cobble_time_label( cobble_minutes_to_time( $window[0] ) ) . ' – ' . cobble_time_label( cobble_minutes_to_time( $window[1] ) )
 		: __( 'Closed', 'cobbleandcandle-core' );
 }
 
@@ -228,16 +228,16 @@ function cc_today_hours( $location_id ) {
  * @param int $location_id Location post ID.
  * @return array{week: array<int, array{0: int, 1: int}|null>, holidays: array<string, array{0: int, 1: int}|null>}
  */
-function cc_status_windows( $location_id ) {
+function cobble_status_windows( $location_id ) {
 	$week = array();
-	$rows = (array) get_post_meta( $location_id, 'cc_hours', true );
+	$rows = (array) get_post_meta( $location_id, 'cobble_hours', true );
 	for ( $i = 0; $i < 7; $i++ ) {
-		$week[] = cc_day_window( $rows[ $i ] ?? null );
+		$week[] = cobble_day_window( $rows[ $i ] ?? null );
 	}
 	$holidays = array();
-	foreach ( (array) get_post_meta( $location_id, 'cc_holiday_hours', true ) as $holiday ) {
+	foreach ( (array) get_post_meta( $location_id, 'cobble_holiday_hours', true ) as $holiday ) {
 		if ( is_array( $holiday ) && ! empty( $holiday['date'] ) ) {
-			$holidays[ $holiday['date'] ] = cc_day_window( $holiday );
+			$holidays[ $holiday['date'] ] = cobble_day_window( $holiday );
 		}
 	}
 	return array(
@@ -247,11 +247,11 @@ function cc_status_windows( $location_id ) {
 }
 
 /**
- * Status phrases for the browser, matching cc_location_status() and cc_time_label().
+ * Status phrases for the browser, matching cobble_location_status() and cobble_time_label().
  *
  * @return array<string, string|bool>
  */
-function cc_status_labels() {
+function cobble_status_labels() {
 	return array(
 		/* translators: %s: closing time */
 		'open'       => __( 'Open now · closes %s', 'cobbleandcandle-core' ),
@@ -265,6 +265,6 @@ function cc_status_labels() {
 		'tomorrow'   => __( 'tomorrow', 'cobbleandcandle-core' ),
 		'midnight'   => __( 'midnight', 'cobbleandcandle-core' ),
 		'noon'       => __( 'noon', 'cobbleandcandle-core' ),
-		'clock24'    => cc_uses_24_hour_clock(),
+		'clock24'    => cobble_uses_24_hour_clock(),
 	);
 }

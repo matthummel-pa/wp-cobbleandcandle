@@ -22,7 +22,7 @@ function core_plugin_package(): string
  * Notice on admin screens while the plugin is missing or inactive.
  */
 add_action('admin_notices', function () {
-    if (function_exists('cc_get_locations') || ! current_user_can('activate_plugins')) {
+    if (function_exists('cobble_get_locations') || ! current_user_can('activate_plugins')) {
         return;
     }
     $screen = get_current_screen();
@@ -80,6 +80,6 @@ add_action('admin_post_cobbleandcandle_install_core', function () {
     if (is_wp_error($activated)) {
         wp_die(esc_html($activated->get_error_message()), '', ['back_link' => true]);
     }
-    wp_safe_redirect(admin_url('options-general.php?page=cc-setup')); // Straight into the setup wizard.
+    wp_safe_redirect(admin_url('options-general.php?page=cobble-setup')); // Straight into the setup wizard.
     exit;
 });

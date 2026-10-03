@@ -210,7 +210,7 @@ Link the folder into a local site (for example [WordPress Studio](https://develo
 
 - **Hooks and filters:** [docs/guide/developers.md](docs/guide/developers.md)
 - **Contributing, coding standards and the release flow:** [CONTRIBUTING.md](CONTRIBUTING.md)
-- **Error tracking:** every failure fires `do_action( 'cc_log', $entry )`. See [Troubleshooting](docs/guide/troubleshooting.md#send-errors-to-sentry-or-slack).
+- **Error tracking:** every failure fires `do_action( 'cobble_log', $entry )`. See [Troubleshooting](docs/guide/troubleshooting.md#send-errors-to-sentry-or-slack).
 
 ## Support
 

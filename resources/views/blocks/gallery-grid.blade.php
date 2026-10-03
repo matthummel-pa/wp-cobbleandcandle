@@ -8,7 +8,7 @@
       $meta = wp_get_attachment_metadata($id) ?: [];
       $w = (int) ($meta['width'] ?? 0);
       $h = (int) ($meta['height'] ?? 0);
-      $terms = get_the_terms($id, 'cc_gallery');
+      $terms = get_the_terms($id, 'cobble_gallery');
       $term = $terms && ! is_wp_error($terms) ? $terms[0] : null;
       if ($term) {
           $cats[$term->slug] = $term->name;

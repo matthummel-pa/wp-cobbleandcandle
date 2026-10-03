@@ -14,11 +14,11 @@ namespace App;
  */
 function locations(): array
 {
-    if (! function_exists('cc_get_locations') || ! function_exists('cc_location')) {
+    if (! function_exists('cobble_get_locations') || ! function_exists('cobble_location')) {
         return [];
     }
 
-    return array_values(array_filter(array_map('cc_location', cc_get_locations())));
+    return array_values(array_filter(array_map('cobble_location', cobble_get_locations())));
 }
 
 /**
@@ -28,7 +28,7 @@ function locations(): array
  */
 function current_location(): array
 {
-    return function_exists('cc_current_location') ? cc_current_location() : [];
+    return function_exists('cobble_current_location') ? cobble_current_location() : [];
 }
 
 /**
@@ -44,7 +44,7 @@ function locations_json(): string
         'map_url' => $l['map_url'],
         'order_url' => $l['order_url'],
         'status' => $l['status'],
-        'windows' => function_exists('cc_status_windows') ? cc_status_windows($l['id']) : null,
+        'windows' => function_exists('cobble_status_windows') ? cobble_status_windows($l['id']) : null,
     ], locations()), JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
 }
 
@@ -53,11 +53,11 @@ function locations_json(): string
  */
 function status_json(): string
 {
-    if (! function_exists('cc_status_labels')) {
+    if (! function_exists('cobble_status_labels')) {
         return '{}';
     }
 
-    return (string) wp_json_encode(['tz' => wp_timezone_string(), 'labels' => cc_status_labels()], JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+    return (string) wp_json_encode(['tz' => wp_timezone_string(), 'labels' => cobble_status_labels()], JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
 }
 
 /**
@@ -67,19 +67,19 @@ function status_json(): string
  */
 function week_rows(int $location_id): array
 {
-    if (! function_exists('cc_day_window')) {
+    if (! function_exists('cobble_day_window')) {
         return [];
     }
-    $week = (array) get_post_meta($location_id, 'cc_hours', true);
+    $week = (array) get_post_meta($location_id, 'cobble_hours', true);
     $today = (int) wp_date('N') - 1;
     // Build dates in the site timezone: strtotime() is UTC, so wp_date() would shift US sites a day back.
     $monday = new \DateTimeImmutable('monday this week', wp_timezone());
     $rows = [];
     for ($i = 0; $i < 7; $i++) {
-        $window = cc_day_window($week[$i] ?? null);
+        $window = cobble_day_window($week[$i] ?? null);
         $rows[] = [
             wp_date('l', $monday->modify("+{$i} days")->getTimestamp()),
-            $window ? cc_time_label(cc_minutes_to_time($window[0])).' – '.cc_time_label(cc_minutes_to_time($window[1])) : __('Closed', 'cobbleandcandle'),
+            $window ? cobble_time_label(cobble_minutes_to_time($window[0])).' – '.cobble_time_label(cobble_minutes_to_time($window[1])) : __('Closed', 'cobbleandcandle'),
             $i === $today,
         ];
     }
@@ -94,19 +94,19 @@ function week_rows(int $location_id): array
  */
 function holiday_rows(int $location_id): array
 {
-    if (! function_exists('cc_day_window')) {
+    if (! function_exists('cobble_day_window')) {
         return [];
     }
     $rows = [];
-    foreach ((array) get_post_meta($location_id, 'cc_holiday_hours', true) as $holiday) {
+    foreach ((array) get_post_meta($location_id, 'cobble_holiday_hours', true) as $holiday) {
         if (! is_array($holiday) || ($holiday['date'] ?? '') < wp_date('Y-m-d')) {
             continue;
         }
-        $window = cc_day_window($holiday);
+        $window = cobble_day_window($holiday);
         $rows[] = [
             (string) ($holiday['label'] ?? ''),
             wp_date('D j M', (date_create_immutable($holiday['date'], wp_timezone()) ?: new \DateTimeImmutable('now', wp_timezone()))->getTimestamp()),
-            $window ? cc_time_label(cc_minutes_to_time($window[0])).' – '.cc_time_label(cc_minutes_to_time($window[1])) : __('Closed', 'cobbleandcandle'),
+            $window ? cobble_time_label(cobble_minutes_to_time($window[0])).' – '.cobble_time_label(cobble_minutes_to_time($window[1])) : __('Closed', 'cobbleandcandle'),
         ];
     }
 

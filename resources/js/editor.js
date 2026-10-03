@@ -156,7 +156,7 @@ Object.values(manifests).forEach((metadata) => {
   registerBlockType(metadata, template
     ? {
         edit({ attributes, setAttributes }) {
-          const blockProps = useBlockProps({ className: 'cc-content-block' })
+          const blockProps = useBlockProps({ className: 'cobble-content-block' })
           return el(Fragment, null,
             el(Settings, { metadata, attributes, setAttributes }),
             el('div', blockProps, el(InnerBlocks, { template, allowedBlocks: ALLOWED[metadata.name], templateLock: false })))

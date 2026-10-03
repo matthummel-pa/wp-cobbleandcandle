@@ -5,7 +5,7 @@
   $directions = $attributes['directionsUrl'] ?: ($current['map_url'] ?? '');
   $order = $attributes['orderUrl'] ?: ($current['order_url'] ?? '');
   // Stay: only when the site has rooms. On a room page it leads, straight to that room's calendar.
-  $onRoom = is_singular('cc_room') && ! post_password_required(get_queried_object()); // Locked rooms have no booking card.
+  $onRoom = is_singular('cobble_room') && ! post_password_required(get_queried_object()); // Locked rooms have no booking card.
   $stay = $attributes['showStay'] && \App\rooms(1) ? ($onRoom ? '#book' : $attributes['stayUrl']) : '';
   $bind = $current ? ['tel' => '$store.site.loc.tel', 'nav' => '$store.site.loc.map_url'] : [];
   $items = array_filter([

@@ -1,7 +1,7 @@
 {{-- Location Details: the location being viewed (single location template), else the current one. --}}
 @php
   $post = \App\context_post();
-  $l = $post && $post->post_type === 'cc_location' && function_exists('cc_location') ? cc_location($post) : \App\current_location();
+  $l = $post && $post->post_type === 'cobble_location' && function_exists('cobble_location') ? cobble_location($post) : \App\current_location();
   $pin = array_search($l['id'] ?? 0, array_column(\App\locations(), 'id'), true);
 @endphp
 @if ($l)

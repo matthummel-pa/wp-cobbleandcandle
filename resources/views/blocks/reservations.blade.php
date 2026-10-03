@@ -3,7 +3,7 @@
 @php
   $locations = \App\locations();
   $current = \App\current_location();
-  $choices = function_exists('cc_reservation_choices') ? cc_reservation_choices() : null;
+  $choices = function_exists('cobble_reservation_choices') ? cobble_reservation_choices() : null;
   $notes = array_filter(array_map('trim', explode("\n", $attributes['notes'])));
   // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only status flag after redirect.
   $status = isset($_GET['reservation']) ? sanitize_key(wp_unslash($_GET['reservation'])) : '';
@@ -52,37 +52,37 @@
                 <h2 class="h3 resv-h"><x-icon name="calendar" /> {{ sprintf(__('Book at %s', 'cobbleandcandle'), $l['name']) }}</h2>
 
                 @if ($mode === 'native')
-                  <form class="resv-form" method="post" action="{{ admin_url('admin-post.php') }}" x-data="bookingForm({{ wp_json_encode(cc_booking_windows($l['id'])) }})"
+                  <form class="resv-form" method="post" action="{{ admin_url('admin-post.php') }}" x-data="bookingForm({{ wp_json_encode(cobble_booking_windows($l['id'])) }})"
                         data-full="{{ __('No tables left online for this day. Try another date or call us.', 'cobbleandcandle') }}"
                         {{-- translators: 1: party size, 2: time --}}
                         data-submit="{{ __('Request a table for %1$s · %2$s', 'cobbleandcandle') }}" data-submit-empty="{{ __('Choose a time', 'cobbleandcandle') }}">
-                    <input type="hidden" name="action" value="cc_reservation">
-                    <input type="hidden" name="cc_location" value="{{ $l['id'] }}">
-                    {!! wp_nonce_field('cc_reservation', 'cc_reservation_nonce', true, false) !!}
-                    <div class="sr" aria-hidden="true"><label for="{{ $fid }}-web">{{ __('Leave this empty', 'cobbleandcandle') }}</label><input id="{{ $fid }}-web" type="text" name="cc_website" tabindex="-1" autocomplete="off"></div>
+                    <input type="hidden" name="action" value="cobble_reservation">
+                    <input type="hidden" name="cobble_location" value="{{ $l['id'] }}">
+                    {!! wp_nonce_field('cobble_reservation', 'cobble_reservation_nonce', true, false) !!}
+                    <div class="sr" aria-hidden="true"><label for="{{ $fid }}-web">{{ __('Leave this empty', 'cobbleandcandle') }}</label><input id="{{ $fid }}-web" type="text" name="cobble_website" tabindex="-1" autocomplete="off"></div>
                     <div class="form-grid form-grid--3">
-                      <div class="field"><label for="{{ $fid }}-date">{{ __('Date', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $fid }}-date" name="cc_date" type="date" min="{{ wp_date('Y-m-d') }}" required x-model="date"></div>
-                      <div class="field"><label for="{{ $fid }}-party">{{ __('Party size', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><div class="select"><select id="{{ $fid }}-party" name="cc_party" required x-model="party">@foreach ($choices['party'] as $n)<option value="{{ $n }}" @selected($n === '2')>{{ sprintf(_n('%s guest', '%s guests', (int) $n, 'cobbleandcandle'), $n) }}</option>@endforeach</select><x-icon name="chev-down" /></div></div>
-                      <div class="field"><label for="{{ $fid }}-seat">{{ __('Seating', 'cobbleandcandle') }} <span class="opt">{{ __('(optional)', 'cobbleandcandle') }}</span></label><div class="select"><select id="{{ $fid }}-seat" name="cc_seating">@foreach ($choices['seating'] as $key => $s)<option value="{{ $key }}">{{ $s }}</option>@endforeach</select><x-icon name="chev-down" /></div></div>
+                      <div class="field"><label for="{{ $fid }}-date">{{ __('Date', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $fid }}-date" name="cobble_date" type="date" min="{{ wp_date('Y-m-d') }}" required x-model="date"></div>
+                      <div class="field"><label for="{{ $fid }}-party">{{ __('Party size', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><div class="select"><select id="{{ $fid }}-party" name="cobble_party" required x-model="party">@foreach ($choices['party'] as $n)<option value="{{ $n }}" @selected($n === '2')>{{ sprintf(_n('%s guest', '%s guests', (int) $n, 'cobbleandcandle'), $n) }}</option>@endforeach</select><x-icon name="chev-down" /></div></div>
+                      <div class="field"><label for="{{ $fid }}-seat">{{ __('Seating', 'cobbleandcandle') }} <span class="opt">{{ __('(optional)', 'cobbleandcandle') }}</span></label><div class="select"><select id="{{ $fid }}-seat" name="cobble_seating">@foreach ($choices['seating'] as $key => $s)<option value="{{ $key }}">{{ $s }}</option>@endforeach</select><x-icon name="chev-down" /></div></div>
                     </div>
                     <fieldset class="slots">
                       <legend>{{ __('Times', 'cobbleandcandle') }} <span x-text="dayLabel"></span></legend>
                       <div class="slot-grid">
                         <template x-for="slot in slots" :key="slot.value">
-                          <label class="slot"><input type="radio" name="cc_time" required :value="slot.value" x-model="time"><span x-text="slot.label"></span></label>
+                          <label class="slot"><input type="radio" name="cobble_time" required :value="slot.value" x-model="time"><span x-text="slot.label"></span></label>
                         </template>
                       </div>
                       <p class="hint" x-show="!slots.length" x-text="$root.dataset.full"></p>
-                      <noscript><div class="field"><label for="{{ $fid }}-time">{{ __('Time (HH:MM)', 'cobbleandcandle') }}</label><input id="{{ $fid }}-time" name="cc_time" type="time" step="1800"></div></noscript>
+                      <noscript><div class="field"><label for="{{ $fid }}-time">{{ __('Time (HH:MM)', 'cobbleandcandle') }}</label><input id="{{ $fid }}-time" name="cobble_time" type="time" step="1800"></div></noscript>
                     </fieldset>
                     <div class="form-grid">
-                      <div class="field"><label for="{{ $fid }}-name">{{ __('Full name', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $fid }}-name" name="cc_name" type="text" autocomplete="name" required></div>
-                      <div class="field"><label for="{{ $fid }}-tel">{{ __('Phone', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $fid }}-tel" name="cc_phone" type="tel" autocomplete="tel" required aria-describedby="{{ $fid }}-tel-h"><p class="hint" id="{{ $fid }}-tel-h">{{ __('Only used if we need to reach you about this booking.', 'cobbleandcandle') }}</p></div>
-                      <div class="field"><label for="{{ $fid }}-email">{{ __('Email', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $fid }}-email" name="cc_email" type="email" autocomplete="email" required></div>
-                      <div class="field"><label for="{{ $fid }}-occ">{{ __('Occasion', 'cobbleandcandle') }} <span class="opt">{{ __('(optional)', 'cobbleandcandle') }}</span></label><div class="select"><select id="{{ $fid }}-occ" name="cc_occasion">@foreach ($choices['occasions'] as $key => $o)<option value="{{ $key }}">{{ $o }}</option>@endforeach</select><x-icon name="chev-down" /></div></div>
-                      <div class="field field--full"><label for="{{ $fid }}-req">{{ __('Requests or allergies', 'cobbleandcandle') }} <span class="opt">{{ __('(optional)', 'cobbleandcandle') }}</span></label><textarea id="{{ $fid }}-req" name="cc_requests" rows="3"></textarea></div>
+                      <div class="field"><label for="{{ $fid }}-name">{{ __('Full name', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $fid }}-name" name="cobble_name" type="text" autocomplete="name" required></div>
+                      <div class="field"><label for="{{ $fid }}-tel">{{ __('Phone', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $fid }}-tel" name="cobble_phone" type="tel" autocomplete="tel" required aria-describedby="{{ $fid }}-tel-h"><p class="hint" id="{{ $fid }}-tel-h">{{ __('Only used if we need to reach you about this booking.', 'cobbleandcandle') }}</p></div>
+                      <div class="field"><label for="{{ $fid }}-email">{{ __('Email', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $fid }}-email" name="cobble_email" type="email" autocomplete="email" required></div>
+                      <div class="field"><label for="{{ $fid }}-occ">{{ __('Occasion', 'cobbleandcandle') }} <span class="opt">{{ __('(optional)', 'cobbleandcandle') }}</span></label><div class="select"><select id="{{ $fid }}-occ" name="cobble_occasion">@foreach ($choices['occasions'] as $key => $o)<option value="{{ $key }}">{{ $o }}</option>@endforeach</select><x-icon name="chev-down" /></div></div>
+                      <div class="field field--full"><label for="{{ $fid }}-req">{{ __('Requests or allergies', 'cobbleandcandle') }} <span class="opt">{{ __('(optional)', 'cobbleandcandle') }}</span></label><textarea id="{{ $fid }}-req" name="cobble_requests" rows="3"></textarea></div>
                     </div>
-                    <label class="check"><input type="checkbox" name="cc_newsletter" value="1"><span>{{ __('Send me the monthly newsletter', 'cobbleandcandle') }}</span></label>
+                    <label class="check"><input type="checkbox" name="cobble_newsletter" value="1"><span>{{ __('Send me the monthly newsletter', 'cobbleandcandle') }}</span></label>
                     <button class="btn btn--primary btn--block" type="submit" :disabled="!time"><x-icon name="calendar" /><span x-text="submitLabel">{{ __('Request a table', 'cobbleandcandle') }}</span></button>
                     <p class="hint">{{ __('This is a request: the house confirms every table personally.', 'cobbleandcandle') }}</p>
                   </form>
@@ -145,7 +145,7 @@
               <div class="card">
                 <h2 class="h4"><x-icon name="pin" /> {{ __('Getting there', 'cobbleandcandle') }}</h2>
                 <p>{{ $l['address'] }}</p>
-                @php($parking = (string) get_post_meta($l['id'], 'cc_parking', true))
+                @php($parking = (string) get_post_meta($l['id'], 'cobble_parking', true))
                 @if ($parking !== '')
                   <p class="muted">{{ $parking }}</p>
                 @endif
@@ -161,7 +161,7 @@
             <div class="card stay-x">
               <h2 class="h4"><x-icon name="bed" /> {{ __('Staying the night?', 'cobbleandcandle') }}</h2>
               {{-- translators: %s: lowest nightly room price --}}
-              <p>{{ $cheapest > 0 ? sprintf(__('Rooms upstairs from %s a night, breakfast included. Add your dinner table when you book.', 'cobbleandcandle'), cc_money($cheapest)) : __('Rooms upstairs, breakfast included. Add your dinner table when you book.', 'cobbleandcandle') }}</p>
+              <p>{{ $cheapest > 0 ? sprintf(__('Rooms upstairs from %s a night, breakfast included. Add your dinner table when you book.', 'cobbleandcandle'), cobble_money($cheapest)) : __('Rooms upstairs, breakfast included. Add your dinner table when you book.', 'cobbleandcandle') }}</p>
               <a class="link-arrow" href="{!! esc_url(\App\page_link('/rooms/')) !!}">{{ __('See rooms & dates', 'cobbleandcandle') }}<x-icon name="arrow" /></a>
             </div>
           @endif

@@ -2,8 +2,8 @@
      live availability calendar (free nights only, live total) that sends a booking request. --}}
 @php
   $post = \App\context_post();
-  $room = $post && $post->post_type === 'cc_room' && function_exists('cc_room') ? cc_room($post) : [];
-  $place = ($room['location_id'] ?? 0) && function_exists('cc_location') ? cc_location($room['location_id']) : [];
+  $room = $post && $post->post_type === 'cobble_room' && function_exists('cobble_room') ? cobble_room($post) : [];
+  $place = ($room['location_id'] ?? 0) && function_exists('cobble_location') ? cobble_location($room['location_id']) : [];
   $notes = array_filter(array_map('trim', explode("\n", $attributes['notes'])));
   $related = $room ? array_slice(array_values(array_filter(\App\rooms(), fn ($r) => $r['id'] !== $room['id'])), 0, (int) $attributes['related']) : [];
   $crumbs = \App\crumbs();
@@ -22,11 +22,11 @@
   $uid = wp_unique_id('stay-');
   $picker = $room ? [
       'rest' => rest_url('cobbleandcandle/v1/rooms/'.$room['id'].'/availability'),
-      'currency' => (string) apply_filters('cc_currency', 'USD'),
+      'currency' => (string) apply_filters('cobble_currency', 'USD'),
       'minNights' => $room['min_nights'],
       'priceNight' => $room['price_night'],
       'priceWeekend' => $room['price_weekend'],
-      'windows' => $place && function_exists('cc_booking_windows') ? cc_booking_windows($place['id']) : null,
+      'windows' => $place && function_exists('cobble_booking_windows') ? cobble_booking_windows($place['id']) : null,
   ] : [];
 @endphp
 @if ($room)
@@ -85,10 +85,10 @@
           <aside class="card ticket stay" id="book" aria-labelledby="{{ $uid }}-h">
             <h2 class="h4" id="{{ $uid }}-h">{{ __('Check dates & book', 'cobbleandcandle') }}</h2>
             @if ($room['price_night'] > 0)
-              <p class="ticket-price">{{ cc_money($room['price_night']) }} <small class="muted">{{ __('a night', 'cobbleandcandle') }}</small></p>
+              <p class="ticket-price">{{ cobble_money($room['price_night']) }} <small class="muted">{{ __('a night', 'cobbleandcandle') }}</small></p>
               @if ($room['price_weekend'] > 0 && $room['price_weekend'] !== $room['price_night'])
                 {{-- translators: %s: weekend nightly price --}}
-                <p class="muted stay-weekend">{{ sprintf(__('Friday & Saturday nights %s', 'cobbleandcandle'), cc_money($room['price_weekend'])) }}</p>
+                <p class="muted stay-weekend">{{ sprintf(__('Friday & Saturday nights %s', 'cobbleandcandle'), cobble_money($room['price_weekend'])) }}</p>
               @endif
             @endif
             @if (isset($messages[$status]))
@@ -102,10 +102,10 @@
                   {{-- translators: %d: number of nights --}}
                   data-nights="{{ __('%d night', 'cobbleandcandle') }}" data-nights-plural="{{ __('%d nights', 'cobbleandcandle') }}"
                   data-free="{{ __('available', 'cobbleandcandle') }}" data-full="{{ __('booked', 'cobbleandcandle') }}">
-              <input type="hidden" name="action" value="cc_room_booking">
-              <input type="hidden" name="cc_room" value="{{ $room['id'] }}">
-              {!! wp_nonce_field('cc_room_booking', 'cc_room_booking_nonce', true, false) !!}
-              <div class="sr" aria-hidden="true"><label for="{{ $uid }}-web">{{ __('Leave this empty', 'cobbleandcandle') }}</label><input id="{{ $uid }}-web" type="text" name="cc_website" tabindex="-1" autocomplete="off"></div>
+              <input type="hidden" name="action" value="cobble_room_booking">
+              <input type="hidden" name="cobble_room" value="{{ $room['id'] }}">
+              {!! wp_nonce_field('cobble_room_booking', 'cobble_room_booking_nonce', true, false) !!}
+              <div class="sr" aria-hidden="true"><label for="{{ $uid }}-web">{{ __('Leave this empty', 'cobbleandcandle') }}</label><input id="{{ $uid }}-web" type="text" name="cobble_website" tabindex="-1" autocomplete="off"></div>
 
               <div class="cal" x-cloak x-show="ready" role="group" aria-label="{{ __('Availability calendar', 'cobbleandcandle') }}">
                 <div class="cal-nav">
@@ -128,33 +128,33 @@
               </div>
 
               <div class="form-grid">
-                <div class="field"><label for="{{ $uid }}-in">{{ __('Check-in', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $uid }}-in" name="cc_check_in" type="date" min="{{ wp_date('Y-m-d') }}" required x-model="checkIn" @change="clearOut()"></div>
-                <div class="field"><label for="{{ $uid }}-out">{{ __('Check-out', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $uid }}-out" name="cc_check_out" type="date" min="{{ wp_date('Y-m-d', strtotime('+1 day')) }}" required x-model="checkOut" :min="minOut"></div>
+                <div class="field"><label for="{{ $uid }}-in">{{ __('Check-in', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $uid }}-in" name="cobble_check_in" type="date" min="{{ wp_date('Y-m-d') }}" required x-model="checkIn" @change="clearOut()"></div>
+                <div class="field"><label for="{{ $uid }}-out">{{ __('Check-out', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $uid }}-out" name="cobble_check_out" type="date" min="{{ wp_date('Y-m-d', strtotime('+1 day')) }}" required x-model="checkOut" :min="minOut"></div>
               </div>
               <p class="hint" aria-live="polite" x-text="problem"></p>
               <div class="stay-total" x-show="total" x-cloak aria-live="polite"><span x-text="nightsLabel"></span><b x-text="total"></b></div>
 
-              <div class="field"><label for="{{ $uid }}-guests">{{ __('Guests', 'cobbleandcandle') }}</label><div class="select"><select id="{{ $uid }}-guests" name="cc_guests">@for ($n = 1; $n <= $room['max_guests']; $n++)<option value="{{ $n }}" @selected($n === min(2, $room['max_guests']))>{{ sprintf(_n('%d guest', '%d guests', $n, 'cobbleandcandle'), $n) }}</option>@endfor</select><x-icon name="chev-down" /></div></div>
-              <div class="field"><label for="{{ $uid }}-name">{{ __('Full name', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $uid }}-name" name="cc_name" type="text" autocomplete="name" required></div>
-              <div class="field"><label for="{{ $uid }}-email">{{ __('Email', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $uid }}-email" name="cc_email" type="email" autocomplete="email" required></div>
-              <div class="field"><label for="{{ $uid }}-tel">{{ __('Phone', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $uid }}-tel" name="cc_phone" type="tel" autocomplete="tel" required></div>
-              @if ($place && function_exists('cc_booking_windows'))
+              <div class="field"><label for="{{ $uid }}-guests">{{ __('Guests', 'cobbleandcandle') }}</label><div class="select"><select id="{{ $uid }}-guests" name="cobble_guests">@for ($n = 1; $n <= $room['max_guests']; $n++)<option value="{{ $n }}" @selected($n === min(2, $room['max_guests']))>{{ sprintf(_n('%d guest', '%d guests', $n, 'cobbleandcandle'), $n) }}</option>@endfor</select><x-icon name="chev-down" /></div></div>
+              <div class="field"><label for="{{ $uid }}-name">{{ __('Full name', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $uid }}-name" name="cobble_name" type="text" autocomplete="name" required></div>
+              <div class="field"><label for="{{ $uid }}-email">{{ __('Email', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $uid }}-email" name="cobble_email" type="email" autocomplete="email" required></div>
+              <div class="field"><label for="{{ $uid }}-tel">{{ __('Phone', 'cobbleandcandle') }} <span class="req" aria-hidden="true">*</span></label><input id="{{ $uid }}-tel" name="cobble_phone" type="tel" autocomplete="tel" required></div>
+              @if ($place && function_exists('cobble_booking_windows'))
                 <fieldset class="dine">
                   <legend class="sr">{{ __('Dinner on arrival', 'cobbleandcandle') }}</legend>
-                  <label class="check"><input type="checkbox" name="cc_dinner" value="1" x-model="dinner"><span>{{ sprintf(__('Add dinner at %s on your first night', 'cobbleandcandle'), $place['name']) }}</span></label>
+                  <label class="check"><input type="checkbox" name="cobble_dinner" value="1" x-model="dinner"><span>{{ sprintf(__('Add dinner at %s on your first night', 'cobbleandcandle'), $place['name']) }}</span></label>
                   <div class="field" x-show="dinner" x-cloak>
                     <label for="{{ $uid }}-dine">{{ __('Table time', 'cobbleandcandle') }}</label>
-                    <div class="select"><select id="{{ $uid }}-dine" name="cc_dinner_time" x-model="dinnerTime" :disabled="!dinner" :required="dinner">
+                    <div class="select"><select id="{{ $uid }}-dine" name="cobble_dinner_time" x-model="dinnerTime" :disabled="!dinner" :required="dinner">
                       <option value="">{{ __('Choose a time', 'cobbleandcandle') }}</option>
                       <template x-for="slot in dinnerSlots" :key="slot.value"><option :value="slot.value" x-text="slot.label"></option></template>
                     </select><x-icon name="chev-down" /></div>
                     <p class="hint" x-show="checkIn && !dinnerSlots.length">{{ __('The kitchen is closed that night. Ask us about a late supper tray.', 'cobbleandcandle') }}</p>
                     <p class="hint" x-show="!checkIn">{{ __('Pick your dates first.', 'cobbleandcandle') }}</p>
                   </div>
-                  <noscript><div class="field"><label for="{{ $uid }}-dine-ns">{{ __('Table time (HH:MM)', 'cobbleandcandle') }}</label><input id="{{ $uid }}-dine-ns" name="cc_dinner_time" type="time" step="1800"></div></noscript>
+                  <noscript><div class="field"><label for="{{ $uid }}-dine-ns">{{ __('Table time (HH:MM)', 'cobbleandcandle') }}</label><input id="{{ $uid }}-dine-ns" name="cobble_dinner_time" type="time" step="1800"></div></noscript>
                 </fieldset>
               @endif
-              <div class="field"><label for="{{ $uid }}-msg">{{ __('Arrival time or requests', 'cobbleandcandle') }} <span class="opt">{{ __('(optional)', 'cobbleandcandle') }}</span></label><textarea id="{{ $uid }}-msg" name="cc_message" rows="3"></textarea></div>
+              <div class="field"><label for="{{ $uid }}-msg">{{ __('Arrival time or requests', 'cobbleandcandle') }} <span class="opt">{{ __('(optional)', 'cobbleandcandle') }}</span></label><textarea id="{{ $uid }}-msg" name="cobble_message" rows="3"></textarea></div>
               <button class="btn btn--primary btn--block" type="submit" :disabled="!valid"><x-icon name="calendar" /><span>{{ __('Request this stay', 'cobbleandcandle') }}</span></button>
               <p class="hint">{{ __('This is a request: we confirm every stay personally. No card needed.', 'cobbleandcandle') }}</p>
             </form>
@@ -166,7 +166,7 @@
     @if ($related)
       <section class="section section--alt">
         <div class="container">
-          <x-section-head :eyebrow="__('More rooms', 'cobbleandcandle')" :title="__('Other places to rest', 'cobbleandcandle')" :link="get_post_type_archive_link('cc_room')" :link-label="__('All rooms', 'cobbleandcandle')" />
+          <x-section-head :eyebrow="__('More rooms', 'cobbleandcandle')" :title="__('Other places to rest', 'cobbleandcandle')" :link="get_post_type_archive_link('cobble_room')" :link-label="__('All rooms', 'cobbleandcandle')" />
           <div class="grid-3 room-grid">
             @foreach ($related as $item)
               <x-room-card :room="$item" />
