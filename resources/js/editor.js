@@ -56,6 +56,8 @@ const LABELS = {
   reserveLabel: __('Reserve button label', 'cobbleandcandle'),
   contacts: __('Direct contacts (one per line, Label: value)', 'cobbleandcandle'),
   showFeatured: __('Feature the next event', 'cobbleandcandle'),
+  showStay: __('Show a Stay button when you have rooms', 'cobbleandcandle'),
+  stayUrl: __('Stay link', 'cobbleandcandle'),
   listTitle: __('List heading', 'cobbleandcandle'),
   emptyText: __('Text when there are no events', 'cobbleandcandle'),
   regularsEyebrow: __('Regulars eyebrow', 'cobbleandcandle'),

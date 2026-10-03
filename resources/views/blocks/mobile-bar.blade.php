@@ -1,16 +1,21 @@
-{{-- Mobile Action Bar block: fixed bottom bar below 768px (HANDOFF §3, §8). --}}
+{{-- Mobile Action Bar block: fixed bottom bar below 768px (HANDOFF §3, §8). The primary action comes first. --}}
 @php
   $current = \App\current_location();
   $phone = $attributes['phone'] ?: ($current['phone'] ?? \App\brand('phone'));
   $directions = $attributes['directionsUrl'] ?: ($current['map_url'] ?? '');
   $order = $attributes['orderUrl'] ?: ($current['order_url'] ?? '');
+  // Stay: only when the site has rooms. On a room page it leads, straight to that room's calendar.
+  $onRoom = is_singular('cc_room');
+  $stay = $attributes['showStay'] && \App\rooms(1) ? ($onRoom ? '#book' : $attributes['stayUrl']) : '';
   $bind = $current ? ['tel' => '$store.site.loc.tel', 'nav' => '$store.site.loc.map_url'] : [];
   $items = array_filter([
-    ['url' => $attributes['reserveUrl'], 'icon' => 'calendar', 'label' => __('Reserve', 'cobbleandcandle'), 'primary' => true],
+    ['url' => $attributes['reserveUrl'], 'icon' => 'calendar', 'label' => __('Reserve', 'cobbleandcandle'), 'primary' => ! $onRoom || $stay === ''],
+    ['url' => $stay, 'icon' => 'bed', 'label' => $onRoom ? __('Book stay', 'cobbleandcandle') : __('Stay', 'cobbleandcandle'), 'primary' => $onRoom],
     ['url' => $order, 'icon' => 'bag', 'label' => __('Order', 'cobbleandcandle'), 'primary' => false],
     ['url' => $phone ? 'tel:'.preg_replace('/[^0-9+]/', '', $phone) : '', 'icon' => 'phone', 'label' => __('Call', 'cobbleandcandle'), 'primary' => false],
     ['url' => $directions, 'icon' => 'nav', 'label' => __('Directions', 'cobbleandcandle'), 'primary' => false],
   ], fn ($i) => $i['url'] !== '');
+  usort($items, fn ($a, $b) => $b['primary'] <=> $a['primary']);
 @endphp
 @if ($items)
   <nav {!! $wrapper !!} aria-label="{{ __('Quick actions', 'cobbleandcandle') }}">
