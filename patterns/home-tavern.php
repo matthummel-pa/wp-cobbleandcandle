@@ -10,6 +10,7 @@
  */
 
 use function App\block_attr;
+
 ?>
 <!-- wp:cobbleandcandle/hero {"align": "full", "caption": "<?php echo block_attr(__('The taproom at last orders', 'cobbleandcandle')); ?>"} -->
 <!-- wp:paragraph {"className": "eyebrow eyebrow--hero"} -->
