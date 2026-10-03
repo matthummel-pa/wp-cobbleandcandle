@@ -56,6 +56,7 @@ function cc_uninstall_site() {
 	wp_unschedule_hook( 'cc_ical_sync_room' );
 	delete_option( 'cc_log' ); // Event log: temporary diagnostics.
 	wp_clear_scheduled_hook( 'cc_prune_messages' );
+	delete_option( 'cc_mail_failures' );
 	// Rate-limit counters (transients named cc_rl_*). They expire on their own; removed here for tidiness.
 	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s", $wpdb->esc_like( '_transient_cc_rl_' ) . '%', $wpdb->esc_like( '_transient_timeout_cc_rl_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- one-off cleanup on uninstall; no API deletes transients by prefix.
 }

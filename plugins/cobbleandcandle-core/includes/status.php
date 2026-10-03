@@ -34,10 +34,32 @@ function cc_log( $level, $source, $message, array $context = array() ) {
 			array_slice( $context, 0, 10, true )
 		),
 	);
-	$log   = get_option( 'cc_log', array() );
-	$log   = is_array( $log ) ? $log : array();
+	$log = get_option( 'cc_log', array() );
+	$log = is_array( $log ) ? $log : array();
+	// The same problem again within a day (an hourly feed failure, say) bumps a count on the existing
+	// entry instead of filling the log, so other problems are not pushed out.
+	$repeat = null;
+	foreach ( $log as $i => $old ) {
+		if ( ! is_array( $old ) || (int) ( $old['time'] ?? 0 ) < time() - DAY_IN_SECONDS ) {
+			break;
+		}
+		if ( ( $old['source'] ?? '' ) === $entry['source'] && ( $old['message'] ?? '' ) === $entry['message'] && ( $old['context'] ?? array() ) === $entry['context'] ) {
+			$repeat = $i;
+			break;
+		}
+	}
+	if ( null !== $repeat ) {
+		$entry['count'] = (int) ( $log[ $repeat ]['count'] ?? 1 ) + 1;
+		unset( $log[ $repeat ] );
+	}
 	array_unshift( $log, $entry );
-	update_option( 'cc_log', array_slice( $log, 0, 200 ), false );
+	update_option( 'cc_log', array_slice( array_values( $log ), 0, 200 ), false );
+	if ( 'mail' === $entry['source'] && 'error' === $level ) {
+		// Kept apart from the log so the weekly email check can't be pushed out by other events.
+		$failures   = array_filter( (array) get_option( 'cc_mail_failures', array() ), static fn( $t ) => (int) $t > time() - WEEK_IN_SECONDS );
+		$failures[] = time();
+		update_option( 'cc_mail_failures', array_slice( array_values( $failures ), -100 ), false );
+	}
 
 	if ( defined( 'WP_DEBUG_LOG' ) && WP_DEBUG_LOG && 'info' !== $level ) {
 		error_log( sprintf( '[Cobble & Candle] %s %s: %s %s', strtoupper( $level ), $entry['source'], $entry['message'], $entry['context'] ? wp_json_encode( $entry['context'] ) : '' ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- only when the site owner turned on WP_DEBUG_LOG.
@@ -83,13 +105,14 @@ function cc_status_checks() {
 	$checks[] = array( __( 'WordPress version', 'cobbleandcandle-core' ), version_compare( $wp_version, '6.6', '>=' ) ? 'ok' : 'fail', $wp_version . ' ' . __( '(6.6 or newer required)', 'cobbleandcandle-core' ) );
 
 	$theme    = wp_get_theme( get_template() );
-	$active   = 'cobbleandcandle' === get_template();
-	$checks[] = array( __( 'Theme', 'cobbleandcandle-core' ), $active ? 'ok' : 'warn', $active ? $theme->get( 'Name' ) . ' ' . $theme->get( 'Version' ) : __( 'Cobble & Candle is not the active theme.', 'cobbleandcandle-core' ) );
+	$active   = 'Cobble & Candle' === wp_specialchars_decode( $theme->get( 'Name' ), ENT_QUOTES ) || 'cobbleandcandle' === $theme->get( 'TextDomain' ); // Works in a renamed folder too.
+	$checks[] = array( __( 'Theme', 'cobbleandcandle-core' ), $active ? 'ok' : 'warn', $active ? wp_specialchars_decode( $theme->get( 'Name' ), ENT_QUOTES ) . ' ' . $theme->get( 'Version' ) : __( 'Cobble & Candle is not the active theme.', 'cobbleandcandle-core' ) );
 	$checks[] = array( __( 'Cobble & Candle Core', 'cobbleandcandle-core' ), 'ok', CC_CORE_VERSION );
 
 	$checks[] = array( __( 'Permalinks', 'cobbleandcandle-core' ), get_option( 'permalink_structure' ) ? 'ok' : 'warn', get_option( 'permalink_structure' ) ? (string) get_option( 'permalink_structure' ) : __( 'Plain links: choose “Post name” under Settings → Permalinks so /menu/, /rooms/ and /events/ work.', 'cobbleandcandle-core' ) );
 	$checks[] = array( __( 'Timezone', 'cobbleandcandle-core' ), get_option( 'timezone_string' ) ? 'ok' : 'warn', get_option( 'timezone_string' ) ? (string) get_option( 'timezone_string' ) : __( 'Set a city under Settings → General so “Open now” and booking times follow daylight saving.', 'cobbleandcandle-core' ) );
-	$checks[] = array( __( 'HTTPS', 'cobbleandcandle-core' ), is_ssl() || 0 === strpos( home_url(), 'https://' ) ? 'ok' : 'warn', home_url() );
+	$https    = 'https' === wp_parse_url( home_url(), PHP_URL_SCHEME ); // The public address, not this admin request.
+	$checks[] = array( __( 'HTTPS', 'cobbleandcandle-core' ), $https ? 'ok' : 'warn', $https ? home_url() : home_url() . ' ' . __( '(use https:// under Settings → General once your host has a certificate)', 'cobbleandcandle-core' ) );
 
 	$cron_off = defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON;
 	$next     = wp_next_scheduled( 'cc_ical_sync' );
@@ -102,14 +125,25 @@ function cc_status_checks() {
 			: __( 'Calendar sync is not scheduled. Deactivate and reactivate Cobble & Candle Core.', 'cobbleandcandle-core' ),
 	);
 
+	// Acorn compiles templates into WP_CONTENT_DIR/cache/acorn: test the nearest folder that exists.
 	$cache    = WP_CONTENT_DIR . '/cache/acorn';
-	$writable = wp_is_writable( is_dir( $cache ) ? $cache : WP_CONTENT_DIR );
-	$checks[] = array( __( 'Template cache', 'cobbleandcandle-core' ), $writable ? 'ok' : 'fail', $writable ? __( 'wp-content/cache/acorn is writable.', 'cobbleandcandle-core' ) : __( 'wp-content/cache/acorn is not writable: pages cannot be compiled. Ask your host to fix folder permissions.', 'cobbleandcandle-core' ) );
+	$probe    = is_dir( $cache ) ? $cache : ( is_dir( dirname( $cache ) ) ? dirname( $cache ) : WP_CONTENT_DIR );
+	$writable = wp_is_writable( $probe );
+	$shown    = str_replace( wp_normalize_path( ABSPATH ), '', wp_normalize_path( $cache ) );
+	$checks[] = array(
+		__( 'Template cache', 'cobbleandcandle-core' ),
+		$writable ? 'ok' : 'fail',
+		$writable
+			/* translators: %s: folder path */
+			? sprintf( __( '%s is writable.', 'cobbleandcandle-core' ), $shown )
+			/* translators: %s: folder path */
+			: sprintf( __( '%s is not writable: pages cannot be compiled. Ask your host to fix folder permissions.', 'cobbleandcandle-core' ), $shown ),
+	);
 
 	$display  = defined( 'WP_DEBUG' ) && WP_DEBUG && ( ! defined( 'WP_DEBUG_DISPLAY' ) || WP_DEBUG_DISPLAY );
 	$checks[] = array( __( 'Error display', 'cobbleandcandle-core' ), $display ? 'warn' : 'ok', $display ? __( 'WP_DEBUG shows errors to visitors. On a live site set WP_DEBUG_DISPLAY to false and use WP_DEBUG_LOG.', 'cobbleandcandle-core' ) : __( 'Errors are not shown to visitors.', 'cobbleandcandle-core' ) );
 
-	$mail_errors = count( array_filter( (array) get_option( 'cc_log', array() ), static fn( $e ) => is_array( $e ) && 'mail' === ( $e['source'] ?? '' ) && 'error' === ( $e['level'] ?? '' ) && ( $e['time'] ?? 0 ) > time() - WEEK_IN_SECONDS ) );
+	$mail_errors = count( array_filter( (array) get_option( 'cc_mail_failures', array() ), static fn( $t ) => (int) $t > time() - WEEK_IN_SECONDS ) );
 	$checks[]    = array(
 		__( 'Email', 'cobbleandcandle-core' ),
 		$mail_errors ? 'fail' : 'ok',
@@ -119,8 +153,19 @@ function cc_status_checks() {
 			: __( 'No failed emails this week. Send a test below to be sure guests’ requests reach you.', 'cobbleandcandle-core' ),
 	);
 
-	$seo      = defined( 'WPSEO_VERSION' ) ? 'Yoast SEO' : ( defined( 'RANK_MATH_VERSION' ) ? 'Rank Math' : ( defined( 'AIOSEO_VERSION' ) ? 'AIOSEO' : ( defined( 'SEOPRESS_VERSION' ) ? 'SEOPress' : '' ) ) );
-	$checks[] = array( __( 'SEO', 'cobbleandcandle-core' ), 'info', '' !== $seo ? sprintf( /* translators: %s: plugin name */ __( '%s is active: restaurant data joins its schema graph.', 'cobbleandcandle-core' ), $seo ) : __( 'No SEO plugin: Cobble & Candle prints its own meta, share tags and schema.', 'cobbleandcandle-core' ) );
+	// Same detection the SEO layer uses (includes/seo.php), so the row describes what really happens.
+	$graph = defined( 'WPSEO_VERSION' ) ? 'Yoast SEO' : ( defined( 'RANK_MATH_VERSION' ) ? 'Rank Math' : '' );
+	$other = defined( 'AIOSEO_VERSION' ) ? 'AIOSEO' : ( defined( 'SEOPRESS_VERSION' ) ? 'SEOPress' : ( defined( 'THE_SEO_FRAMEWORK_VERSION' ) ? 'The SEO Framework' : ( defined( 'SLIM_SEO_VER' ) ? 'Slim SEO' : '' ) ) );
+	if ( '' !== $graph ) {
+		/* translators: %s: SEO plugin name */
+		$seo_text = sprintf( __( '%s handles titles and meta; your restaurant, menu, event and room data joins its schema graph.', 'cobbleandcandle-core' ), $graph );
+	} elseif ( function_exists( 'cc_seo_plugin_active' ) && cc_seo_plugin_active() ) {
+		/* translators: %s: SEO plugin name */
+		$seo_text = sprintf( __( '%s handles titles and meta; Cobble & Candle adds its own restaurant, menu, event and room schema.', 'cobbleandcandle-core' ), '' !== $other ? $other : __( 'Your SEO plugin', 'cobbleandcandle-core' ) );
+	} else {
+		$seo_text = __( 'No SEO plugin: Cobble & Candle prints its own meta, share tags and schema.', 'cobbleandcandle-core' );
+	}
+	$checks[] = array( __( 'SEO', 'cobbleandcandle-core' ), 'info', $seo_text );
 	$checks[] = array( __( 'Object cache', 'cobbleandcandle-core' ), 'info', wp_using_ext_object_cache() ? __( 'Persistent object cache in use.', 'cobbleandcandle-core' ) : __( 'None (fine for most sites).', 'cobbleandcandle-core' ) );
 	return $checks;
 }
@@ -185,6 +230,7 @@ function cc_handle_status_action() {
 		}
 	} elseif ( 'clear' === $do ) {
 		delete_option( 'cc_log' );
+		delete_option( 'cc_mail_failures' );
 		$result = 'cleared';
 	}
 	wp_safe_redirect( add_query_arg( 'done', $result, admin_url( 'tools.php?page=cc-status' ) ) );
@@ -268,6 +314,10 @@ function cc_render_status_page() {
 								<td><span class="cc-state cc-state--<?php echo esc_attr( 'error' === $entry['level'] ? 'fail' : ( 'warning' === $entry['level'] ? 'warn' : 'info' ) ); ?>"><?php echo esc_html( ucfirst( (string) $entry['level'] ) ); ?></span></td>
 								<td><?php echo esc_html( (string) $entry['source'] ); ?></td>
 								<td><?php echo esc_html( (string) $entry['message'] ); ?>
+									<?php if ( (int) ( $entry['count'] ?? 1 ) > 1 ) : ?>
+										<?php /* translators: %d: how many times */ ?>
+										<strong><?php echo esc_html( sprintf( __( '(×%d)', 'cobbleandcandle-core' ), (int) $entry['count'] ) ); ?></strong>
+									<?php endif; ?>
 									<?php if ( ! empty( $entry['context'] ) ) : ?>
 										<br><code><?php echo esc_html( (string) wp_json_encode( $entry['context'] ) ); ?></code>
 									<?php endif; ?>
