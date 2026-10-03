@@ -84,7 +84,7 @@ function cc_parse_menu_csv( $path ) {
 			'errors' => array( __( 'The file could not be read.', 'cobbleandcandle-core' ) ),
 		);
 	}
-	$header = fgetcsv( $handle, 0, ',', '"', '\\' );
+	$header = fgetcsv( $handle, 0, ',', '"', '' );
 	if ( ! $header ) {
 		fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 		return array(
@@ -105,23 +105,36 @@ function cc_parse_menu_csv( $path ) {
 			'errors' => array( sprintf( __( 'Missing columns: %s. The first row must name the columns.', 'cobbleandcandle-core' ), implode( ', ', $missing ) ) ),
 		);
 	}
-	$diets = cc_menu_csv_diets();
-	$line  = 1;
-	while ( false !== ( $cells = fgetcsv( $handle, 0, ',', '"', '\\' ) ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition
+	$diets   = cc_menu_csv_diets();
+	$line    = 1;
+	$present = array_values( array_intersect( cc_menu_csv_columns(), $header ) );
+	$note    = static function ( $message ) use ( &$errors ) {
+		if ( count( $errors ) < 100 ) { // A broken file must not build a huge error list.
+			$errors[] = $message;
+		}
+	};
+	while ( false !== ( $cells = fgetcsv( $handle, 0, ',', '"', '' ) ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition
 		++$line;
-		if ( count( $rows ) >= 2000 ) {
+		if ( count( $rows ) >= 2000 || $line > 5000 ) {
 			$errors[] = __( 'Only the first 2,000 rows are imported. Split larger files.', 'cobbleandcandle-core' );
 			break;
 		}
+		// Excel on Windows saves "CSV" as Windows-1252: convert, or accents and £/€ would be dropped.
+		$cells = array_map(
+			static fn( $c ) => ( null === $c || mb_check_encoding( (string) $c, 'UTF-8' ) ) ? $c : mb_convert_encoding( (string) $c, 'UTF-8', 'Windows-1252' ),
+			$cells
+		);
 		if ( array( null ) === $cells || '' === trim( implode( '', array_map( 'strval', $cells ) ) ) ) {
 			continue;
 		}
 		$cell = static function ( $name ) use ( $header, $cells ) {
 			$i = array_search( $name, $header, true );
-			return false === $i ? '' : trim( (string) ( $cells[ $i ] ?? '' ) );
+			$v = false === $i ? '' : trim( (string) ( $cells[ $i ] ?? '' ) );
+			return preg_match( "/^'[=+\\-@\t\r]/", $v ) ? substr( $v, 1 ) : $v; // Undo the export's spreadsheet guard.
 		};
 		$row  = array(
 			'line'        => $line,
+			'present'     => $present,
 			'menu'        => sanitize_text_field( $cell( 'menu' ) ),
 			'section'     => sanitize_text_field( $cell( 'section' ) ),
 			'name'        => sanitize_text_field( $cell( 'name' ) ),
@@ -135,7 +148,7 @@ function cc_parse_menu_csv( $path ) {
 		);
 		if ( '' === $row['menu'] || '' === $row['section'] || '' === $row['name'] ) {
 			/* translators: %d: line number */
-			$errors[] = sprintf( __( 'Line %d skipped: menu, section and name are required.', 'cobbleandcandle-core' ), $line );
+			$note( sprintf( __( 'Line %d skipped: menu, section and name are required.', 'cobbleandcandle-core' ), $line ) );
 			continue;
 		}
 		foreach ( array_filter( array_map( 'trim', explode( '|', $cell( 'sizes' ) ) ) ) as $size ) {
@@ -150,7 +163,7 @@ function cc_parse_menu_csv( $path ) {
 				$row['diet'][] = $diets[ $word ];
 			} else {
 				/* translators: 1: line number, 2: unknown word */
-				$errors[] = sprintf( __( 'Line %1$d: unknown diet "%2$s" ignored (use v, vg, gf or spicy).', 'cobbleandcandle-core' ), $line, $word );
+				$note( sprintf( __( 'Line %1$d: unknown diet "%2$s" ignored (use v, vg, gf or spicy).', 'cobbleandcandle-core' ), $line, $word ) );
 			}
 		}
 		$row['diet'] = array_values( array_unique( $row['diet'] ) );
@@ -170,7 +183,7 @@ function cc_parse_menu_csv( $path ) {
  * @return int Post ID or 0.
  */
 function cc_menu_csv_match( array $row ) {
-	$menu    = get_term_by( 'name', $row['menu'], 'cc_menu' );
+	$menu    = get_term_by( 'slug', sanitize_title( $row['menu'] ), 'cc_menu' );
 	$section = $menu ? get_term_by( 'slug', sanitize_title( $row['menu'] . '-' . $row['section'] ), 'cc_menu_section' ) : false;
 	if ( ! $menu || ! $section ) {
 		return 0;
@@ -237,10 +250,11 @@ function cc_handle_menu_import_upload() {
 	$back = admin_url( 'edit.php?post_type=cc_menu_item&page=cc-menu-import' );
 	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- checked below; only tmp_name, size, error and name are used.
 	$file = isset( $_FILES['cc_menu_csv'] ) && is_array( $_FILES['cc_menu_csv'] ) ? $_FILES['cc_menu_csv'] : array();
+	$size = (int) ( $file['size'] ?? 0 );
 	$name = sanitize_file_name( (string) ( $file['name'] ?? '' ) );
 	$tmp  = (string) ( $file['tmp_name'] ?? '' );
 	if ( empty( $file ) || UPLOAD_ERR_OK !== (int) ( $file['error'] ?? -1 ) || ! is_uploaded_file( $tmp )
-		|| 'csv' !== strtolower( pathinfo( $name, PATHINFO_EXTENSION ) ) || (int) $file['size'] > 2 * MB_IN_BYTES ) {
+		|| 'csv' !== strtolower( pathinfo( $name, PATHINFO_EXTENSION ) ) || $size > 2 * MB_IN_BYTES ) {
 		wp_safe_redirect( add_query_arg( 'import', 'badfile', $back ) );
 		exit;
 	}
@@ -278,6 +292,10 @@ function cc_handle_menu_import_run() {
 	);
 	$order   = array();
 	$intros  = array();
+	wp_defer_term_counting( true );
+	if ( function_exists( 'set_time_limit' ) ) {
+		set_time_limit( 300 ); // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged -- large menus: up to 2,000 dishes.
+	}
 	foreach ( $pending['rows'] as $row ) {
 		$menu_id    = cc_menu_csv_term( 'cc_menu', $row['menu'], sanitize_title( $row['menu'] ) );
 		$section_id = cc_menu_csv_term( 'cc_menu_section', $row['section'], sanitize_title( $row['menu'] . '-' . $row['section'] ) );
@@ -296,24 +314,36 @@ function cc_handle_menu_import_run() {
 			++$counts['skipped'];
 			continue;
 		}
-		$postarr = array(
-			'post_type'    => 'cc_menu_item',
-			'post_status'  => 'publish',
-			'post_title'   => $row['name'],
-			'post_excerpt' => $row['description'],
-			'menu_order'   => $order[ $key ],
-			'meta_input'   => array(
-				'cc_price'     => $row['price'],
-				'cc_variants'  => $row['variants'],
-				'cc_diet'      => $row['diet'],
-				'cc_flag'      => $row['flag'],
-				'cc_chef_pick' => $row['chef_pick'],
-			),
+		$meta    = array(
+			'price'     => array( 'cc_price', $row['price'] ),
+			'sizes'     => array( 'cc_variants', $row['variants'] ),
+			'diet'      => array( 'cc_diet', $row['diet'] ),
+			'flag'      => array( 'cc_flag', $row['flag'] ),
+			'chef_pick' => array( 'cc_chef_pick', $row['chef_pick'] ),
 		);
-		if ( $existing ) {
-			$postarr['ID'] = $existing;
+		$present = (array) ( $row['present'] ?? cc_menu_csv_columns() );
+		$postarr = array(
+			'post_type'  => 'cc_menu_item',
+			'post_title' => $row['name'],
+			'menu_order' => $order[ $key ],
+			'meta_input' => array(),
+		);
+		foreach ( $meta as $column => list( $meta_key, $value ) ) {
+			// Updating: a column missing from the file leaves that field alone (nothing is wiped).
+			if ( ! $existing || in_array( $column, $present, true ) ) {
+				$postarr['meta_input'][ $meta_key ] = $value;
+			}
 		}
-		$id = wp_insert_post( wp_slash( $postarr ), true );
+		if ( ! $existing || in_array( 'description', $present, true ) ) {
+			$postarr['post_excerpt'] = $row['description'];
+		}
+		if ( $existing ) {
+			$postarr['ID'] = $existing; // Status untouched: an unpublished dish stays unpublished.
+		} else {
+			$postarr['post_status'] = 'publish';
+		}
+		// wp_update_post() merges with the stored dish, so fields not in the file stay as they are.
+		$id = $existing ? wp_update_post( wp_slash( $postarr ), true ) : wp_insert_post( wp_slash( $postarr ), true );
 		if ( is_wp_error( $id ) ) {
 			++$counts['skipped'];
 			continue;
@@ -322,6 +352,7 @@ function cc_handle_menu_import_run() {
 		wp_set_object_terms( $id, $section_id, 'cc_menu_section', true );
 		++$counts[ $existing ? 'updated' : 'created' ];
 	}
+	wp_defer_term_counting( false );
 	wp_safe_redirect( add_query_arg( array_merge( array( 'import' => 'done' ), $counts ), $back ) );
 	exit;
 }
@@ -390,9 +421,9 @@ function cc_handle_menu_export() {
 	header( 'Content-Disposition: attachment; filename="' . ( $sample ? 'menu-sample' : 'menus-' . wp_date( 'Y-m-d' ) ) . '.csv"' );
 	$out = fopen( 'php://output', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- streaming the download.
 	fwrite( $out, "\xEF\xBB\xBF" ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- UTF-8 BOM so Excel reads accents and £/€.
-	fputcsv( $out, cc_menu_csv_columns(), ',', '"', '\\' );
+	fputcsv( $out, cc_menu_csv_columns(), ',', '"', '' );
 	foreach ( $lines as $line ) {
-		fputcsv( $out, array_map( 'cc_csv_cell', $line ), ',', '"', '\\' );
+		fputcsv( $out, array_map( 'cc_csv_cell', $line ), ',', '"', '' );
 	}
 	fclose( $out ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 	exit;
