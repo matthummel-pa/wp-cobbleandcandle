@@ -32,9 +32,9 @@ function cc_form_rate_limited( $form ) {
 
 /**
  * The visitor's IP for rate limiting. Behind Cloudflare or another proxy every visitor shares the
- * proxy's address: filter `cc_client_ip` to read the real one from a header your proxy sets and
- * that visitors can't forge, e.g.
- * add_filter( 'cc_client_ip', fn( $ip ) => $_SERVER['HTTP_CF_CONNECTING_IP'] ?? $ip );
+ * proxy's address: filter `cc_client_ip` to read the real one from your proxy's header. Only do that
+ * when REMOTE_ADDR is your proxy (the origin firewall accepts nothing else, or you check REMOTE_ADDR
+ * against the proxy's published IP ranges); otherwise anyone can send a fake header and dodge the limit.
  *
  * @return string
  */

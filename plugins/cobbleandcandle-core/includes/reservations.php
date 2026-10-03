@@ -190,10 +190,12 @@ function cc_handle_reservation() {
 	/**
 	 * Fires after a table request is emailed, for CRMs, newsletters or booking systems.
 	 *
-	 * @param array<string, mixed> $request Sanitized request.
+	 * @param array<string, mixed> $request Sanitized request. `seating`/`occasion` are stable keys; `*_label` the shown text.
 	 * @param bool                 $sent    Whether wp_mail() succeeded.
 	 */
-	do_action( 'cc_reservation_requested', compact( 'location', 'date', 'time', 'party', 'seating', 'occasion', 'name', 'phone', 'email', 'requests', 'news' ), $sent );
+	$seating_label  = $choices['seating'][ $seating ];
+	$occasion_label = $choices['occasions'][ $occasion ];
+	do_action( 'cc_reservation_requested', compact( 'location', 'date', 'time', 'party', 'seating', 'occasion', 'seating_label', 'occasion_label', 'name', 'phone', 'email', 'requests', 'news' ), $sent );
 
 	$done( $sent || $stored ? 'sent' : 'error' );
 }

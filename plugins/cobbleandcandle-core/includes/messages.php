@@ -40,7 +40,7 @@ function cc_register_message_type() {
 			'show_in_rest'    => false,
 			'menu_icon'       => 'dashicons-email-alt',
 			'menu_position'   => 26,
-			'supports'        => array( 'title' ),
+			'supports'        => false, // Read-only: the message is shown in a meta box, nothing to edit.
 			'capability_type' => 'post',
 			// Guest details: Editors and Administrators only. Messages only come from the site's forms.
 			'capabilities'    => array_merge(
@@ -68,21 +68,25 @@ add_action( 'init', 'cc_register_message_type' );
  * @return int Message ID, or 0.
  */
 function cc_store_message( $type, $subject, $body, $email, $location_id, $sent ) {
+	// wp_insert_post() unslashes its input; slash so a guest's backslashes survive.
 	$id = wp_insert_post(
-		array(
-			'post_type'    => 'cc_message',
-			'post_status'  => 'publish',
-			'post_title'   => wp_strip_all_tags( $subject ),
-			'post_content' => $body,
-			'meta_input'   => array(
-				'cc_type'     => sanitize_key( $type ),
-				'cc_email'    => sanitize_email( $email ),
-				'cc_location' => (int) $location_id,
-				'cc_sent'     => $sent ? 1 : 0,
-			),
+		wp_slash(
+			array(
+				'post_type'    => 'cc_message',
+				'post_status'  => 'private', // Never readable outside the dashboard.
+				'post_title'   => wp_strip_all_tags( $subject ),
+				'post_content' => $body,
+				'meta_input'   => array(
+					'cc_type'     => sanitize_key( $type ),
+					'cc_email'    => sanitize_email( $email ),
+					'cc_location' => (int) $location_id,
+					'cc_sent'     => $sent ? 1 : 0,
+				),
+			)
 		),
 		true
 	);
+	delete_transient( 'cc_unsent_messages' );
 	return is_wp_error( $id ) ? 0 : (int) $id;
 }
 
@@ -154,21 +158,11 @@ function cc_unsent_messages_notice() {
 	if ( ! current_user_can( 'edit_others_posts' ) ) {
 		return;
 	}
-	$unsent = get_posts(
-		array(
-			'post_type'      => 'cc_message',
-			'post_status'    => 'publish',
-			'posts_per_page' => 1,
-			'fields'         => 'ids',
-			'date_query'     => array( array( 'after' => '14 days ago' ) ),
-			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- one small admin lookup.
-				array(
-					'key'   => 'cc_sent',
-					'value' => '0',
-				),
-			),
-		)
-	);
+	$unsent = get_transient( 'cc_unsent_messages' );
+	if ( false === $unsent ) {
+		$unsent = cc_unsent_message_count();
+		set_transient( 'cc_unsent_messages', $unsent, HOUR_IN_SECONDS );
+	}
 	if ( ! $unsent ) {
 		return;
 	}
@@ -182,17 +176,43 @@ function cc_unsent_messages_notice() {
 add_action( 'admin_notices', 'cc_unsent_messages_notice' );
 
 /**
+ * Unsent messages in the last 14 days (0 or 1 is enough for the notice).
+ *
+ * @return int
+ */
+function cc_unsent_message_count() {
+	$unsent = get_posts(
+		array(
+			'post_type'      => 'cc_message',
+			'post_status'    => array( 'publish', 'private' ),
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+			'date_query'     => array( array( 'after' => '14 days ago' ) ),
+			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- one small admin lookup.
+				array(
+					'key'   => 'cc_sent',
+					'value' => '0',
+				),
+			),
+		)
+	);
+	return count( $unsent );
+}
+
+/**
  * Message IDs for a sender email.
  *
  * @param string $email Email address.
+ * @param int    $page  1-based page of 100.
  * @return array<int, int>
  */
-function cc_messages_for_email( $email ) {
+function cc_messages_for_email( $email, $page = 1 ) {
 	return get_posts(
 		array(
 			'post_type'      => 'cc_message',
-			'post_status'    => 'any',
+			'post_status'    => array_keys( get_post_stati() ), // Trashed messages too.
 			'posts_per_page' => 100,
+			'paged'          => max( 1, (int) $page ),
 			'fields'         => 'ids',
 			'no_found_rows'  => true,
 			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- privacy requests are rare.
@@ -210,9 +230,10 @@ add_filter(
 	static function ( $exporters ) {
 		$exporters['cobbleandcandle-messages'] = array(
 			'exporter_friendly_name' => __( 'Guest messages', 'cobbleandcandle-core' ),
-			'callback'               => static function ( $email ) {
+			'callback'               => static function ( $email, $page = 1 ) {
 				$data = array();
-				foreach ( cc_messages_for_email( $email ) as $id ) {
+				$ids  = cc_messages_for_email( $email, $page );
+				foreach ( $ids as $id ) {
 					$data[] = array(
 						'group_id'    => 'cc-messages',
 						'group_label' => __( 'Guest messages', 'cobbleandcandle-core' ),
@@ -235,7 +256,7 @@ add_filter(
 				}
 				return array(
 					'data' => $data,
-					'done' => true,
+					'done' => count( $ids ) < 100,
 				);
 			},
 		);
@@ -249,7 +270,7 @@ add_filter(
 		$erasers['cobbleandcandle-messages'] = array(
 			'eraser_friendly_name' => __( 'Guest messages', 'cobbleandcandle-core' ),
 			'callback'             => static function ( $email ) {
-				$ids = cc_messages_for_email( $email );
+				$ids = cc_messages_for_email( $email ); // Always page 1: erased rows drop out of the next query.
 				foreach ( $ids as $id ) {
 					wp_delete_post( $id, true ); // A message is all personal data: erase it whole.
 				}
@@ -257,7 +278,7 @@ add_filter(
 					'items_removed'  => (bool) $ids,
 					'items_retained' => false,
 					'messages'       => array(),
-					'done'           => true,
+					'done'           => count( $ids ) < 100,
 				);
 			},
 		);

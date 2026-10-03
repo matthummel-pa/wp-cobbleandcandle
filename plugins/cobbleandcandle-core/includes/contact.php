@@ -17,7 +17,7 @@ function cc_contact_topics() {
 	/**
 	 * Topics offered on the contact form.
 	 *
-	 * @param array<string, string> $topics Key => label.
+	 * @param array<string, string> $topics Key => label. Keys must be lowercase a-z, 0-9, _ or - (sanitize_key-safe).
 	 */
 	return (array) apply_filters(
 		'cc_contact_topics',
