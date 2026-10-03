@@ -34,5 +34,11 @@ mkdir -p "$stage/$slug/plugins"
 (cd "$root/plugins" && zip -rq "$stage/$slug/plugins/cobbleandcandle-core.zip" cobbleandcandle-core -x '*.DS_Store')
 
 rm -f "$stage/$slug/public/hot"
+
+# Build-only files a buyer never needs (composer.json stays: Acorn reads it for package discovery).
+(cd "$stage/$slug" && rm -f package.json package-lock.json vite.config.js pint.json composer.lock README.md)
+# Vendor docs, tests and CI files: dead weight in a theme zip. Licence files stay.
+find "$stage/$slug/vendor" -type d \( -iname tests -o -iname test -o -iname docs -o -iname doc -o -name .github \) -prune -exec rm -rf {} +
+find "$stage/$slug/vendor" -type f \( \( -iname '*.md' ! -iname 'license*' \) -o -name 'phpunit.xml*' -o -name '.gitattributes' -o -name '.editorconfig' -o -name 'psalm*.xml' -o -name 'phpstan*.neon*' \) -delete
 (cd "$stage" && zip -rq "$out" "$slug")
 echo "Wrote $out ($(du -h "$out" | awk '{print $1}'))"
