@@ -461,7 +461,8 @@ Alpine.data('siteHeader', () => ({
   },
   lockPage(locked) {
     document.body.style.overflow = locked ? 'hidden' : ''
-    document.querySelectorAll('.wp-site-blocks > :not(header)').forEach((el) => { el.inert = locked })
+    // Everything except the block that holds the drawer (the header template part), or the drawer itself goes inert.
+    document.querySelectorAll('.wp-site-blocks > *').forEach((el) => { if (!el.contains(this.$el)) el.inert = locked })
   },
   trap(event) {
     if (event.key !== 'Tab') return
