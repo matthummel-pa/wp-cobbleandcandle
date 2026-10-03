@@ -21,7 +21,7 @@ All notable changes to the Cobble & Candle theme and the Cobble & Candle Core pl
 - Privacy: personal-data export/erase for bookings and messages; automatic deletion of old messages (default 12 months).
 
 ### Changed
-- **Unique prefix:** every function, hook, option, post type, taxonomy, meta key and handle now uses `cobble_` (was the generic `cc_`). Existing sites are migrated automatically and once on update; URLs don’t change, and calendar-feed / `.ics` links and the saved-location cookie from before keep working. Custom code that used `cc_*` hooks or functions needs the new names (see [Developers](docs/guide/developers.md)).
+- **Unique prefix:** every function, hook, option, post type, taxonomy, meta key and handle now uses `cobble_` (was the generic `cc_`). Existing sites are migrated automatically and once on update; URLs don’t change, and calendar-feed / `.ics` links and the saved-location cookie from before keep working. Theme and plugin must be updated together (both 1.0.0); the theme shows an “Update Cobble & Candle Core” notice while an older plugin is active. WPML translation links are migrated too. Purge the page cache after updating so forms use the new field names. Custom code that used `cc_*` hooks or functions needs the new names (see [Developers](docs/guide/developers.md)).
 
 ### Fixed
 - Dishes now open in the block editor with their Price & details panel (previously the classic screen showed raw custom fields).

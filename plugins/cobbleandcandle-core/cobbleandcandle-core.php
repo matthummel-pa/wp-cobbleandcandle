@@ -3,7 +3,7 @@
  * Plugin Name:       Cobble & Candle Core
  * Plugin URI:        https://github.com/matthummel-pa/wp-cobbleandcandle
  * Description:       Locations, menus and events for the Cobble & Candle restaurant theme. Your content stays when you switch themes.
- * Version:           0.1.0
+ * Version:           1.0.0
  * Requires at least: 6.6
  * Requires PHP:      8.3
  * Author:            Matt Hummel
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'COBBLE_CORE_VERSION', '0.1.0' );
+define( 'COBBLE_CORE_VERSION', '1.0.0' );
 define( 'COBBLE_CORE_FILE', __FILE__ );
 define( 'COBBLE_CORE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'COBBLE_CORE_URL', plugin_dir_url( __FILE__ ) );

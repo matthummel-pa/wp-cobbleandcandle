@@ -35,7 +35,7 @@ function cobble_room_ical_url( $room_id ) {
 	return add_query_arg(
 		array(
 			'cobble_room_ical' => (int) $room_id,
-			'key'          => cobble_room_ical_key( $room_id ),
+			'key'              => cobble_room_ical_key( $room_id ),
 		),
 		home_url( '/' )
 	);

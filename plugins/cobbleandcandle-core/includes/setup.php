@@ -313,8 +313,8 @@ function cobble_setup_save() {
 		$brand = get_option( 'cobbleandcandle_brand', array() );
 		$brand = is_array( $brand ) ? $brand : array();
 		foreach ( array( 'tagline', 'est', 'currency' ) as $key ) {
-			if ( isset( $_POST[ 'cc_' . $key ] ) ) {
-				$brand[ $key ] = sanitize_text_field( wp_unslash( $_POST[ 'cc_' . $key ] ) );
+			if ( isset( $_POST[ 'cobble_' . $key ] ) ) {
+				$brand[ $key ] = sanitize_text_field( wp_unslash( $_POST[ 'cobble_' . $key ] ) );
 			}
 		}
 		update_option( 'cobbleandcandle_brand', cobble_sanitize_settings( $brand ) );
@@ -339,7 +339,7 @@ function cobble_setup_save() {
 			if ( '' !== $name ) {
 				$fields = array();
 				foreach ( array( 'street', 'locality', 'phone' ) as $key ) {
-					$fields[ 'cc_' . $key ] = isset( $_POST[ 'cobble_loc_' . $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ 'cobble_loc_' . $key ] ) ) : '';
+					$fields[ 'cobble_' . $key ] = isset( $_POST[ 'cobble_loc_' . $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ 'cobble_loc_' . $key ] ) ) : '';
 				}
 				$fields['cobble_email'] = isset( $_POST['cobble_loc_email'] ) ? sanitize_email( wp_unslash( $_POST['cobble_loc_email'] ) ) : '';
 				$existing           = get_posts(

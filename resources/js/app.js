@@ -1,4 +1,5 @@
-import Alpine from 'alpinejs'
+const cookie = (name) => document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`))?.[1] || ''
+  try { saved = decodeURIComponent(cookie('cobble_loc') || cookie('cc_loc')) } catch {}import Alpine from 'alpinejs'
 
 const root = document.documentElement
 const DIRECTIONS = ['lampwright', 'ember-arch', 'ashlar-iron']
@@ -15,8 +16,9 @@ const STATUS = readJson('cobble-status', {})
    The saved cookie is applied here rather than on the server so cached pages stay shareable. */
 function initialLocation() {
   let saved = ''
-  // cc_loc: the cookie's name before the 1.0 prefix change, so returning guests keep their house.
-  try { saved = decodeURIComponent(document.cookie.match(/(?:^|; )(?:cobble_loc|cc_loc)=([^;]*)/)?.[1] || '') } catch {}
+  // cc_loc: the cookie's name before the 1.0 prefix change, so returning guests keep their house. The new name wins.
+  const cookie = (name) => document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`))?.[1] || ''
+  try { saved = decodeURIComponent(cookie('cobble_loc') || cookie('cc_loc')) } catch {}
   const wanted = new URLSearchParams(location.search).get('loc') || saved || root.dataset.loc || ''
   return Math.max(0, LOCATIONS.findIndex((l) => l.slug === wanted))
 }
@@ -87,6 +89,7 @@ Alpine.store('site', {
     this.current = index
     root.dataset.loc = this.locations[index].slug
     document.cookie = `cobble_loc=${encodeURIComponent(this.locations[index].slug)};path=/;max-age=31536000;samesite=lax`
+    document.cookie = 'cc_loc=;path=/;max-age=0;samesite=lax' // The pre-1.0 cookie, so it can no longer win.
   },
   setTheme(theme) {
     if (!DIRECTIONS.includes(theme)) return
