@@ -84,7 +84,7 @@
         @endif
       </div>
       @if ($attributes['showStyleSwitcher'])
-        <div class="drawer-theme"><p class="eyebrow">{{ __('Demo style', 'cobbleandcandle') }}</p>@include('partials.theme-switcher')</div>
+        <div class="drawer-theme"><p class="eyebrow">{{ __('Demo', 'cobbleandcandle') }}</p>@include('partials.kind-switcher')@include('partials.theme-switcher')</div>
       @endif
     </div>
   </div>
