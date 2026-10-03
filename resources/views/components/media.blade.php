@@ -5,6 +5,11 @@
   @if ((int) $imageId > 0)
     {!! wp_get_attachment_image((int) $imageId, $size, false, array_filter(['loading' => $eager ? 'eager' : 'lazy', 'fetchpriority' => $eager ? 'high' : null, 'decoding' => 'async'])) !!}
   @else
-    @includeIf('art.'.$kind, ['uid' => $uid])
+    @php($shared = \App\art_ref($kind))
+    @if ($shared !== '')
+      {!! $shared !!}
+    @else
+      @includeIf('art.'.$kind, ['uid' => $uid])
+    @endif
   @endif
 </div>
