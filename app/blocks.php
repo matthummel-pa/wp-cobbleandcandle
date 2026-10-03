@@ -98,7 +98,8 @@ add_filter('cobble_render_block', function ($html, string $name, array $attribut
  * Without the Core plugin the blocks aren't registered, so the site chrome would vanish. Keep a plain,
  * working header, footer, page heading and 404 message until the plugin is installed.
  */
-add_filter('render_block', function (string $html, array $parsed): string {
+add_filter('render_block', function ($html, array $parsed): string {
+    $html = (string) $html; // Another plugin at a lower priority may hand back a non-string.
     $name = (string) ($parsed['blockName'] ?? '');
     $fallbacks = ['site-header', 'site-footer', 'page-hero', 'not-found'];
     $short = str_starts_with($name, 'cobbleandcandle/') ? substr($name, 16) : '';

@@ -17,7 +17,8 @@ defined( 'ABSPATH' ) || exit;
  */
 function cobble_block_dirs() {
 	$dirs = array();
-	foreach ( glob( COBBLE_CORE_DIR . 'blocks/*/block.json' ) ?: array() as $file ) {
+	$files = glob( COBBLE_CORE_DIR . 'blocks/*/block.json' );
+	foreach ( is_array( $files ) ? $files : array() as $file ) {
 		$dirs[ basename( dirname( $file ) ) ] = dirname( $file );
 	}
 	return $dirs;
@@ -63,7 +64,9 @@ function cobble_render_block( $name, array $attributes, $content, $block ) {
 	if ( null !== $html ) {
 		return (string) $html;
 	}
-	if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+	// Only the editor's block-renderer preview (core already checked edit_post there); public REST content stays clean.
+	$route = isset( $GLOBALS['wp']->query_vars['rest_route'] ) ? (string) $GLOBALS['wp']->query_vars['rest_route'] : '';
+	if ( defined( 'REST_REQUEST' ) && REST_REQUEST && str_contains( $route, '/block-renderer/' ) && current_user_can( 'edit_posts' ) ) {
 		return '<p>' . esc_html__( 'This block needs the Cobble & Candle theme to display.', 'cobbleandcandle-core' ) . '</p>';
 	}
 	return '';

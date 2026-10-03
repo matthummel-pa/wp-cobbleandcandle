@@ -4,6 +4,6 @@
     @if (has_nav_menu('footer_navigation'))
       <nav aria-label="{{ __('Footer', 'cobbleandcandle') }}">{!! \App\menu('footer_navigation', 'nav-fallback') !!}</nav>
     @endif
-    <p class="muted">&copy; {{ wp_date('Y') }} {{ get_bloginfo('name') }}</p>
+    <p class="muted">&copy; {{ wp_date('Y') }} {{ \App\site_name() }}</p>
   </div>
 </footer>
