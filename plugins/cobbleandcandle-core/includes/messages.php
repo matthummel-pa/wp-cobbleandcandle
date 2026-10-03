@@ -285,3 +285,63 @@ add_filter(
 		return $erasers;
 	}
 );
+
+/**
+ * Daily: delete messages older than the retention setting (Settings → Restaurant, default 12 months;
+ * 0 keeps them forever). Only Messages: bookings and content are never touched.
+ */
+function cc_prune_messages() {
+	$months = (int) cc_setting( 'message_months', '12' );
+	if ( $months < 1 ) {
+		return;
+	}
+	$ids = get_posts(
+		array(
+			'post_type'      => 'cc_message',
+			'post_status'    => array_keys( get_post_stati() ),
+			'posts_per_page' => 100,
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+			'date_query'     => array( array( 'before' => $months . ' months ago' ) ),
+		)
+	);
+	foreach ( $ids as $id ) {
+		if ( 'cc_message' === get_post_type( $id ) ) {
+			wp_delete_post( $id, true );
+		}
+	}
+}
+add_action( 'cc_prune_messages', 'cc_prune_messages' );
+
+/**
+ * Keep the daily clean-up scheduled.
+ */
+function cc_schedule_message_prune() {
+	if ( ! wp_next_scheduled( 'cc_prune_messages' ) ) {
+		wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', 'cc_prune_messages' );
+	}
+}
+add_action( 'init', 'cc_schedule_message_prune' );
+
+/**
+ * Suggested privacy-policy text (Settings → Privacy → Policy Guide).
+ */
+function cc_privacy_policy_content() {
+	if ( ! function_exists( 'wp_add_privacy_policy_content' ) ) {
+		return;
+	}
+	$months = (int) cc_setting( 'message_months', '12' );
+	$keep   = $months > 0
+		/* translators: %d: number of months */
+		? sprintf( _n( 'Messages are deleted automatically after %d month.', 'Messages are deleted automatically after %d months.', $months, 'cobbleandcandle-core' ), $months )
+		: __( 'Messages are kept until we delete them.', 'cobbleandcandle-core' );
+	wp_add_privacy_policy_content(
+		__( 'Cobble & Candle Core', 'cobbleandcandle-core' ),
+		wp_kses_post(
+			'<p>' . __( 'When you request a table, a room or a private dining event, or send us a message, we keep the details you enter (name, email, phone, dates and your message) so we can answer and manage your booking.', 'cobbleandcandle-core' ) . '</p><p>'
+			. $keep . ' ' . __( 'You can ask us for a copy of your data or to erase it.', 'cobbleandcandle-core' ) . '</p>'
+		)
+	);
+}
+add_action( 'admin_init', 'cc_privacy_policy_content' );
+

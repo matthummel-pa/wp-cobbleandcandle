@@ -68,6 +68,7 @@ register_deactivation_hook(
 		}
 		wp_clear_scheduled_hook( 'cc_ical_sync' );
 		wp_unschedule_hook( 'cc_ical_sync_room' );
+		wp_clear_scheduled_hook( 'cc_prune_messages' );
 		flush_rewrite_rules();
 	}
 );
