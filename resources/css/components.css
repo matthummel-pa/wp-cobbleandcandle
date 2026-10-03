@@ -144,6 +144,12 @@ em{font-style:var(--em-style);color:var(--color-accent)}
 .tsw:hover{color:var(--color-text);border-color:var(--color-line)}
 .tsw[aria-pressed="true"]{color:var(--color-text);border-color:var(--color-accent);background:color-mix(in srgb,var(--color-accent) 14%,transparent)}
 .tsw-sw{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--sw-a) 0 50%,var(--sw-b) 50% 100%);box-shadow:0 0 0 1.5px color-mix(in srgb,var(--color-text) 40%,transparent);flex:none}
+.kindsw{display:flex;align-items:center;gap:4px;margin-inline-end:12px;padding-inline-end:12px;border-inline-end:1px solid var(--color-line)}
+.kindsw-label{display:inline-flex;align-items:center;gap:6px;color:var(--color-muted);font-size:var(--text-xs);font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-inline-end:4px}
+.kindsw-label .i{width:16px;height:16px}
+.ksw{display:inline-flex;align-items:center;min-height:44px;padding-inline:12px;border-radius:var(--radius-chip);border:1px solid transparent;color:var(--color-muted);font-size:var(--text-sm);font-weight:700;text-decoration:none}
+.ksw:hover{color:var(--color-text);border-color:var(--color-line)}
+.ksw[aria-current="page"]{color:var(--color-text);border-color:var(--color-accent);background:color-mix(in srgb,var(--color-accent) 14%,transparent)}
 
 /* ---------- header ---------- */
 .hdr{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--color-bg) 94%,transparent);backdrop-filter:saturate(1.2) blur(10px);border-bottom:1px solid var(--color-line)}
@@ -177,6 +183,8 @@ em{font-style:var(--em-style);color:var(--color-accent)}
 .drawer-loc a{font-weight:700;text-decoration:none}
 .drawer-theme .themesw{flex-wrap:wrap}
 .drawer-theme .themesw-label{display:none}
+.drawer-theme .kindsw{margin:0 0 10px;padding:0;border:0;flex-wrap:wrap}
+.drawer-theme .kindsw-label{display:none}
 
 /* mobile action bar */
 .mbar{display:none}
@@ -694,6 +702,9 @@ input::placeholder,textarea::placeholder{color:var(--color-muted);opacity:1}
   .util-r .tsw-l{display:none}
   .util-r .tsw{padding:0;width:44px;justify-content:center}
   .util-r .themesw{gap:0}
+  .util-r .kindsw-label{display:none}
+  .util-r .kindsw{margin-inline-end:6px;padding-inline-end:6px}
+  .util-r .ksw{padding-inline:8px}
   .hdr-reserve{display:none}
   .brand{gap:10px}
   .brand .crest{width:42px;height:42px}

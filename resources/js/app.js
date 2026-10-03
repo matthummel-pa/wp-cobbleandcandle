@@ -4,11 +4,9 @@ const cookie = (name) => document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]
 const root = document.documentElement
 /* Style directions come from the switcher's buttons (App\directions()), so a new style needs no JS change. */
 const DIRECTIONS = [...new Set([root.dataset.theme, ...[...document.querySelectorAll('[data-set-theme]')].map((b) => b.dataset.setTheme)].filter(Boolean))]
-/* The demo style a visitor picked on an earlier page; only honoured while the site shows the switcher. */
-function savedTheme() {
-  if (DIRECTIONS.length < 2) return ''
-  try { return localStorage.getItem('rm-theme') || '' } catch { return '' }
-}
+/* Where a picked demo style is remembered: per business kind (restaurant / tavern / B&B), so each demo keeps its own look.
+   The Site Header re-applies it before paint; see the inline script there. */
+const THEME_KEY = root.dataset.kind ? `rm-theme:${root.dataset.kind}` : 'rm-theme'
 const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select,textarea,[tabindex]:not([tabindex="-1"])'
 
 /* Locations and open-now settings from the Core plugin (printed by the Site Header as JSON). */
@@ -97,11 +95,11 @@ Alpine.store('site', {
     document.cookie = `cobble_loc=${encodeURIComponent(this.locations[index].slug)};path=/;max-age=31536000;samesite=lax`
     document.cookie = 'cc_loc=;path=/;max-age=0;samesite=lax' // The pre-1.0 cookie, so it can no longer win.
   },
-  setTheme(theme, remember = true) {
+  setTheme(theme) {
     if (!DIRECTIONS.includes(theme)) return
     this.theme = theme
     root.dataset.theme = theme
-    if (remember) try { localStorage.setItem('rm-theme', theme) } catch {}
+    try { localStorage.setItem(THEME_KEY, theme) } catch {}
   },
   /* Recompute every location's status; badges bound to the store update reactively, the rest by slug. */
   refreshStatus() {
@@ -118,8 +116,6 @@ Alpine.store('site', {
   },
   init() {
     root.dataset.loc = this.loc.slug || root.dataset.loc
-    const saved = savedTheme()
-    if (saved && saved !== this.theme) this.setTheme(saved, false)
     this.refreshStatus()
     setInterval(() => this.refreshStatus(), 60000)
   },

@@ -21,7 +21,7 @@ const LABELS = {
   orderLabel: __('Order button label', 'cobbleandcandle-core'),
   orderUrl: __('Order online link (empty = use the location’s)', 'cobbleandcandle-core'),
   showUtilityBar: __('Show utility bar', 'cobbleandcandle-core'),
-  showStyleSwitcher: __('Show demo style switcher', 'cobbleandcandle-core'),
+  showStyleSwitcher: __('Show demo switchers (style and business type)', 'cobbleandcandle-core'),
   about: __('About line (defaults to the site tagline)', 'cobbleandcandle-core'),
   instagram: __('Instagram URL', 'cobbleandcandle-core'),
   facebook: __('Facebook URL', 'cobbleandcandle-core'),

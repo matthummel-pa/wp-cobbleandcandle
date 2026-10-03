@@ -195,7 +195,77 @@ function cobble_import_demo( $update = false ) {
 		);
 	}
 
+	cobble_import_demo_pages( $counts );
+
 	return $counts;
+}
+
+/**
+ * The Tavern and B&B demo home pages (from the theme's patterns), the front page marked as the
+ * Restaurant one, and the Site Header's demo switchers turned on so the three can be compared.
+ * Pages are matched by slug and never overwritten; the header override is only created when the
+ * site has none.
+ *
+ * @param array<string, int> $counts Running counts.
+ */
+function cobble_import_demo_pages( array &$counts ) {
+	$pages = array(
+		'tavern' => array( __( 'Tavern', 'cobbleandcandle-core' ), 'tavern', 'cobbleandcandle/home-tavern', __( 'Good ale, long tables and a fire that never goes out.', 'cobbleandcandle-core' ) ),
+		'bnb'    => array( __( 'Bed & Breakfast', 'cobbleandcandle-core' ), 'bnb', 'cobbleandcandle/home-bnb', __( 'Sleep above the supper room, wake to the harbour.', 'cobbleandcandle-core' ) ),
+	);
+	foreach ( $pages as $kind => $page ) {
+		if ( '' === cobble_setup_pattern( $page[2] ) ) {
+			continue; // Another theme is active; its pages would be empty.
+		}
+		$result = cobble_setup_page( $kind, $page );
+		if ( $result['id'] ) {
+			update_post_meta( $result['id'], 'cobble_kind', $kind );
+			if ( $result['created'] ) {
+				update_post_meta( $result['id'], '_wp_page_template', 'page-landing' ); // Like the front page: no page heading above the hero.
+			}
+			++$counts[ $result['created'] ? 'created' : 'skipped' ];
+		}
+	}
+	$front = 'page' === get_option( 'show_on_front' ) ? (int) get_option( 'page_on_front' ) : 0;
+	if ( $front && ! get_post_meta( $front, 'cobble_kind', true ) ) {
+		update_post_meta( $front, 'cobble_kind', 'restaurant' );
+	}
+
+	// Demo switchers in the header (a Site Editor override of parts/header.html). Turn off in the block's settings.
+	$theme = get_stylesheet();
+	$found = get_posts(
+		array(
+			'post_type'      => 'wp_template_part',
+			'name'           => 'header',
+			'post_status'    => 'any',
+			'posts_per_page' => 1,
+			'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- one-time import.
+				array(
+					'taxonomy' => 'wp_theme',
+					'field'    => 'name',
+					'terms'    => $theme,
+				),
+			),
+		)
+	);
+	// A Site Editor change: needs edit_theme_options (WP-CLI runs as the site owner).
+	$may_edit_theme = ( defined( 'WP_CLI' ) && WP_CLI ) || current_user_can( 'edit_theme_options' );
+	if ( ! $found && $may_edit_theme && 'cobbleandcandle' === get_template() ) {
+		$id = wp_insert_post(
+			array(
+				'post_type'    => 'wp_template_part',
+				'post_status'  => 'publish',
+				'post_name'    => 'header',
+				'post_title'   => __( 'Header', 'cobbleandcandle-core' ),
+				'post_content' => '<!-- wp:cobbleandcandle/site-header {"showStyleSwitcher":true} /-->',
+			),
+			true
+		);
+		if ( ! is_wp_error( $id ) ) {
+			wp_set_object_terms( $id, $theme, 'wp_theme' );
+			wp_set_object_terms( $id, 'header', 'wp_template_part_area' );
+		}
+	}
 }
 
 /**
