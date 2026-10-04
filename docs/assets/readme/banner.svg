@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="260" viewBox="0 0 1200 260" role="img" aria-label="Cobble &amp; Candle — Restaurants, taverns and inns: menus, live hours, table and room bookings, no page builder.">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#15110D"/><stop offset="1" stop-color="#5C2A22"/></linearGradient>
+    <linearGradient id="rule" x1="0" x2="1"><stop offset="0" stop-color="#C79A55"/><stop offset="1" stop-color="#F4B860"/></linearGradient>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0v24" fill="none" stroke="#ffffff" stroke-opacity=".06"/></pattern>
+  </defs>
+  <style>
+    .kicker { font: 600 13px/1 -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif; fill: #F4B860; letter-spacing: .18em; text-transform: uppercase; }
+    .title { font: 800 40px/1 -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif; fill: #ffffff; letter-spacing: -.03em; }
+    .sub { font: 400 18px/1.4 -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif; fill: #F2E6D3; }
+    .chip { fill: rgba(255,255,255,.08); stroke: rgba(255,255,255,.18); }
+    .chipt { font: 600 12px/1 -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif; fill: #f3f4f6; letter-spacing: .02em; }
+    .mono { font: 600 12px/1 ui-monospace, Menlo, Consolas, monospace; fill: #F4B860; }
+    .markt { font: 800 26px/1 -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif; fill: #15110D; letter-spacing: -.04em; }
+  </style>
+  <rect width="1200" height="260" rx="18" fill="url(#bg)"/><rect width="1200" height="260" rx="18" fill="url(#grid)"/>
+  <g transform="translate(56,58)"><rect width="72" height="72" rx="16" fill="#C79A55"/><text class="markt" x="36" y="46" text-anchor="middle">C</text></g>
+  <text class="kicker" x="156" y="70">WordPress block theme · Sage 11 · Core plugin</text>
+  <text class="title" x="154" y="118">Cobble &amp; Candle</text>
+  <rect x="156" y="132" width="88" height="4" rx="2" fill="url(#rule)"/>
+  <text class="sub" x="156" y="168">Restaurants, taverns and inns: menus, live hours, table and room bookings, no page builder.</text>
+  <g transform="translate(156,194)"><rect class="chip" x="0" width="118" height="30" rx="15"/><text class="chipt" x="14" y="19">Block theme</text><rect class="chip" x="128" width="85" height="30" rx="15"/><text class="chipt" x="142" y="19">Sage 11</text><rect class="chip" x="224" width="118" height="30" rx="15"/><text class="chipt" x="238" y="19">Tailwind v4</text><rect class="chip" x="352" width="77" height="30" rx="15"/><text class="chipt" x="366" y="19">Vite 8</text><rect class="chip" x="439" width="85" height="30" rx="15"/><text class="chipt" x="453" y="19">PHP 8.3</text><rect class="chip" x="534" width="102" height="30" rx="15"/><text class="chipt" x="548" y="19">28 blocks</text><rect class="chip" x="646" width="94" height="30" rx="15"/><text class="chipt" x="660" y="19">4 styles</text><rect class="chip" x="750" width="118" height="30" rx="15"/><text class="chipt" x="764" y="19">WCAG 2.2 AA</text></g>
+  <text class="mono" x="1144" y="236" text-anchor="end">v1.0.0 · GPL-2.0-or-later</text>
+</svg>

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="520" viewBox="0 0 1100 520" role="img" aria-label="Cobble &amp; Candle architecture: WordPress block templates render Core-plugin content through Acorn, Blade and Vite; forms, iCal sync and schema sit beside it; CI packs the theme and plugin into one release zip.">
+  <style>
+    :root { --ink:#0f1c2e; --muted:#5b6b7f; --line:#c5d0de; --box:#ffffff; --tint:#f3f5f8; --navy:#5C2A22; --blue:#5C2A22; --teal:#F4B860; }
+    @media (prefers-color-scheme: dark) { :root { --ink:#e6edf3; --muted:#9aa7b8; --line:#30363d; --box:#161b22; --tint:#0d1117; --navy:#C79A55; --blue:#C79A55; --teal:#F4B860; } }
+    .lane { fill: var(--tint); stroke: var(--line); }
+    .lanet { font: 700 12px/1 -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif; fill: var(--muted); letter-spacing: .12em; text-transform: uppercase; }
+    .box { fill: var(--box); stroke: var(--line); stroke-width: 1.2; } .box.hi { stroke: var(--navy); stroke-width: 1.6; }
+    .t { font: 700 14px/1 -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif; fill: var(--ink); } .s { font: 400 12px/1.3 -apple-system, "Segoe UI", Inter, Helvetica, Arial, sans-serif; fill: var(--muted); } .m { font: 600 11px/1 ui-monospace, Menlo, Consolas, monospace; fill: var(--blue); }
+    .arrow { stroke: var(--navy); stroke-width: 1.6; fill: none; marker-end: url(#a); } .arrow.teal { stroke: var(--teal); marker-end: url(#at); }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5C2A22"/></marker>
+    <marker id="at" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#F4B860"/></marker>
+  </defs>
+  <rect class="lane" x="20" y="20" width="1060" height="150" rx="12"/><text class="lanet" x="36" y="44">Request</text>
+  <g transform="translate(40,60)"><rect class="box" width="150" height="88" rx="10"/><text class="t" x="14" y="26">WordPress</text><text class="s" x="14" y="46">Template hierarchy</text><text class="m" x="14" y="80">functions.php</text></g>
+  <g transform="translate(230,60)"><rect class="box" width="160" height="88" rx="10"/><text class="t" x="14" y="26">Acorn 6</text><text class="s" x="14" y="46">Boots Laravel pieces</text><text class="m" x="14" y="80">Application::configure()</text></g>
+  <g transform="translate(430,60)"><rect class="box hi" width="200" height="88" rx="10"/><text class="t" x="14" y="26">app/ (10 modules)</text><text class="s" x="14" y="46">Kinds, locations, content,</text><text class="s" x="14" y="61">blocks, art, SEO helpers</text><text class="m" x="14" y="80">namespace App</text></g>
+  <g transform="translate(670,60)"><rect class="box hi" width="190" height="88" rx="10"/><text class="t" x="14" y="26">Blade views</text><text class="s" x="14" y="46">69 Blade templates:</text><text class="s" x="14" y="61">block render + partials</text><text class="m" x="14" y="80">resources/views/</text></g>
+  <g transform="translate(900,60)"><rect class="box" width="160" height="88" rx="10"/><text class="t" x="14" y="26">Vite 8 assets</text><text class="s" x="14" y="46">Tailwind v4 tokens,</text><text class="s" x="14" y="61">small JS modules</text><text class="m" x="14" y="80">public/build/manifest</text></g>
+  <path class="arrow" d="M190 104h38"/><path class="arrow" d="M390 104h38"/><path class="arrow" d="M630 104h38"/><path class="arrow" d="M860 104h38"/>
+  <rect class="lane" x="20" y="190" width="520" height="160" rx="12"/><text class="lanet" x="36" y="214">Content</text>
+  <g transform="translate(40,230)"><rect class="box" width="230" height="100" rx="10"/><text class="t" x="14" y="26">Core plugin (24 files)</text><text class="s" x="14" y="46">Locations, menus, dishes, events,</text><text class="s" x="14" y="61">rooms, bookings, messages</text><text class="m" x="14" y="80">plugins/cobbleandcandle-core/</text></g>
+  <g transform="translate(290,230)"><rect class="box" width="230" height="100" rx="10"/><text class="t" x="14" y="26">Site Editor</text><text class="s" x="14" y="46">13 templates, 2 parts, 8 patterns,</text><text class="s" x="14" y="61">4 style variations</text><text class="m" x="14" y="80">templates/ · styles/</text></g>
+  <rect class="lane" x="560" y="190" width="520" height="160" rx="12"/><text class="lanet" x="576" y="214">Integrations</text>
+  <g transform="translate(580,230)"><rect class="box" width="150" height="100" rx="10"/><text class="t" x="14" y="26">Forms</text><text class="s" x="14" y="46">Nonce + capability,</text><text class="s" x="14" y="61">honeypot, rate limit</text><text class="m" x="14" y="80">forms.php</text></g>
+  <g transform="translate(745,230)"><rect class="box" width="155" height="100" rx="10"/><text class="t" x="14" y="26">iCal sync</text><text class="s" x="14" y="46">Airbnb, Booking.com, Vrbo;</text><text class="s" x="14" y="61">hourly WP-Cron</text><text class="m" x="14" y="80">ical.php</text></g>
+  <g transform="translate(915,230)"><rect class="box" width="145" height="100" rx="10"/><text class="t" x="14" y="26">SEO graph</text><text class="s" x="14" y="46">Restaurant, Menu, Event,</text><text class="s" x="14" y="61">HotelRoom; Yoast/RM</text><text class="m" x="14" y="80">seo.php</text></g>
+  <path class="arrow teal" d="M155 230V148"/><path class="arrow teal" d="M405 230V148"/><path class="arrow teal" d="M655 230V148"/>
+  <rect class="lane" x="20" y="370" width="1060" height="130" rx="12"/><text class="lanet" x="36" y="394">Ship</text>
+  <g transform="translate(40,410)"><rect class="box" width="170" height="72" rx="10"/><text class="t" x="14" y="26">wp-review CI</text><text class="s" x="14" y="46">Changed-lines WP review</text><text class="s" x="14" y="61">PHP 8.3</text></g>
+  <g transform="translate(250,410)"><rect class="box" width="190" height="72" rx="10"/><text class="t" x="14" y="26">Pint + PHPStan 5</text><text class="s" x="14" y="46">Formatting and static</text><text class="s" x="14" y="61">analysis on every PR</text></g>
+  <g transform="translate(480,410)"><rect class="box" width="190" height="72" rx="10"/><text class="t" x="14" y="26">Vite build</text><text class="s" x="14" y="46">Tailwind v4 tokens,</text><text class="s" x="14" y="61">Alpine.js bundle</text></g>
+  <g transform="translate(710,410)"><rect class="box hi" width="170" height="72" rx="10"/><text class="t" x="14" y="26">theme-latest release</text><text class="s" x="14" y="46">Theme + Core zips</text><text class="m" x="14" y="63">GitHub Actions</text></g>
+  <g transform="translate(920,410)"><rect class="box" width="140" height="72" rx="10"/><text class="t" x="14" y="26">WordPress</text><text class="s" x="14" y="46">Upload zip, one-click</text><text class="s" x="14" y="61">Core install, wizard</text></g>
+  <path class="arrow" d="M210 446h38"/><path class="arrow" d="M440 446h38"/><path class="arrow" d="M670 446h38"/><path class="arrow" d="M880 446h38"/>
+</svg>
